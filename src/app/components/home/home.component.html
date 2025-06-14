@@ -1,0 +1,31 @@
+	<!-- Page Content Start -->
+	<div class="page-content space-top p-b65">
+		<div class="container fixed-full-area">
+			<div class="dzSwipe_card-cont dz-gallery-slider">
+				<div class="dzSwipe_card" *ngFor="let cliente of clientes">
+					<div class="dz-media">
+						<img [src]="cliente.photos?.[0] || 'assets/images/avatar/1.png'" alt="">					</div>
+					<div class="dz-content">
+						<div class="left-content">
+							<span class="badge badge-primary d-inline-flex gap-1 mb-2"><i class="icon feather icon-map-pin"></i>{{cliente.address}}</span>
+							<h4 class="title"><a (click)="global.setRoute('detail-profile')">{{cliente.name}} </a></h4>
+							<p class="mb-0"><i class="icon feather icon-user"></i> {{cliente.gender}}</p>
+						</div>
+						<a  class="dz-icon dz-sp-like"><i class="flaticon flaticon-star-1"></i></a>
+					</div>
+					<div class="dzSwipe_card__option dzReject">
+						<i class="fa-solid fa-xmark"></i>
+					</div>
+					<div class="dzSwipe_card__option dzLike">
+						<i class="fa-solid fa-check"></i>
+					</div>
+					<div class="dzSwipe_card__option dzSuperlike">
+						<h5 class="title mb-0">Super Like</h5>
+					</div>
+					<div class="dzSwipe_card__drag"></div>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+	<!-- Page Content End -->

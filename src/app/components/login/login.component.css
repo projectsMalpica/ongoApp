@@ -1,0 +1,184 @@
+.content-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: rgb(0, 9, 45);
+  }
+  
+  .welcome-area {
+    width: 100%;
+    max-width: 400px;
+    padding: 2rem;
+  }
+  
+  .logo-area {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  .logo {
+    max-width: 180px;
+    margin-bottom: 1rem;
+  }
+  
+  .para-title {
+    color: #333;
+    font-size: 1.1rem;
+  }
+  
+  .login-form {
+    background:#00092d2e;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.62);
+  }
+  
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+  }
+  
+  .remember-forgot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 1rem 0;
+  }
+  
+  .forgot-password {
+    color: #666;
+    text-decoration: none;
+    font-size: 0.9rem;
+  }
+  
+  .terms-section {
+    margin-top: 1.5rem;
+    font-size: 0.8rem;
+    color: #666;
+    text-align: center;
+  }
+  
+  .terms-section a {
+    color: #430d7f;
+    text-decoration: none;
+    cursor: pointer;
+    font-weight: 500;
+  }
+  
+  .terms-section a:hover {
+    text-decoration: underline;
+  }
+  
+  .register-link {
+    text-align: center;
+    margin-top: 1.5rem;
+  }
+  
+  .register-link a {
+    color: #430d7f;
+    font-weight: 500;
+    text-decoration: none;
+  }
+  
+  .btn-primary {
+    background-color: #430d7f;
+    border: none;
+    padding: 0.75rem;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+  }
+  
+  .btn-primary:hover {
+    background-color: #2d4a6d;
+  }
+  
+  .btn-primary:disabled {
+    background-color: #FF50A2;
+  }
+
+  /* Modal Styles */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 1rem;
+  }
+
+  .modal-content {
+    background: white;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    animation: modalFadeIn 0.3s ease-out;
+  }
+
+  @keyframes modalFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .modal-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 10;
+  }
+
+  .modal-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #333;
+  }
+
+  .close-button {
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: #666;
+    line-height: 1;
+    padding: 0 0.5rem;
+  }
+
+  .close-button:hover {
+    color: #333;
+  }
+
+  .modal-body {
+    padding: 1.5rem;
+  }
