@@ -31,7 +31,7 @@ export class RealtimePartnerService implements OnDestroy {
     this.clientesSubject.asObservable();
 
   constructor() {
-    this.pb = new PocketBase('https://db.buckapi.lat:8015');
+    this.pb = new PocketBase('https://db.ongomatch.com:8090');
     this.subscribeToClientes();
   }
 

@@ -60,7 +60,7 @@ export class ProfileComponent implements OnInit {
     { value: 'Demisexual', label: 'Demisexual' }
   ];
   
-  private pb = new PocketBase('https://db.buckapi.lat:8015');
+  private pb = new PocketBase('https://db.ongomatch.com:8090');
 isEditProfile: boolean = false;
 newAvatar: File | null = null;
   avatarPreview: string | null = null;

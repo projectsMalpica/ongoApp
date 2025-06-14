@@ -11,7 +11,7 @@ import { GlobalService } from 'src/app/services/global.service';
 export class MapComponent implements AfterViewInit, OnDestroy {
   @ViewChild('mapContainer', { static: true }) mapContainer!: ElementRef;
   private map!: mapboxgl.Map;
-  private pb = new PocketBase('https://db.buckapi.lat:8015');
+  private pb = new PocketBase('https://db.ongomatch.com:8090');
   private markers: Map<string, mapboxgl.Marker> = new Map();
 constructor(public global: GlobalService){}
   async ngAfterViewInit() {

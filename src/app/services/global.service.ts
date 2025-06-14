@@ -6,7 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class GlobalService {
 activeRoute: string = 'login';
-pb = new PocketBase('https://db.buckapi.lat:8015');
+pb = new PocketBase('https://db.ongomatch.com:8090');
 private clientesSubject = new BehaviorSubject<any[]>([]);
 clientes$ = this.clientesSubject.asObservable();
 private partnersSubject = new BehaviorSubject<any[]>([]);
