@@ -2,6 +2,9 @@ import { Component, OnDestroy, AfterViewInit, ViewChild, ElementRef } from '@ang
 import * as mapboxgl from 'mapbox-gl';
 import PocketBase, { RecordModel } from 'pocketbase';
 import { GlobalService } from 'src/app/services/global.service';
+import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+
+
 
 @Component({
   selector: 'app-map',
@@ -14,15 +17,40 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   private pb = new PocketBase('https://db.ongomatch.com:8090');
   private markers: Map<string, mapboxgl.Marker> = new Map();
 constructor(public global: GlobalService){}
+  async ngOnInit() {
+    window.addEventListener('resize', () => {
+      this.map.resize();
+    }); 
+  }
   async ngAfterViewInit() {
     this.map = new mapboxgl.Map({
+      container: this.mapContainer.nativeElement,
+      style: 'mapbox://styles/mapbox/dark-v11',  // mapa oscuro
+      center: [-75.576, 6.244],                  // valor “fallback”
+      zoom: 13,
+      accessToken: 'pk.eyJ1Ijoib25nb21hdGNoIiwiYSI6ImNtYnNnMDJyeTBrYWQycHB4aHIzYXpybTIifQ.8Wc3ow1OKOUh_fxiXMgTtQ',      // ¡no quemes el token!
+      attributionControl:false
+    });
+  
+    /* Control nativo que localiza y sigue al usuario */
+    this.map.addControl(new mapboxgl.GeolocateControl({
+      positionOptions: { enableHighAccuracy:true },
+      trackUserLocation:true,
+      showUserHeading:true,
+    }));
+  
+    /* Si solo quieres centrar una vez: */
+    navigator.geolocation.getCurrentPosition(({coords})=>{
+      this.map.setCenter([coords.longitude, coords.latitude]);
+    });
+    /* this.map = new mapboxgl.Map({
       container: this.mapContainer.nativeElement,
       style: 'mapbox://styles/mapbox/streets-v12',
       center: [-75.576, 6.244], // Medellín
       zoom: 13,
       accessToken: 'pk.eyJ1Ijoib25nb21hdGNoIiwiYSI6ImNtYnNnMDJyeTBrYWQycHB4aHIzYXpybTIifQ.8Wc3ow1OKOUh_fxiXMgTtQ',
       attributionControl: false
-    });
+    }); */
 
     this.map.addControl(new mapboxgl.NavigationControl());
     this.map.on('load', () => {
@@ -35,6 +63,21 @@ constructor(public global: GlobalService){}
     this.pb.collection('usuariosPartner').subscribe('*', (e) => {
       this.actualizarMarcadores(e.record);
     });
+
+    const geocoder = new MapboxGeocoder({
+      accessToken: 'pk.eyJ1Ijoib25nb21hdGNoIiwiYSI6ImNtYnNnMDJyeTBrYWQycHB4aHIzYXpybTIifQ.8Wc3ow1OKOUh_fxiXMgTtQ',
+      mapboxgl,
+      marker:false,
+      placeholder:'Buscar lugar'
+    });
+  
+    /* this.map.addControl(geocoder); */
+    geocoder.addTo('#geocoder');
+
+geocoder.on('result', (e)=>{
+  const [lng,lat] = e.result.center;
+  this.map.flyTo({ center:[lng,lat], zoom:14 });
+});
   }
 
   fitToBounds() {

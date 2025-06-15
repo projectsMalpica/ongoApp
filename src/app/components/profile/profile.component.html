@@ -38,17 +38,17 @@
                         </div>
                         <div class="about">
                             <h6 class="title" style="text-align:start;">Genero</h6>
-                            <p> {{auth.currentUser?.gender || 'No especificado'}}</p>
+                            <p> {{profileData.gender || 'No especificado'}} </p>
                        
                         </div>
                         <div class="about">
                             <h6 class="title" style="text-align:start;">Orientación</h6>
-                            <p> {{auth.currentUser?.orientation || 'No especificado'}}</p>
+                            <p> {{profileData.sexualOrientation || 'No especificado'}} </p>
                        
                         </div>
                         <div class="about">
                             <h6 class="title" style="text-align:start;">Objetivo</h6>
-                            <p> {{auth.currentUser?.relationshipGoal || 'No especificado'}}</p>
+                            <p> {{profileData.relationshipGoal || 'No especificado'}} </p>
                        
                         </div>
                         <div class="intrests mb-3">
@@ -57,7 +57,7 @@
                                 <li> 
                                     <div class="dz-tag">
                                         <i class="icon feather icon-camera"></i>
-                                        <span>{{auth.currentUser?.interests || 'No especificados'}}</span>
+                                        <span>{{profileData.interests || 'No especificados'}}</span>
                                     </div>
                                 </li>
 
