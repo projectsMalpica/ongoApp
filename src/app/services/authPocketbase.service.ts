@@ -202,7 +202,7 @@ export class AuthPocketbaseService {
 
     const currentUser = this.getCurrentUser();
     if (!currentUser || !currentUser.type) {
-      this.global.setRoute('profile');
+      this.global.setRoute('home');
       return;
     }
 
@@ -224,7 +224,7 @@ export class AuthPocketbaseService {
       console.error('Error checking permissions:', error);
       localStorage.clear();
       this.pb.authStore.clear();
-      this.global.setRoute('profile');
+      this.global.setRoute('home');
     });
   }
 

@@ -62,7 +62,7 @@ export class LoginComponent {
     
     this.auth.loginUser(email, password).subscribe({
       next: () => {
-        this.global.setRoute('home'); // Redirigir a la página principal
+        this.auth.permision(); // Redirigir a la página principal
       },
       error: (error) => {
         console.error('Error en el login:', error);

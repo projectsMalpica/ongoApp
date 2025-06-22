@@ -1,5 +1,5 @@
 	<!-- Menubar -->
-	<div class="menubar-area footer-fixed" [hidden]="global.activeRoute === 'profile'">
+	<!-- <div class="menubar-area footer-fixed" [hidden]="global.activeRoute === 'profile'">
 		<div class="toolbar-inner menubar-nav">
 			<a  class="nav-link active" (click)="global.setRoute('home')">
 				<i class="flaticon flaticon-dog-house"></i>
@@ -17,5 +17,24 @@
 				<i class="flaticon flaticon-user"></i>
 			</a>
 		</div>
-	</div>
+	</div> -->
+	<div class="menubar-area footer-fixed" [hidden]="global.activeRoute === (auth.isPartner() ? 'profile-local' : 'profile')">
+		<div class="toolbar-inner menubar-nav">
+		  <a class="nav-link active" (click)="global.setRoute(auth.isPartner() ? 'homeLocal' : 'home')">
+			<i class="flaticon flaticon-dog-house"></i>
+		  </a>
+		  <a class="nav-link" (click)="global.setRoute('map')">
+			<i class="fas fa-map-marker-alt"></i>
+		  </a>
+		  <a class="nav-link" (click)="global.setRoute('explorer')">
+			<i class="flaticon flaticon-search"></i>
+		  </a>
+		  <a *ngIf="!auth.isPartner()" class="nav-link" (click)="global.setRoute('chat')">
+			<i class="flaticon flaticon-chat-1"></i>
+		  </a>
+		  <a class="nav-link" (click)="global.setRoute(auth.isPartner() ? 'profile-local' : 'profile')">
+			<i class="flaticon flaticon-user"></i>
+		  </a>
+		</div>
+	  </div>
 	<!-- Menubar -->

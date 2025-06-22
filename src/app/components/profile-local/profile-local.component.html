@@ -1,85 +1,142 @@
-<div class="page-content space-top p-b40">
-    <div class="container">
-        <div class="detail-area">
-            <div class="dz-media-card style-2">
-                <div class="dz-media">
-                    <img src="../assets/images/w3tinder/liked/pic4.png" alt="">
-                </div>
-                <div class="dz-content">
-                    <div class="left-content">
-                        <h4 class="title">Chelsea, 21</h4>
-                        <p class="mb-0"><i class="icon feather icon-map-pin"></i> 5 miles away</p>
+<!-- Page Content Start -->
+<div class="page-content space-top p-b60" *ngIf="!isEditProfile">
+    <div class="container pt-0"> 
+        <div class="profile-area">
+            <div class="main-profile">
+                <div class="about-profile">
+                  
+                    <div class="media rounded-circle position-relative">
+                        <img [src]="global.profileDataPartner.files" alt="profile-image" class="profile-avatar">
+                        <svg class="radial-progress m-b20" data-percentage="40" viewBox="0 0 80 80">
+                            <circle class="incomplete" cx="40" cy="40" r="35"></circle>
+                            <circle class="complete" cx="40" cy="40" r="35" style="stroke-dashoffset: 39.58406743523136;"></circle>
+                        </svg>
                     </div>
-                    <a href="javascript:void(0);" class="dz-icon"><i class="flaticon flaticon-star-1"></i></a>
+                    <a (click)="isEditProfile = true" class="edit-profile dz-icon">
+                        <i class="flaticon flaticon-pencil-2"></i>
+                    </a>
+                </div>
+                
+                <div class="profile-detail">
+                    <div class="profile-header mb-4">
+                        <h2 class="profile-name">{{auth.getFullName()}}</h2>
+                        <div class="d-flex align-items-center location text-muted">
+                            <i class="icon feather icon-map-pin me-2"></i> 
+                            <span>{{global.profileDataPartner.address || 'No especificada'}}</span>
+                        </div>
+                    </div>
+                  
                 </div>
             </div>
-            <div class="detail-bottom-area">
-                <div class="about">
-                    <h6 class="title">Basic information</h6>
-                    <p class="para-text">Just moved back to jakarata after living at India for 10+ years. Di luar terlifiat cenger - center di dalam.</p>					
-                </div>
-                <div class="intrests mb-3">
-                    <h6 class="title">Intrests</h6>
+            <div class="detail-area">
+             
+              <div class="detail-bottom-area">
+                  <div class="about" style="margin-bottom: 1rem;">
+                      <h6 class="title">Somos  {{global.profileDataPartner.venueName}}</h6>
+                      <p class="para-text">{{global.profileDataPartner.description}}</p>	
+                      <h6 class="para-text"><i class="icon feather icon-phone me-2"></i><span style="color: #FF50A2;">{{global.profileDataPartner.phone}}</span></h6>				
+                      <h6 class="para-text"><i class="icon feather icon-mail me-2"></i><span style="color: #FF50A2;">{{global.profileDataPartner.email}}</span></h6>				
+                  </div>
+                  <div class="about" style="margin-bottom: 1rem;">
+                      <h6 class="title">Capacidad:</h6>
+                      <ul class="dz-tag-list">
+                          <li> 
+                              <div class="dz-tag">
+                                  <i class="icon feather icon-user"></i>
+                                  <span style="color: #FF50A2;">{{global.profileDataPartner.capacity}}</span>
+                              </div>
+                          </li>
+                         
+                      </ul>                
+                  </div>
+                  <div class="about" style="margin-bottom: 1rem;">
+                    <h6 class="title">Horario de apertura:</h6>
                     <ul class="dz-tag-list">
                         <li> 
                             <div class="dz-tag">
-                                <i class="icon feather icon-camera"></i>
-                                <span>Photography</span>
+                                <i class="icon feather icon-clock"></i>
+                                <span style="color: #FF50A2;">{{global.profileDataPartner.openingHours}}</span>
                             </div>
                         </li>
-                        <li> 
-                            <div class="dz-tag">
-                                <i class="icon feather icon-music"></i>
-                                <span>Music</span>
-                            </div>
-                        </li>
-                        <li> 
-                            <div class="dz-tag">
-                                <i class="icon feather icon-book"></i>
-                                <span>Study</span>
-                            </div>
-                        </li>
-                        <li> 
-                            <div class="dz-tag">
-                                <i class="icon feather icon-film"></i>
-                                <span>Movies</span>
-                            </div>
-                        </li>
-                        <li> 
-                            <div class="dz-tag">
-                                <i class="icon feather icon-instagram"></i>
-                                <span>Instagram</span>
-                            </div>
-                        </li>
-                        <li> 
-                            <div class="dz-tag">
-                                <i class="icon feather icon-map-pin"></i>
-                                <span>Travelling</span>
-                            </div>
-                        </li>
-                    </ul>
+                       
+                    </ul>                
                 </div>
-                <div class="languages mb-3">
-                    <h6 class="title">Languages</h6>
+                <div class="about" style="margin-bottom: 1rem;">
+                    <h6 class="title">Servicios:</h6>
                     <ul class="dz-tag-list">
                         <li> 
                             <div class="dz-tag">
-                                <span>English</span>
+                                <i class="icon feather icon-plus"></i>
+                                <span style="color: #FF50A2;">{{global.profileDataPartner.services}}</span>
                             </div>
                         </li>
-                        <li> 
-                            <div class="dz-tag">
-                                <span>Spanish</span>
+                       
+                    </ul>                
+                </div>
+              </div>
+          </div>
+            <div class="stats-cards">
+                <div class="row g-2 mb-4">
+                    <div class="col-6">
+                        <div class="card style-2 stats-card">
+                            <div class="card-body">
+                                <a href="javascript:void(0);" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom">	
+                                    <div class="card-icon">
+                                        <i class="flaticon flaticon-star-1"></i>
+                                    </div>
+                                    <div class="card-content">
+                                        <p>Promociones</p>
+                                        <div class="stat-value">0</div>
+                                    </div>
+                                </a>
                             </div>
-                        </li>
-                        <li> 
-                            <div class="dz-tag">
-                                <span>German</span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="card style-2 stats-card">
+                            <div class="card-body">
+                                <a>
+                                    <div class="card-icon">
+                                        <i class="flaticon flaticon-bell"></i>
+                                    </div>
+                                    <div class="card-content">
+                                        <p>Subscripciones</p>
+                                        <div class="stat-value">0</div>
+                                    </div>
+                                </a>
                             </div>
-                        </li>
-                    </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="subscription-section">
+                <h3 class="section-title">Mejora tu experiencia</h3>
+                <p class="section-subtitle">Desbloquea características exclusivas con nuestros planes premium</p>
+                
+                <div class="swiper subscription-swiper">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide" *ngFor="let planning of global.planningPartners$ | async">
+                            <div class="dz-content subscription-card">
+                                <div class="card-header">
+                                    <h5 class="title">{{planning.name}}</h5>
+                                    <div class="price">{{planning.priceCOP}}<span>/mes</span></div>
+                                    <div class="price">{{planning.priceUSD}}<span>/mes</span></div>
+                                </div>
+                                <ul class="features-list">
+                                    <li>{{planning.items}}</li>
+                                </ul>
+                                <a class="btn rounded-xl">Suscribirse</a>
+                            </div>
+                        </div>
+                       
+                    </div>
+                    <div class="swiper-btn">
+                        <div class="swiper-pagination style-1 flex-1"></div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </div> 
 </div>
+<!-- Page Content End -->

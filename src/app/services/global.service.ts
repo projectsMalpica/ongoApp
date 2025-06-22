@@ -19,7 +19,9 @@ planningPartners$ = this.planningPartnersSubject.asObservable();
 private planningClientsSubject = new BehaviorSubject<any[]>([]);
 planningClients$ = this.planningClientsSubject.asObservable();
 public selectedPartner: any = null;
+public selectedServicesPartner: string[] = [];
 public selectedClient: any =null;
+public photosPartner: any[] = [];
 public profileData: any = {
   name: '',
   gender: '',
@@ -37,6 +39,25 @@ public profileData: any = {
   age: null,
   interests: [],
   avatar: '',
+};
+
+profileDataPartner: any = {
+  venueName: '',
+  userId: '',
+  status: '',
+  files: [],
+  birthday: '',
+  address: '',
+  email: '',
+  description: '',
+  phone: '',
+  capacity: '',
+  openingHours: '',
+  lat: '',
+  lng: '',
+  services: '',
+  about: '',    
+  
 };
 
   constructor(
@@ -149,4 +170,5 @@ public profileData: any = {
       this.planningClientsSubject.next(current);
     });
   }
+ 
 }
