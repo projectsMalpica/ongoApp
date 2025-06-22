@@ -4,11 +4,11 @@
         <div class="profile-area">
             <div class="main-profile">
                 <div class="about-profile">
-                    <a class="setting dz-icon">
+                  <!--   <a class="setting dz-icon">
                         <i class="flaticon flaticon-setting"></i>
-                    </a>
+                    </a> -->
                     <div class="media rounded-circle position-relative">
-                        <img [src]="auth.currentUser?.avatar || 'assets/images/default-avatar.png'" alt="profile-image" class="profile-avatar">
+                        <img [src]="profileData.avatar || 'assets/images/default-avatar.png'" alt="profile-image" class="profile-avatar">
                         <svg class="radial-progress m-b20" data-percentage="40" viewBox="0 0 80 80">
                             <circle class="incomplete" cx="40" cy="40" r="35"></circle>
                             <circle class="complete" cx="40" cy="40" r="35" style="stroke-dashoffset: 39.58406743523136;"></circle>
@@ -36,7 +36,7 @@
                   <div class="about" style="margin-bottom: 1rem;">
                       <h6 class="title">Soy  {{profileData.name}}</h6>
                       <p class="para-text">{{profileData.about}}</p>	
-                      <h6 class="para-text"><i class="icon feather icon-calendar me-2"></i><span style="color: #FF50A2;">{{profileData.birthday | date:'yyyy'}}</span></h6>				
+                      <h6 class="para-text"><i class="icon feather icon-calendar me-2"></i><span style="color: #FF50A2;">{{profileData.birthday | date:'dd/MM/yyyy'}}</span></h6>				
                       <h6 class="para-text"><i class="icon feather icon-user me-2"></i><span style="color: #FF50A2;">{{profileData.gender}}</span></h6>				
                   </div>
                   <div class="about" style="margin-bottom: 1rem;">

@@ -31,10 +31,11 @@ export class ProfileComponent implements OnInit {
     language: '',
     about: '',
     age: null,
-    interests: []
+    interests: [],
+    avatar: '',
     
   };
-  
+
   photos: any[] = Array(6).fill({});
   selectedInterests: string[] = [];
   interestSearch: string = '';
@@ -85,9 +86,10 @@ export class ProfileComponent implements OnInit {
   ];
   
   private pb = new PocketBase('https://db.ongomatch.com:8090');
-isEditProfile: boolean = false;
-newAvatar: File | null = null;
-  avatarPreview: string | null = null;
+  isEditProfile: boolean = false;
+  newAvatar: File | null = null;
+  avatar: File | null = null;
+  avatarPreview: string | ArrayBuffer | null = null;
 
 constructor(
   public global: GlobalService,
@@ -122,6 +124,7 @@ async loadProfileData() {
         userId: userData['userId'] || '',
         status: userData['status'] || '',
         interests: userData['interests'] || '',
+        avatar: userData['avatar'] || '',
       };
     
     // Cargar fotos si existen
@@ -149,6 +152,7 @@ filterInterests() {
     interest.toLowerCase().includes(this.interestSearch.toLowerCase())
   );
 }
+
 
 toggleInterest(interest: string) {
   const index = this.selectedInterests.indexOf(interest);
@@ -185,7 +189,8 @@ saveGender() {
   // Guardar en perfil
 }
 
-async saveProfile() {
+/* async saveProfile() {
+  
   try {
     // Subir fotos nuevas
     const uploadedPhotos = [];
@@ -234,6 +239,7 @@ async saveProfile() {
       userId: this.auth.currentUser?.id,
       status: this.auth.currentUser?.status,
       interests: this.profileData.interests,
+      avatar: this.profileData.avatar,
     };
 
     // Actualizar o crear perfil
@@ -255,8 +261,81 @@ async saveProfile() {
     console.error('Error guardando perfil:', error);
     alert('Error al guardar los cambios');
   }
-}
+} */
 
+  async saveProfile() {
+    try {
+      // Subir fotos nuevas
+      const uploadedPhotos = [];
+      for (const photo of this.photos) {
+        if (photo.file) {
+          const formData = new FormData();
+          formData.append('file', photo.file);
+  
+          // Subir la imagen a PocketBase
+          const record = await this.pb.collection('files').create(formData);
+          // Obtener URL de la imagen subida
+          const url = this.pb.files.getUrl(record, record['file']);
+          uploadedPhotos.push(url);
+        } else if (photo.url) {
+          // Mantener las URLs existentes
+          uploadedPhotos.push(photo.url);
+        }
+      }
+  
+      // Subir nuevo avatar si existe
+      let avatarUrl = this.profileData.avatar;
+      if (this.avatar) {
+        const avatarFormData = new FormData();
+        avatarFormData.append('file', this.avatar);
+        avatarFormData.append('userId', this.auth.currentUser?.id || '');
+        avatarFormData.append('type', 'avatar');
+  
+        // Subir avatar a la colección files
+        const avatarRecord = await this.pb.collection('files').create(avatarFormData);
+        avatarUrl = this.pb.files.getUrl(avatarRecord, avatarRecord['file']);
+      }
+  
+      // Preparar datos para PocketBase
+      const data: any = {
+        name: this.profileData.name,
+        birthday: this.profileData.birthday,
+        interestedIn: this.profileData.interestedIn,
+        lookingFor: this.profileData.lookingFor,
+        language: this.profileData.language,
+        orientation: this.profileData.orientation,
+        age: this.profileData.age,
+        gender: this.profileData.gender,
+        address: this.profileData.address,
+        about: this.profileData.about,
+        photos: JSON.stringify(uploadedPhotos),
+        email: this.auth.currentUser?.email,
+        userId: this.auth.currentUser?.id,
+        status: this.auth.currentUser?.status,
+        interests: this.profileData.interests,
+        avatar: avatarUrl,
+      };
+  
+      // Actualizar o crear perfil
+      const existingProfile = await this.pb.collection('usuariosClient').getFirstListItem(
+        `userId="${this.auth.currentUser?.id}"`,
+        { silent: true }
+      ).catch(() => null);
+  
+      if (existingProfile) {
+        await this.pb.collection('usuariosClient').update(existingProfile.id, data);
+      } else {
+        data.userId = this.auth.currentUser?.id;
+        await this.pb.collection('usuariosClient').create(data);
+      }
+  
+      console.log('Perfil actualizado correctamente');
+      this.isEditProfile = false;
+    } catch (error) {
+      console.error('Error guardando perfil:', error);
+      console.log('Error al guardar los cambios');
+    }
+  }
 cancelEdit() {
   // Volver a cargar los datos originales
   this.loadProfileData();
@@ -275,15 +354,30 @@ onPhotoSelected(event: any, index: number) {
   }
 }
 
-onAvatarSelected(event: any) {
-  const file = event.target.files[0];
-  if (file) {
-    this.newAvatar = file;
-    // Crear URL temporal para previsualización
-    this.avatarPreview = URL.createObjectURL(file);
+onAvatarSelected(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  if (input.files && input.files[0]) {
+    this.avatar = input.files[0];
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      this.avatarPreview = e.target?.result ?? null;
+    };
+    reader.readAsDataURL(this.avatar);
   }
 }
+async uploadAvatarFile(): Promise<any> {
+  if (!this.avatar) return null;
 
+  const formData = new FormData();
+  formData.append('file', this.avatar);
+  formData.append('userId', this.auth.currentUser?.id || '');
+  formData.append('type', 'avatar');
+
+  // PocketBase SDK permite pasar FormData directamente
+  const fileRecord = await this.pb.collection('files').create(formData);
+  return fileRecord;
+}
 removePhoto(index: number) {
   this.photos[index] = {};
   // Limpiar el input file
@@ -299,7 +393,7 @@ addPhoto() {
     const inputId = 'imageUpload' + emptyIndex;
     document.getElementById(inputId)?.click();
   } else {
-    alert('Máximo de fotos alcanzado');
+    console.log('Máximo de fotos alcanzado');
   }
 }
 }
