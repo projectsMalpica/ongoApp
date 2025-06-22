@@ -13,7 +13,6 @@
                             <circle class="incomplete" cx="40" cy="40" r="35"></circle>
                             <circle class="complete" cx="40" cy="40" r="35" style="stroke-dashoffset: 39.58406743523136;"></circle>
                         </svg>
-                        <div class="data-fill"><span>40%</span></div>
                     </div>
                     <a (click)="isEditProfile = true" class="edit-profile dz-icon">
                         <i class="flaticon flaticon-pencil-2"></i>
@@ -22,71 +21,86 @@
                 
                 <div class="profile-detail">
                     <div class="profile-header mb-4">
-                        <h2 class="profile-name">{{auth.getFullName()}}</h2>
+                        <h2 class="profile-name">{{auth.getFullName()}}, {{profileData.age}}</h2>
                         <div class="d-flex align-items-center location text-muted">
                             <i class="icon feather icon-map-pin me-2"></i> 
-                            <span>5 miles away</span>
+                            <span>{{profileData.address || 'No especificada'}}</span>
                         </div>
                     </div>
-                    <div class="detail-bottom-area">
-                        <div class="about">
-                            <h6 class="title" style="text-align:start;">Sobre mí</h6>
-                            <p class="para-text">Just moved back to jakarata after living at India for 10+ years. Di luar terlifiat cenger - center di dalam.</p>					
-                            <h6 class="title" style="text-align:start;">Edad</h6>
-                            <p> {{auth.currentUser?.age || 'No especificada'}}</p>
-                       
-                        </div>
-                        <div class="about">
-                            <h6 class="title" style="text-align:start;">Genero</h6>
-                            <p> {{profileData.gender || 'No especificado'}} </p>
-                       
-                        </div>
-                        <div class="about">
-                            <h6 class="title" style="text-align:start;">Orientación</h6>
-                            <p> {{profileData.sexualOrientation || 'No especificado'}} </p>
-                       
-                        </div>
-                        <div class="about">
-                            <h6 class="title" style="text-align:start;">Objetivo</h6>
-                            <p> {{profileData.relationshipGoal || 'No especificado'}} </p>
-                       
-                        </div>
-                        <div class="intrests mb-3">
-                            <h6 class="title" style="text-align:start;">Intereses</h6>
-                            <ul class="dz-tag-list">
-                                <li> 
-                                    <div class="dz-tag">
-                                        <i class="icon feather icon-camera"></i>
-                                        <span>{{profileData.interests || 'No especificados'}}</span>
-                                    </div>
-                                </li>
-
-                            </ul>
-                        </div>
-                        <div class="languages mb-3">
-                            <h6 class="title" style="text-align:start;">Idiomas</h6>
-                            <ul class="dz-tag-list">
-                                <li> 
-                                    <div class="dz-tag">
-                                        <span>English</span>
-                                    </div>
-                                </li>
-                                <li> 
-                                    <div class="dz-tag">
-                                        <span>Spanish</span>
-                                    </div>
-                                </li>
-                                <li> 
-                                    <div class="dz-tag">
-                                        <span>German</span>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+                  
                 </div>
             </div>
-            
+            <div class="detail-area">
+             
+              <div class="detail-bottom-area">
+                  <div class="about" style="margin-bottom: 1rem;">
+                      <h6 class="title">Soy  {{profileData.name}}</h6>
+                      <p class="para-text">{{profileData.about}}</p>	
+                      <h6 class="para-text"><i class="icon feather icon-calendar me-2"></i><span style="color: #FF50A2;">{{profileData.birthday | date:'yyyy'}}</span></h6>				
+                      <h6 class="para-text"><i class="icon feather icon-user me-2"></i><span style="color: #FF50A2;">{{profileData.gender}}</span></h6>				
+                  </div>
+                  <div class="about" style="margin-bottom: 1rem;">
+                      <h6 class="title">Mi orientación sexual es</h6>
+                      <ul class="dz-tag-list">
+                          <li> 
+                              <div class="dz-tag">
+                                  <i class="icon feather icon-user"></i>
+                                  <span style="color: #FF50A2;">{{profileData.orientation}}</span>
+                              </div>
+                          </li>
+                         
+                      </ul>                
+                  </div>
+                  <div class="about" style="margin-bottom: 1rem;">
+                      <h6 class="title">Estoy interesad&#64; en</h6>
+                      <ul class="dz-tag-list">
+                          <li> 
+                              <div class="dz-tag">
+                                  <i class="icon feather icon-heart"></i>
+                                  <span style="color: #FF50A2;">{{profileData.interestedIn}}</span>
+                              </div>
+                          </li>
+                         
+                      </ul>
+                  </div>
+                  <div class="languages mb-3">
+                      <h6 class="title">En búsqueda de </h6>
+                      <ul class="dz-tag-list">
+                          <li> 
+                              <div class="dz-tag">
+                                  <i class="icon feather icon-check-circle"></i>
+                                  <span style="color: #FF50A2;">{{profileData.lookingFor}}</span>
+                              </div>
+                          </li>
+                          
+                      </ul>
+                  </div>
+                  <div class="languages mb-3">
+                    <h6 class="title">Mi idioma es </h6>
+                    <ul class="dz-tag-list">
+                        <li> 
+                            <div class="dz-tag">
+                                <i class="icon feather icon-globe"></i>
+                                <span style="color: #FF50A2;">{{profileData.language}}</span>
+                            </div>
+                        </li>
+                        
+                    </ul>
+                </div>
+                <div class="languages mb-3">
+                  <h6 class="title">Mis hobbies son </h6>
+                  <ul class="dz-tag-list">
+                      <li> 
+                          <div class="dz-tag">
+                              <i class="icon feather icon-heart"></i>
+                              <span style="color: #FF50A2;">{{profileData.interests}}</span>
+                          </div>
+                      </li>
+                      
+                  </ul>
+              </div>
+              </div>
+          </div>
             <div class="stats-cards">
                 <div class="row g-2 mb-4">
                     <div class="col-6">
@@ -276,7 +290,7 @@
           <div class="card-body">
             <a href="javascript:void(0);" class="setting-input" 
                data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom1" aria-controls="offcanvasBottom1">
-              <span>{{profileData.interests || 'Photography, Tea, Travel'}}</span>
+              <span>{{profileData.interests || 'Bailar, Cocinar, Viajar'}}</span>
               <i class="icon feather dz-flex-box icon-chevron-right ms-auto me-0"></i>
             </a>
           </div>
@@ -289,7 +303,7 @@
           <div class="card-body">
             <a href="javascript:void(0);" class="setting-input" 
                data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom2" aria-controls="offcanvasBottom2">
-              <span>{{profileData.relationshipGoal || 'Long-term partner'}}</span>
+              <span>{{profileData.lookingFor || 'Relacion corta plazo'}}</span>
               <i class="icon feather dz-flex-box icon-chevron-right ms-auto me-0"></i>
             </a>
           </div>
@@ -302,7 +316,7 @@
           <div class="card-body">
             <a href="javascript:void(0);" class="setting-input" 
                data-bs-toggle="offcanvas" data-bs-target="#offcanvasLang" aria-controls="offcanvasLang">
-              <span class="select-lang">{{profileData.language || 'English'}}</span>
+              <span class="select-lang">{{profileData.language || 'Español'}}</span>
               <i class="icon feather dz-flex-box icon-chevron-right ms-auto me-0"></i>
             </a>
           </div>
@@ -315,9 +329,57 @@
           <div class="card-body">
             <a href="javascript:void(0);" class="setting-input" 
                data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom3" aria-controls="offcanvasBottom3">
-              <span>{{profileData.sexualOrientation || 'Straight'}}</span>
+              <span>{{profileData.orientation || 'Heterosexual'}}</span>
               <i class="icon feather dz-flex-box icon-chevron-right ms-auto me-0"></i>
             </a>
+          </div>
+        </div>
+        <div class="card style-4">
+          <div class="card-header">
+            <label for="address">Dirección</label>
+          </div>
+          <div class="card-body">
+            <input type="text" class="form-control" name="address" id="address" [(ngModel)]="profileData.address" placeholder="Medellín, Colombia" />
+          </div>
+        </div>
+        <div class="card style-4">
+          <div class="card-header">
+            <h6 class="title mb-0">Género</h6>
+          </div>
+          <div class="card-body">
+            <a href="javascript:void(0);" class="setting-input" 
+               data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom4" aria-controls="offcanvasBottom4">
+              <span>{{profileData.gender || 'Masculino'}}</span>
+              <i class="icon feather dz-flex-box icon-chevron-right ms-auto me-0"></i>
+            </a>
+          </div>
+        </div>
+        <div class="card style-4">
+          <div class="card-header">
+            <h6 class="title mb-0">Interesado en</h6>
+          </div>
+          <div class="card-body">
+            <a href="javascript:void(0);" class="setting-input" 
+               data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom5" aria-controls="offcanvasBottom5">
+              <span>{{profileData.interestedIn || 'Mujeres'}}</span>
+              <i class="icon feather dz-flex-box icon-chevron-right ms-auto me-0"></i>
+            </a>
+          </div>
+        </div>
+        <div class="card style-4">
+          <div class="card-header">
+            <label for="about">Sobre mi</label>
+          </div>
+          <div class="card-body">
+            <input type="text" class="form-control" name="about" id="about" [(ngModel)]="profileData.about" placeholder="Hola, me encanta bailar" />
+          </div>
+        </div>
+        <div class="card style-4">
+          <div class="card-header">
+            <label for="age">Edad</label>
+          </div>
+          <div class="card-body">
+            <input type="number" class="form-control" name="age" id="age" [(ngModel)]="profileData.age" placeholder="25" />
           </div>
         </div>
       </div>
@@ -336,7 +398,6 @@
     </div> 
 </div>
 
-<!-- Offcanvases para edición -->
 <!-- Interest OffCanvas -->
 <div class="offcanvas offcanvas-bottom intrests" tabindex="-1" id="offcanvasBottom1">
   <div class="offcanvas-header share-style">
@@ -384,11 +445,11 @@
   </div>
   <div class="offcanvas-body">
     <div class="radio style-4 row g-2">
-      <div class="col-4" *ngFor="let goal of relationshipGoals">
+      <div class="col-4" *ngFor="let goal of lookingFor">
         <label class="radio-label">
           <input type="radio" [name]="'relationshipGoal'" 
                  [value]="goal.value" 
-                 [(ngModel)]="profileData.relationshipGoal">
+                 [(ngModel)]="profileData.lookingFor">
           <span class="checkmark">
             <img [src]="goal.icon" alt="">                            
             <span class="text">{{goal.label}}</span>  
@@ -442,12 +503,12 @@
   </div>
   <div class="offcanvas-body">
     <div>
-      <div class="form-check mb-3" *ngFor="let orientation of sexualOrientations">
+      <div class="form-check mb-3" *ngFor="let orientation of orientation">
         <input class="form-check-input" type="radio" 
-               name="sexualOrientation" 
+               name="orientation" 
                [id]="'orientation' + orientation.value"
                [value]="orientation.value"
-               [(ngModel)]="profileData.sexualOrientation">
+               [(ngModel)]="profileData.orientation">
         <label class="form-check-label" [for]="'orientation' + orientation.value">
           {{orientation.label}}
         </label>
@@ -457,6 +518,65 @@
       <button class="btn btn-primary w-100" 
               data-bs-dismiss="offcanvas"
               (click)="saveSexualOrientation()">
+        Guardar
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Gender OffCanvas -->
+<div class="offcanvas offcanvas-bottom" tabindex="-1" id="offcanvasBottom4">
+  <button type="button" class="btn-close drage-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  <div class="offcanvas-header share-style m-0 pb-0">
+    <h6 class="title">Género</h6>
+  </div>
+  <div class="offcanvas-body">
+    <div>
+      <div class="form-check mb-3" *ngFor="let gender of gender">
+        <input class="form-check-input" type="radio" 
+               name="gender" 
+               [id]="'gender' + gender.value"
+               [value]="gender.value"
+               [(ngModel)]="profileData.gender">
+        <label class="form-check-label" [for]="'gender' + gender.value">
+          {{gender.label}}
+        </label>
+      </div>
+    </div>
+    <div class="mt-3">
+      <button class="btn btn-primary w-100" 
+              data-bs-dismiss="offcanvas"
+              (click)="saveGender()">
+        Guardar
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Interests OffCanvas -->
+
+<div class="offcanvas offcanvas-bottom" tabindex="-1" id="offcanvasBottom5">
+  <button type="button" class="btn-close drage-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  <div class="offcanvas-header share-style m-0 pb-0">
+    <h6 class="title">Interesad&#64; en</h6>
+  </div>
+  <div class="offcanvas-body">
+    <div>
+      <div class="form-check mb-3" *ngFor="let interestedIn of interestedIn">
+        <input class="form-check-input" type="radio" 
+               name="interestedIn" 
+               [id]="'interestedIn' + interestedIn.value"
+               [value]="interestedIn.value"
+               [(ngModel)]="profileData.interestedIn">
+        <label class="form-check-label" [for]="'interestedIn' + interestedIn.value">
+          {{interestedIn.label}}
+        </label>
+      </div>
+    </div>
+    <div class="mt-3">
+      <button class="btn btn-primary w-100" 
+              data-bs-dismiss="offcanvas"
+              (click)="saveInterests()">
         Guardar
       </button>
     </div>

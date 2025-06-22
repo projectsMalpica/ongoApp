@@ -11,7 +11,6 @@ import PocketBase from 'pocketbase';
 })
 export class HomeComponent implements OnInit {
   clientes: any[] = [];
-  locales: any[] = [];
   pb: PocketBase;
   
 constructor(public global: GlobalService){

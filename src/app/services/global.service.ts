@@ -5,7 +5,7 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class GlobalService {
-activeRoute: string = 'login';
+activeRoute: string = 'register';
 pb = new PocketBase('https://db.ongomatch.com:8090');
 private clientesSubject = new BehaviorSubject<any[]>([]);
 clientes$ = this.clientesSubject.asObservable();
@@ -14,6 +14,7 @@ partners$ = this.partnersSubject.asObservable();
 private promosSubject = new BehaviorSubject<any[]>([]);
 promos$ = this.promosSubject.asObservable();
 public selectedPartner: any = null;
+public selectedClient: any =null;
   constructor(
    
   ) { 
@@ -63,6 +64,10 @@ public selectedPartner: any = null;
   previewPartner(partner: any) {
     this.selectedPartner = partner;
     this.activeRoute = 'detail-profile-local';
+  }
+  previewClient(client: any) {
+    this.selectedClient = client;
+    this.activeRoute = 'detail-profile';
   }
   async initPromosRealtime() {
     // Fetch inicial

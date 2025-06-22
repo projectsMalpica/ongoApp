@@ -17,10 +17,22 @@ import * as bootstrap from 'bootstrap';
 })
 export class ProfileComponent implements OnInit {
   profileData: any = {
-    interests: '',
-    relationshipGoal: '',
+    name: '',
+    gender: '',
+    userId: '',
+    status: '',
+    photos: [],
+    birthday: '',
+    interestedIn: '',
+    email: '',
+    orientation: '',
+    lookingFor: '',
+    address: '',
     language: '',
-    sexualOrientation: ''
+    about: '',
+    age: null,
+    interests: []
+    
   };
   
   photos: any[] = Array(6).fill({});
@@ -33,8 +45,8 @@ export class ProfileComponent implements OnInit {
   ];
   filteredInterests: string[] = [...this.allInterests];
   
-  relationshipGoals = [
-    { value: 'Socio a largo plazo', label: 'Socio a largo plazo', icon: '../assets/images/w3tinder/svg/love.svg' },
+  lookingFor = [
+    { value: 'Relación seria', label: 'Relación seria', icon: '../assets/images/w3tinder/svg/love.svg' },
     { value: 'Diversión a corto plazo', label: 'Diversión a corto plazo', icon: '../assets/images/w3tinder/svg/smile-emoji.svg' },
     { value: 'Amistad', label: 'Amistad', icon: '../assets/images/w3tinder/svg/toast.svg' },
     { value: 'Citas casuales', label: 'Citas casuales', icon: '../assets/images/w3tinder/svg/party.svg' },
@@ -50,7 +62,7 @@ export class ProfileComponent implements OnInit {
     { name: 'Espanol', flag: '../assets/images/flags/spain.svg' }
   ];
   
-  sexualOrientations = [
+  orientation = [
     { value: 'Heterosexual', label: 'Heterosexual' },
     { value: 'Gay', label: 'Gay' },
     { value: 'Lesbian', label: 'Lesbian' },
@@ -58,6 +70,18 @@ export class ProfileComponent implements OnInit {
     { value: 'Asexual', label: 'Asexual' },
     { value: 'Queer', label: 'Queer' },
     { value: 'Demisexual', label: 'Demisexual' }
+  ];
+
+  gender = [
+    { value: 'Masculino', label: 'Masculino' },
+    { value: 'Femenino', label: 'Femenino' },
+    { value: 'Otro', label: 'Otro' }
+  ];
+
+  interestedIn = [
+    { value: 'Hombres', label: 'Hombres' },
+    { value: 'Mujeres', label: 'Mujeres' },
+    { value: 'Otro', label: 'Otro' }
   ];
   
   private pb = new PocketBase('https://db.ongomatch.com:8090');
@@ -81,12 +105,24 @@ async loadProfileData() {
       `userId="${this.auth.currentUser?.id}"`
     );
     
-    this.profileData = {
-      interests: userData['interestedIn'] || '',
-      relationshipGoal: userData['lookingFor'] || '',
-      language: userData['language'] || '',
-      sexualOrientation: userData['orientation'] || ''
-    };
+    // Dentro de loadProfileData()
+      this.profileData = {
+        name: userData['name'] || '',
+        interestedIn: userData['interestedIn'] || '',
+        lookingFor: userData['lookingFor'] || '',
+        language: userData['language'] || '',
+        orientation: userData['orientation'] || '',
+        birthday: userData['birthday'] || '',
+        gender: userData['gender'] || '',
+        address: userData['address'] || '',
+        about: userData['about'] || '',
+        age: userData['age'] || '',
+        photos: userData['photos'] || [],
+        email: userData['email'] || '',
+        userId: userData['userId'] || '',
+        status: userData['status'] || '',
+        interests: userData['interests'] || '',
+      };
     
     // Cargar fotos si existen
     if (userData['photos']) {
@@ -145,6 +181,10 @@ saveSexualOrientation() {
   // Guardar en perfil
 }
 
+saveGender() {
+  // Guardar en perfil
+}
+
 async saveProfile() {
   try {
     // Subir fotos nuevas
@@ -179,11 +219,21 @@ async saveProfile() {
 
     // Preparar datos para PocketBase
     const data: any = {
-      interestedIn: this.profileData.interests,
-      lookingFor: this.profileData.relationshipGoal,
+      name: this.profileData.name,
+      birthday: this.profileData.birthday,
+      interestedIn: this.profileData.interestedIn,
+      lookingFor: this.profileData.lookingFor,
       language: this.profileData.language,
-      orientation: this.profileData.sexualOrientation,
-      photos: JSON.stringify(uploadedPhotos)
+      orientation: this.profileData.orientation,
+      age: this.profileData.age,
+      gender: this.profileData.gender,
+      address: this.profileData.address,
+      about: this.profileData.about,
+      photos: JSON.stringify(uploadedPhotos),
+      email: this.auth.currentUser?.email,
+      userId: this.auth.currentUser?.id,
+      status: this.auth.currentUser?.status,
+      interests: this.profileData.interests,
     };
 
     // Actualizar o crear perfil

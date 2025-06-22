@@ -83,10 +83,10 @@ export class RegisterComponent {
       confirmPassword: ['', Validators.required],
     
       // Paso 2 - Información personal
-      firstName: ['', Validators.required], // Se mapeará a name
+      name: ['', Validators.required], // Se mapeará a name
       address: ['', Validators.required],   // Si no necesitas address, puedes quitarlo aquí y en el backend
       birthday: ['', [Validators.required, this.validateAge]],
-      gender: ['Women', Validators.required],
+      gender: ['Mujer', Validators.required],
     
       // Paso 3 - Preferencias
       orientation: this.fb.group({

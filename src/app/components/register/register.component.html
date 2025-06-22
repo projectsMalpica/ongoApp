@@ -50,7 +50,6 @@
           <div class="location-pin pin-2"></div>
           <div class="location-pin pin-3"></div>
         </div>
-        
         <swiper-container 
           [slidesPerView]="swiperConfig.slidesPerView"
           [spaceBetween]="swiperConfig.spaceBetween"
@@ -295,9 +294,9 @@
           <form [formGroup]="clientForm">
             <div class="mb-3">
               <label class="form-label">Nombre *</label>
-              <input type="text" class="form-control" formControlName="firstName"
-                    [class.is-invalid]="f['firstName'].touched && f['firstName'].invalid">
-              <div *ngIf="f['firstName'].touched && f['firstName'].invalid" class="invalid-feedback">
+              <input type="text" class="form-control" formControlName="name"
+                    [class.is-invalid]="f['name'].touched && f['name'].invalid">
+              <div *ngIf="f['name'].touched && f['name'].invalid" class="invalid-feedback">
                 Por favor ingresa tu nombre
               </div>
             </div>
@@ -315,9 +314,9 @@
               <label class="form-label">Género *</label>
               <select class="form-control" formControlName="gender"
                       [class.is-invalid]="f['gender'].touched && f['gender'].invalid">
-                <option value="Women">Mujer</option>
-                <option value="Men">Hombre</option>
-                <option value="Other">Otro</option>
+                <option value="Mujer">Mujer</option>
+                <option value="Hombre">Hombre</option>
+                <option value="Otro">Otro</option>
               </select>
             </div>
           </form>
@@ -343,8 +342,8 @@
                 <!-- Usar formGroupName para agrupar los checkboxes -->
                 <div formGroupName="orientation">
                   <div class="form-check">
-                    <input class="form-check-input" type="checkbox" formControlName="straight" id="straight">
-                    <label class="form-check-label" for="straight">Straight</label>
+                    <input class="form-check-input" type="checkbox" formControlName="heterosexual" id="heterosexual">
+                    <label class="form-check-label" for="heterosexual">Heterosexual</label>
                   </div>
                   
                   <div class="form-check">
@@ -353,8 +352,8 @@
                   </div>
                   
                   <div class="form-check">
-                    <input class="form-check-input" type="checkbox" formControlName="lesbian" id="lesbian">
-                    <label class="form-check-label" for="lesbian">Lesbian</label>
+                    <input class="form-check-input" type="checkbox" formControlName="lesbiana" id="lesbiana">
+                    <label class="form-check-label" for="lesbiana">Lesbiana</label>
                   </div>
                   
                   <div class="form-check">
@@ -382,18 +381,21 @@
             <div class="mb-4">
               <label class="form-label">Interesado en *</label>
               <select class="form-control" formControlName="interestedIn">
-                <option value="Women">Mujeres</option>
-                <option value="Men">Hombres</option>
-                <option value="Other">Otros</option>
+                <option value="Mujeres">Mujeres</option>
+                <option value="Hombres">Hombres</option>
+                <option value="Otros">Otros</option>
               </select>
             </div>
             
             <div class="mb-4">
               <label class="form-label">Qué buscas *</label>
               <select class="form-control" formControlName="lookingFor">
-                <option value="Long-term partner">Relación seria</option>
-                <option value="Short-term fun">Diversión a corto plazo</option>
-                <option value="New friends">Nuevas amistades</option>
+                <option value="Relación seria">Relación seria</option>
+                <option value="Diversión a corto plazo">Diversión a corto plazo</option>
+                <option value="Nuevas amistades">Nuevas amistades</option>
+                <option value="Citas casuales">Citas casuales</option>
+                <option value="Abiert@ a opciones">Abiert&#64; a opciones</option>
+                <option value="Averiguarlo">Averiguarlo</option>
               </select>
             </div>
           </form>
