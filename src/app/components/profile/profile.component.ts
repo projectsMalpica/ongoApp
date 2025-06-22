@@ -90,7 +90,7 @@ export class ProfileComponent implements OnInit {
   newAvatar: File | null = null;
   avatar: File | null = null;
   avatarPreview: string | ArrayBuffer | null = null;
-
+  planningClients: any[] = [];
 constructor(
   public global: GlobalService,
   public auth: AuthPocketbaseService,
@@ -98,6 +98,7 @@ constructor(
 ){}
 async ngOnInit() {
   await this.loadProfileData();
+  this.global.initPlanningClientsRealtime();
 }
 
 async loadProfileData() {

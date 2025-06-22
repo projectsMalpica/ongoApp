@@ -14,6 +14,10 @@ private partnersSubject = new BehaviorSubject<any[]>([]);
 partners$ = this.partnersSubject.asObservable();
 private promosSubject = new BehaviorSubject<any[]>([]);
 promos$ = this.promosSubject.asObservable();
+private planningPartnersSubject = new BehaviorSubject<any[]>([]);
+planningPartners$ = this.planningPartnersSubject.asObservable();
+private planningClientsSubject = new BehaviorSubject<any[]>([]);
+planningClients$ = this.planningClientsSubject.asObservable();
 public selectedPartner: any = null;
 public selectedClient: any =null;
 public profileData: any = {
@@ -41,6 +45,8 @@ public profileData: any = {
     this.initClientesRealtime();
     this.initPartnersRealtime();
     this.initPromosRealtime();
+    this.initPlanningPartnersRealtime();
+    this.initPlanningClientsRealtime();
   }
   setRoute(route: string) {
     this.activeRoute = route;
@@ -105,6 +111,42 @@ public profileData: any = {
         current = current.filter((c: any) => c.id !== e.record.id);
       }
       this.promosSubject.next(current);
+    });
+  }
+  async initPlanningPartnersRealtime() {
+    // Fetch inicial
+    const result = await this.pb.collection('planningPartners').getFullList();
+    this.planningPartnersSubject.next(result);
+
+    // Suscripción realtime
+    this.pb.collection('planningPartners').subscribe('*', (e: any) => {
+      let current = this.planningPartnersSubject.getValue();
+      if (e.action === 'create') {
+        current = [...current, e.record];
+      } else if (e.action === 'update') {
+        current = current.map((c: any) => c.id === e.record.id ? e.record : c);
+      } else if (e.action === 'delete') {
+        current = current.filter((c: any) => c.id !== e.record.id);
+      }
+      this.planningPartnersSubject.next(current);
+    });
+  }
+  async initPlanningClientsRealtime() {
+    // Fetch inicial
+    const result = await this.pb.collection('planningClients').getFullList();
+    this.planningClientsSubject.next(result);
+
+    // Suscripción realtime
+    this.pb.collection('planningClients').subscribe('*', (e: any) => {
+      let current = this.planningClientsSubject.getValue();
+      if (e.action === 'create') {
+        current = [...current, e.record];
+      } else if (e.action === 'update') {
+        current = current.map((c: any) => c.id === e.record.id ? e.record : c);
+      } else if (e.action === 'delete') {
+        current = current.filter((c: any) => c.id !== e.record.id);
+      }
+      this.planningClientsSubject.next(current);
     });
   }
 }

@@ -3,39 +3,35 @@ import { Injectable, OnDestroy } from '@angular/core';
 import PocketBase from 'pocketbase';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-export interface Service {
+export interface PlanningPartner {
   name: string;
   images?: string[]; // JSON array
   status?: string;
+  description?: string;
+  items?: string[];
+  priceCOP?: number;
+  priceUSD?: number;
 }
 
-export interface Partner {
-  id: string;
-  name: string;
-  gender: string;
-  images?: string[]; // JSON array
-  services?: Service[];
-  IdMember?: string;
-  status?: string;
-}
+
 
 @Injectable({
   providedIn: 'root',
 })
-export class RealtimePartnerService implements OnDestroy {
+export class RealtimePlanningPartnerService implements OnDestroy {
   private pb: PocketBase;
-  private clientesSubject = new BehaviorSubject<Partner[]>([]);
+  private planningPartnerSubject = new BehaviorSubject<PlanningPartner[]>([]);
 
   // Observable for components to subscribe to
-  public clientes$: Observable<Partner[]> =
-    this.clientesSubject.asObservable();
+  public planningPartner$: Observable<PlanningPartner[]> =
+    this.planningPartnerSubject.asObservable();
 
   constructor() {
     this.pb = new PocketBase('https://db.ongomatch.com:8090');
-    this.subscribeToClientes();
+    this.subscribeToPromos();
   }
 
-  private async subscribeToClientes() {
+  private async subscribeToPromos() {
     try {
       // (Optional) Authentication
       await this.pb
@@ -43,7 +39,7 @@ export class RealtimePartnerService implements OnDestroy {
         .authWithPassword('admin@email.com', 'admin1234');
 
       // Subscribe to changes in any record of the 'professionals' collection
-      this.pb.collection('usuariosPartner').subscribe('*', (e : any) => {
+      this.pb.collection('planningPartners').subscribe('*', (e : any) => {
         this.handleRealtimeEvent(e);
       });
 
@@ -65,25 +61,25 @@ export class RealtimePartnerService implements OnDestroy {
   private async updatePartnerList() {
     try {
       // Get the updated list of professionals
-      const records = await this.pb.collection('usuariosPartner').getFullList<Partner>(200, {
+      const records = await this.pb.collection('planningPartners').getFullList<PlanningPartner>(200, {
         sort: '-created', // Sort by creation date
       });
 
       // Ensures each record conforms to Partner structure
-      const partners = records.map((record: any) => ({
+      const planningPartner = records.map((record: any) => ({
         ...record,
         images: Array.isArray(record.images) ? record.images : [],
-        services: Array.isArray(record.services) ? record.services : [],
-      })) as Partner[];
+        items: Array.isArray(record.items) ? record.items : [],
+      })) as PlanningPartner[];
 
-      this.clientesSubject.next(partners);
+      this.planningPartnerSubject.next(planningPartner);
     } catch (error) {
-      console.error('Error updating clientes list:', error);
+      console.error('Error updating planningPartner list:', error);
     }
   }
 
   ngOnDestroy() {
     // Unsubscribe when the service is destroyed
-    this.pb.collection('usuariosPartner').unsubscribe('*');
+    this.pb.collection('planningPartners').unsubscribe('*');
   }
 }

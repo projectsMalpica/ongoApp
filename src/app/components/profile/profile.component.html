@@ -142,48 +142,20 @@
                 
                 <div class="swiper subscription-swiper">
                     <div class="swiper-wrapper">
-                        <div class="swiper-slide">
+                        <div class="swiper-slide" *ngFor="let planning of global.planningClients$ | async">
                             <div class="dz-content subscription-card">
                                 <div class="card-header">
-                                    <h5 class="title">OnGo Plus</h5>
-                                    <div class="price">$9.99<span>/mes</span></div>
+                                    <h5 class="title">{{planning.name}}</h5>
+                                    <div class="price">{{planning.priceCOP}}<span>/mes</span></div>
+                                    <div class="price">{{planning.priceUSD}}<span>/mes</span></div>
                                 </div>
                                 <ul class="features-list">
-                                    <li>Interacciones ilimitadas</li>
-                                    <li>Ver quién te dio like</li>
-                                    <li>5 Super Likes al mes</li>
+                                    <li>{{planning.items}}</li>
                                 </ul>
                                 <a class="btn rounded-xl">Suscribirse</a>
                             </div>
                         </div>
-                        <div class="swiper-slide">
-                            <div class="dz-content subscription-card">
-                                <div class="card-header">
-                                    <h5 class="title">OnGo Gold</h5>
-                                    <div class="price">$19.99<span>/mes</span></div>
-                                </div>
-                                <ul class="features-list">
-                                    <li>Todas las características Plus</li>
-                                    <li>Super Likes ilimitados</li>
-                                    <li>Perfil destacado</li>
-                                </ul>
-                                <a class="btn rounded-xl">Suscribirse</a>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="dz-content subscription-card">
-                                <div class="card-header">
-                                    <h5 class="title">OnGo Platinum</h5>
-                                    <div class="price">$29.99<span>/mes</span></div>
-                                </div>
-                                <ul class="features-list">
-                                    <li>Todas las características Gold</li>
-                                    <li>Análisis de perfil avanzado</li>
-                                    <li>Soporte prioritario</li>
-                                </ul>
-                                <a class="btn rounded-xl">Suscribirse</a>
-                            </div>
-                        </div>
+                       
                     </div>
                     <div class="swiper-btn">
                         <div class="swiper-pagination style-1 flex-1"></div>
