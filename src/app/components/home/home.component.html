@@ -1,14 +1,15 @@
 	<!-- Page Content Start -->
 	<div class="page-content space-top p-b65">
 		<div class="container fixed-full-area">
-			<div class="dzSwipe_card-cont dz-gallery-slider">
-				<div class="dzSwipe_card" *ngFor="let cliente of clientes">
+			<div class="dzSwipe_card-cont dz-gallery-slider"*ngFor="let cliente of clientes">
+				<div class="dzSwipe_card" >
 					<div class="dz-media">
-						<img [src]="cliente.photos?.[0] || 'assets/images/avatar/1.png'" alt="">					</div>
+						<img [src]="cliente.avatar || 'assets/images/avatar/1.png'" alt="">					
+					</div>
 					<div class="dz-content">
 						<div class="left-content">
 							<span class="badge badge-primary d-inline-flex gap-1 mb-2"><i class="icon feather icon-map-pin"></i>{{cliente.address}}</span>
-							<h4 class="title"><a (click)="global.previewClient(cliente)">{{cliente.name}} </a></h4>
+							<h4 class="title"><a (click)="global.previewClient(cliente)" style="cursor: pointer">{{cliente.name}} </a></h4>
 							<p class="mb-0"><i class="icon feather icon-user"></i> {{cliente.gender}}</p>
 						</div>
 						<a  class="dz-icon dz-sp-like"><i class="flaticon flaticon-star-1"></i></a>

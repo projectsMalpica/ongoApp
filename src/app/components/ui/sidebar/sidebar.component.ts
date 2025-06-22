@@ -8,6 +8,7 @@ import { AuthPocketbaseService } from '../../../services/authPocketbase.service'
   styleUrls: ['./sidebar.component.css']
 })
 export class SidebarComponent implements OnInit {
+  clientes: any[] = [];
   constructor(
     public global: GlobalService,
     public auth: AuthPocketbaseService
@@ -19,5 +20,11 @@ export class SidebarComponent implements OnInit {
     if (currentUser) {
       this.auth.setUser(currentUser); // Actualizar el usuario en el servicio
     }
+    this.global.clientes$.subscribe((clientes : any[]) => {
+      this.clientes = clientes;
+    });
+    
+    console.log('Avatar en profileData:', this.global.profileData.avatar);
+
   }
 }

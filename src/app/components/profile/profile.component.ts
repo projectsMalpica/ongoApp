@@ -137,6 +137,8 @@ async loadProfileData() {
     if (this.profileData.interests) {
       this.selectedInterests = this.profileData.interests.split(',').map((i: string) => i.trim());
     }
+    // Al final de loadProfileData()
+    this.global.profileData = { ...this.profileData };
   } catch (error) {
     console.error('Error cargando perfil:', error);
   }

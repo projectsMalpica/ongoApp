@@ -16,6 +16,25 @@ private promosSubject = new BehaviorSubject<any[]>([]);
 promos$ = this.promosSubject.asObservable();
 public selectedPartner: any = null;
 public selectedClient: any =null;
+public profileData: any = {
+  name: '',
+  gender: '',
+  userId: '',
+  status: '',
+  photos: [],
+  birthday: '',
+  interestedIn: '',
+  email: '',
+  orientation: '',
+  lookingFor: '',
+  address: '',
+  language: '',
+  about: '',
+  age: null,
+  interests: [],
+  avatar: '',
+};
+
   constructor(
    
   ) { 

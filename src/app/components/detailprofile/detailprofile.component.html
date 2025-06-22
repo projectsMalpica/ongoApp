@@ -4,8 +4,7 @@
         <div class="detail-area">
             <div class="dz-media-card style-2">
                 <div class="dz-media">
-                    <img src="../assets/images/w3tinder/liked/pic4.png" alt="">
-                </div>
+                    <img [src]="global.selectedClient.avatar || 'assets/images/w3tinder/liked/pic4.png'" alt="">                </div>
                 <div class="dz-content">
                     <div class="left-content">
                         <h4 class="title">{{global.selectedClient.name}}, {{global.selectedClient.age}} </h4>
