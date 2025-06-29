@@ -22,6 +22,7 @@ public selectedPartner: any = null;
 public selectedServicesPartner: string[] = [];
 public selectedClient: any =null;
 public photosPartner: any[] = [];
+public allServices: { value: string; label: string }[] = [];
 public profileData: any = {
   name: '',
   gender: '',
@@ -42,6 +43,7 @@ public profileData: any = {
 };
 
 profileDataPartner: any = {
+  avatar: '',
   venueName: '',
   userId: '',
   status: '',

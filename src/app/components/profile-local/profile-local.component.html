@@ -1,20 +1,23 @@
 <!-- Page Content Start -->
 <div class="page-content space-top p-b60" *ngIf="!isEditProfile">
-    <div class="container pt-0"> 
+  <div class="container pt-0"> 
         <div class="profile-area">
             <div class="main-profile">
                 <div class="about-profile">
                   
                     <div class="media rounded-circle position-relative">
-                        <img [src]="global.profileDataPartner.files" alt="profile-image" class="profile-avatar">
-                        <svg class="radial-progress m-b20" data-percentage="40" viewBox="0 0 80 80">
+                      <img [src]="global.profileDataPartner.avatar" alt="profile-image" class="profile-avatar">
+                      <svg class="radial-progress m-b20" data-percentage="40" viewBox="0 0 80 80">
                             <circle class="incomplete" cx="40" cy="40" r="35"></circle>
                             <circle class="complete" cx="40" cy="40" r="35" style="stroke-dashoffset: 39.58406743523136;"></circle>
                         </svg>
                     </div>
-                    <a (click)="isEditProfile = true" class="edit-profile dz-icon">
+                    <!-- <a (click)="isEditProfile = true" class="edit-profile dz-icon">
                         <i class="flaticon flaticon-pencil-2"></i>
-                    </a>
+                    </a> -->
+                    <a (click)="activarEdicion()" class="edit-profile dz-icon">
+                      <i class="flaticon flaticon-pencil-2"></i>
+                  </a>
                 </div>
                 
                 <div class="profile-detail">
@@ -34,9 +37,11 @@
                   <div class="about" style="margin-bottom: 1rem;">
                       <h6 class="title">Somos  {{global.profileDataPartner.venueName}}</h6>
                       <p class="para-text">{{global.profileDataPartner.description}}</p>	
+                      <p class="para-text"><i class="icon feather icon-map-pin me-2"></i><span style="color: #FF50A2;">{{global.profileDataPartner.address}}</span></p> 
                       <h6 class="para-text"><i class="icon feather icon-phone me-2"></i><span style="color: #FF50A2;">{{global.profileDataPartner.phone}}</span></h6>				
                       <h6 class="para-text"><i class="icon feather icon-mail me-2"></i><span style="color: #FF50A2;">{{global.profileDataPartner.email}}</span></h6>				
                   </div>
+
                   <div class="about" style="margin-bottom: 1rem;">
                       <h6 class="title">Capacidad:</h6>
                       <ul class="dz-tag-list">
@@ -124,8 +129,9 @@
                                     <div class="price">{{planning.priceUSD}}<span>/mes</span></div>
                                 </div>
                                 <ul class="features-list">
-                                    <li>{{planning.items}}</li>
+                                    <li class="feature-item list-item">{{planning.items}}</li>
                                 </ul>
+                                
                                 <a class="btn rounded-xl">Suscribirse</a>
                             </div>
                         </div>
@@ -136,7 +142,183 @@
                     </div>
                 </div>
             </div>
+
+           
         </div>
     </div> 
 </div>
+
+<div class="page-content space-top" *ngIf="isEditProfile">
+  <div class="container edit-profile-container"> 
+    <!-- Sección de avatar -->
+    <div class="profile-area">
+      <div class="main-profile">
+        <div class="about-profile">
+          <div class="media rounded-circle">
+            <img [src]="avatarPreview || global.profileDataPartner.avatar || auth.currentUser?.avatar" alt="profile-image">
+            <input type="file" accept="image/*" (change)="onAvatarSelected($event)" class="d-none" #avatarInput>
+            <button type="button" class="btn btn-sm btn-primary mt-2" (click)="avatarInput.click()">
+              Cambiar foto
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Galería de imágenes y campos editables -->
+    <div class="gallery-section">
+      <!-- <div class="row g-2 m-b30" data-masonry='{"percentPosition": true }'>
+        <div class="col-4" *ngFor="let photo of photosPartner; let i = index">
+          <div class="dz-drop-box style-2">
+            <div class="drop-bx">
+              <div class="imagePreview" [style.backgroundImage]="'url(' + (photo.url || '../assets/images/recent-pic/drop-bx2.png') + ')'">
+                <label [attr.for]="'imageUpload' + i" class="add-btn">
+                  <i class="icon feather icon-plus"></i>
+                </label>
+                <div class="remove-img remove-btn" (click)="removePhoto(i)">
+                  <i class="icon feather icon-x"></i>
+                </div>
+                <input type="file" [id]="'imageUpload' + i" class="form-control d-none imageUpload" 
+                       (change)="onPhotoSelectedPartner($event, i)" accept=".png, .jpg, .jpeg">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-gradient mb-3 btn-block rounded-xl" (click)="addPhoto()">
+        AÑADIR MEDIA
+      </button> -->
+      
+      <!-- Campos editables -->
+      <div class="card style-4">
+        <div class="card-header">
+          <label for="venueName">Nombre</label>
+        </div>
+        <div class="card-body">
+          <input type="text" class="form-control" name="venueName" id="venueName" [(ngModel)]="global.profileDataPartner.venueName" placeholder="Nombre del lugar" />
+        </div>
+      </div>
+      <div class="card style-4">
+        <div class="card-header">
+          <label for="address">Dirección</label>
+        </div>
+        <div class="card-body">
+          <input type="text" class="form-control" name="address" id="address" [(ngModel)]="global.profileDataPartner.address" placeholder="Medellín, Colombia" />
+        </div>
+      </div>
+      <div class="card style-4">
+        <div class="card-header">
+          <label for="description">Biografia</label>
+        </div>
+        <div class="card-body">
+          <input type="text" class="form-control" name="description" id="description" [(ngModel)]="global.profileDataPartner.description" placeholder="Hola, me encanta bailar" />
+        </div>
+      </div>
+      <div class="card style-4">
+        <div class="card-header">
+          <label for="phone">Télefono</label>
+        </div>
+        <div class="card-body">
+          <input type="number" class="form-control" name="phone" id="phone" [(ngModel)]="global.profileDataPartner.phone" placeholder="ingresa tu telefono" />
+        </div>
+      </div>
+      <div class="card style-4">
+        <div class="card-header">
+          <label for="email">Correo</label>
+        </div>
+        <div class="card-body">
+          <input type="email" class="form-control" name="email" id="email" [(ngModel)]="global.profileDataPartner.email" placeholder="ingresa tu correo" />
+        </div>
+      </div>
+      <div class="card style-4">
+        <div class="card-header">
+          <label for="capacity">Capacidad</label>
+        </div>
+        <div class="card-body">
+          <input type="number" class="form-control" name="capacity" id="capacity" [(ngModel)]="global.profileDataPartner.capacity" placeholder="ingresa tu telefono" />
+        </div>
+      </div>
+      <div class="card style-4">
+        <div class="card-header">
+          <label for="openingHours">Horario de apertura</label>
+        </div>
+        <div class="card-body">
+          <input type="text" class="form-control" name="openingHours" id="openingHours" [(ngModel)]="global.profileDataPartner.openingHours" placeholder="ingresa tu telefono" />
+        </div>
+      </div>
+     
+      <div class="card style-4">
+        <div class="card-header">
+          <h6 class="title mb-0">Servicios</h6>
+        </div>
+        <div class="card-body">
+          <a href="javascript:void(0);" class="setting-input" 
+             data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom1Local" aria-controls="offcanvasBottom1Local">
+            <span>{{global.profileDataPartner.services || 'Servicios'}}</span>
+            <i class="icon feather dz-flex-box icon-chevron-right ms-auto me-0"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Botones de acción fijos en la parte inferior -->
+    <div class="action-buttons">
+      <div class="d-flex gap-2">
+        <button type="button" class="btn btn-light flex-grow-1" (click)="cancelEdit()">
+          Cancelar
+        </button>
+        <button type="button" class="btn btn-primary flex-grow-1" (click)="saveProfile()">
+          Guardar
+        </button>
+      </div>
+    </div>
+  </div> 
+</div>
 <!-- Page Content End -->
+
+<!-- Service OffCanvas -->
+<div class="offcanvas offcanvas-bottom services" tabindex="-1" id="offcanvasBottom1Local">
+  <div class="offcanvas-header share-style">
+    <h6 class="title mb-0">Servicios</h6>
+    <button type="button" class="btn-close dz-flex-box" data-bs-dismiss="offcanvas" aria-label="Close">
+      <i class="icon feather icon-x font-22"></i>
+    </button>
+  </div>
+  <div class="offcanvas-body">
+    <div class="input-group input-group-icon search-input">
+  <input type="search" class="form-control ms-0" 
+         placeholder="Buscar..." 
+         [(ngModel)]="serviceSearch" 
+         (input)="filterServices()">
+  <div class="input-group-text">
+    <div class="input-icon">
+      <i class="icon feather icon-search"></i>
+    </div>
+  </div>
+</div>
+<!-- Agregar nuevo servicio -->
+<div class="input-group mt-2" *ngIf="showAddServiceOption()">
+  <input type="text" class="form-control" [value]="serviceSearch" readonly>
+  <button class="btn btn-outline-primary" type="button" (click)="addService(serviceSearch)">
+    Agregar "{{serviceSearch}}"
+  </button>
+</div>
+    <ul class="dz-tag-list style-2">
+      <li *ngFor="let service of filteredServices">
+        <div class="dz-tag" 
+             [class.active]="selectedServices.includes(service.value)"
+             (click)="toggleService(service)">
+          <span>{{service.value}}</span>
+        </div>
+      </li>
+    </ul>
+    <div class="mt-3">
+      <button class="btn btn-primary w-100" 
+              data-bs-dismiss="offcanvas"
+              (click)="saveServices()">
+        Guardar
+      </button>
+    </div>
+  </div>
+</div>
+

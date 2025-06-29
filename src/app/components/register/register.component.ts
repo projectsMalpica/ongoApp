@@ -101,7 +101,7 @@ export class RegisterComponent {
       interestedIn: ['', Validators.required],
       lookingFor: ['', Validators.required],
       // Paso 4
-      photo: ['', Validators.required],
+      /* photo: ['', Validators.required], */
     
       // Términos y condiciones
       terms: [false, Validators.requiredTrue]
