@@ -23,6 +23,7 @@ public selectedServicesPartner: string[] = [];
 public selectedClient: any =null;
 public photosPartner: any[] = [];
 public allServices: { value: string; label: string }[] = [];
+promosByPartner: any[] = [];
 public profileData: any = {
   name: '',
   gender: '',

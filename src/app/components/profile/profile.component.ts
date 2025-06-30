@@ -257,7 +257,9 @@ saveGender() {
         data.userId = this.auth.currentUser?.id;
         await this.pb.collection('usuariosClient').create(data);
       }
-  
+      const updated = await this.pb.collection('usuariosClient').getOne(existingProfile?.id || '');
+      this.global.profileDataPartner.avatar = this.pb.files.getUrl(updated, updated['avatar']);
+
       console.log('Perfil actualizado correctamente');
       this.isEditProfile = false;
     } catch (error) {

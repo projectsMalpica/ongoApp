@@ -14,4 +14,15 @@
     display: list-item; /* asegúrate de que se comporten como ítems de lista */
     margin-bottom: 0.5rem; /* espaciado entre ítems */
   }
+  .custom-toast {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 1055;
+    border-radius: 1rem;
+    background-color: #28a745; /* o tu color primario */
+    color: white;
+    font-weight: 500;
+    transition: all 0.3s ease-in-out;
+  }
   

@@ -12,9 +12,7 @@
                             <circle class="complete" cx="40" cy="40" r="35" style="stroke-dashoffset: 39.58406743523136;"></circle>
                         </svg>
                     </div>
-                    <!-- <a (click)="isEditProfile = true" class="edit-profile dz-icon">
-                        <i class="flaticon flaticon-pencil-2"></i>
-                    </a> -->
+                    
                     <a (click)="activarEdicion()" class="edit-profile dz-icon">
                       <i class="flaticon flaticon-pencil-2"></i>
                   </a>
@@ -82,21 +80,23 @@
           </div>
             <div class="stats-cards">
                 <div class="row g-2 mb-4">
-                    <div class="col-6">
-                        <div class="card style-2 stats-card">
-                            <div class="card-body">
-                                <a href="javascript:void(0);" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom">	
-                                    <div class="card-icon">
-                                        <i class="flaticon flaticon-star-1"></i>
-                                    </div>
-                                    <div class="card-content">
-                                        <p>Promociones</p>
-                                        <div class="stat-value">0</div>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
+                  <div class="col-6">
+                    <div class="card style-2 stats-card">
+                      <div class="card-body">
+                        <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#promoOptionsModal">
+                          <div class="card-icon">
+                            <i class="flaticon flaticon-star-1"></i>
+                          </div>
+                          <div class="card-content">
+                            <p>Promociones</p>
+                            <div class="stat-value">{{global.promosByPartner.length || 0}}</div>
+                          </div>
+                        </a>
+                        
+                      </div>
                     </div>
+                  </div>
+                  
                     <div class="col-6">
                         <div class="card style-2 stats-card">
                             <div class="card-body">
@@ -321,4 +321,126 @@
     </div>
   </div>
 </div>
+<div 
+  class="custom-toast alert alert-success animate__animated animate__fadeInDown"
+  *ngIf="showSuccessToast"
+>
+  ✅ Perfil actualizado correctamente.
+</div>
 
+<div class="modal fade" id="promoModal" tabindex="-1" aria-labelledby="promoModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rounded-4">
+      <div class="modal-header border-0">
+        <h5 class="modal-title" id="promoModalLabel">Agregar Promoción o Evento</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="savePromotion()">
+          <div class="mb-3">
+            <label for="promoName" class="form-label">Título</label>
+            <input type="text" class="form-control" id="promoName" [(ngModel)]="newPromo.name" name="name" required>
+          </div>
+          <div class="mb-3">
+            <label for="promoDesc" class="form-label">Descripción</label>
+            <textarea class="form-control" id="promoDesc" [(ngModel)]="newPromo.description" name="description" rows="3"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="promoDate" class="form-label">Fecha</label>
+            <input type="date" class="form-control" id="promoDate" [(ngModel)]="newPromo.date" name="date">
+          </div>
+          <div class="mb-3">
+            <label for="promoImage" class="form-label">Imagen</label>
+            <input type="file" class="form-control" id="promoImage" (change)="onPromoImageSelected($event)">
+          </div>
+          
+          <div class="modal-footer border-0 pt-0">
+            <button type="submit" class="btn btn-primary w-100">
+  {{ isEditingPromo ? 'Guardar cambios' : 'Guardar promoción' }}
+</button>
+          </div>
+          <div class="modal-footer border-0 pt-0">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="cancelPromo()">Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<div 
+  class="custom-toast alert alert-info shadow-sm border-0 px-4 py-3 animate__animated animate__fadeInDown"
+  *ngIf="successPromoToast"
+>
+  🎉 Promoción guardada exitosamente.
+</div>
+
+<div class="modal fade" id="promoOptionsModal" tabindex="-1" aria-labelledby="promoOptionsLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="promoOptionsLabel">Promociones</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body text-center">
+        <button class="btn btn-primary mb-2 w-100" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#promoModal">
+          ➕ Agregar nueva promoción
+        </button>
+        <button class="btn btn-outline-info w-100" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#promoListModal">
+          👁 Ver promociones
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para ver promociones -->
+<div class="modal fade" id="promoListModal" tabindex="-1" aria-labelledby="promoListModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="promoListModalLabel">Promociones</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <div class="container-fluid">
+          <div class="row g-2">
+            <div class="col-12 col-md-6" *ngFor="let promo of global.promosByPartner">
+              <div class="dz-media-card style-5 mb-3">
+                <a class="dz-media">
+                  <img [src]="promo.files && promo.files[0] ? promo.files[0] : 'https://via.placeholder.com/300x200?text=Sin+imagen'" alt="" style="width:100%;max-height:200px;object-fit:cover;">                </a>
+                <div class="dz-content">
+                  <div class="left-content">
+                    <h6 class="title">{{promo.name}}</h6>
+                    <span class="about">{{promo.description}}</span>
+                  </div>
+                  <div class="meta-btn">
+                    <a class="btn w-100 font-16 p-2 btn-sm btn-danger light border-danger" (click)="deletePromo(promo)">
+                      <i class="feather icon-x"></i>
+                      <span>Eliminar</span>
+                    </a>
+                    <a class="btn w-100 font-16 p-2 btn-sm btn-info light border-info" (click)="editPromo(promo)">
+  <i class="feather icon-heart-on"></i>
+  <span>Editar</span>
+</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="!global.promosByPartner.length" class="text-center text-muted py-4">
+              No hay promociones registradas.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div 
+  class="custom-toast alert alert-info shadow-sm border-0 px-4 py-3 animate__animated animate__fadeInDown"
+  *ngIf="successPromoToast"
+>
+  🎉 Promoción borrada exitosamente.
+</div>
