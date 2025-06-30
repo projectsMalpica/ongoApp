@@ -37,7 +37,6 @@ description: '',
 date: '',
 files:[],
 userId: '',
-
 };
 showPromos = false;
 
@@ -60,7 +59,7 @@ async ngOnInit() {
 
 ngAfterViewInit() {
   // Limpia backdrop y clase modal-open al cerrar cualquier modal relevante
-  ['promoModal', 'promoListModal'].forEach(id => {
+  ['promoModal', 'promoListModal', 'promoOptionsModal'].forEach(id => {
     const modalEl = document.getElementById(id);
     if (modalEl) {
       modalEl.addEventListener('hidden.bs.modal', () => {
@@ -499,6 +498,11 @@ editPromo(promo: any) {
   }, 100);
 }
 openPromoModal() {
+  // Limpieza antes de abrir
+  const backdrop = document.querySelector('.modal-backdrop');
+  if (backdrop) backdrop.remove();
+  document.body.classList.remove('modal-open');
+
   const modalEl = document.getElementById('promoModal');
   if (modalEl) {
     const modalInstance = (window as any).bootstrap?.Modal?.getOrCreateInstance(modalEl) || (window as any).bootstrap?.Modal?.getInstance(modalEl);

@@ -12,15 +12,14 @@
 			</a>
 			<ul class="nav navbar-nav">	
 				<li>
-					<a class="nav-link active" (click)="global.setRoute('home')">
-						<span class="dz-icon">
+					<a class="nav-link active" (click)="global.setRoute(auth.isPartner() ? 'home-local' : 'home')">						<span class="dz-icon">
 							<i class="icon feather icon-home"></i>
 						</span>
 						<span>Inicio</span>
 					</a>
 				</li>
 				<li>
-					<a class="nav-link" (click)="global.setRoute('profile')">
+					<a class="nav-link" (click)="global.setRoute(auth.isPartner() ? 'profile-local' : 'profile')">
 						<span class="dz-icon">
 							<i class="icon feather icon-user"></i>
 						</span>

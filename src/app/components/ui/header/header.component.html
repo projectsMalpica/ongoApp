@@ -8,7 +8,7 @@
                     </a>
                 </div>
                 <div class="mid-content header-logo">
-                    <a (click)="global.setRoute('home')">
+                    <a (click)="global.setRoute(auth.isPartner() ? 'home-local' : 'home')">
                         <img src="assets/images/logo.png" alt="">
                     </a>
                 </div>

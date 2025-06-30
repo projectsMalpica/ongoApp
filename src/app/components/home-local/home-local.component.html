@@ -1,0 +1,95 @@
+<div class="page-content space-top p-b60">
+    <div class="container pt-0"> 
+        <div class="profile-area style-2">
+            <div class="main-profile">
+                <div class="about-profile">
+                    <div class="media rounded-circle">
+                        <img [src]="global.profileDataPartner.avatar" alt="profile-image">
+                        <svg class="radial-progress m-b20" data-percentage="40" viewBox="0 0 80 80">
+                            <circle class="incomplete" cx="40" cy="40" r="35"></circle>
+                            <circle class="complete" cx="40" cy="40" r="35" style="stroke-dashoffset: 39.58406743523136;"></circle>
+                        </svg>
+                    </div>
+                </div>
+                <div class="profile-detail">
+                    <h4 class="name">{{global.profileDataPartner.venueName}}</h4>
+                    <p>{{global.profileDataPartner.description}}</p>
+                    <a  class="chat-bubble" (click)="global.setRoute('profile-local')" style="cursor: pointer;"> <i class="fa-solid fa-comment"></i>Configurar perfil</a>
+                </div>
+            </div>
+            <div class="row g-2 mb-2">
+                <div class="col-6">
+                    <div class="card card-bx">
+                        <div class="card-body">
+                            <div class="media">
+                                <div class="media-35 m-r10">
+                                    <img src="../assets/images/w3badoo/icon/meter.png" alt="">
+                                </div>
+                                <div>
+                                    <span class="heading font-15">Actividad</span>
+                                    <h6 class="mb-0 title font-15">.</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="card card-bx">
+                        <div class="card-body">
+                            <div class="media">
+                                <div class="media-35 m-r10">
+                                    <img src="../assets/images/w3badoo/icon/coin.png" alt="">
+                                </div>
+                                <div>
+                                    <span class="heading font-15">Creditos</span>
+                                    <h6 class="mb-0 title font-15">₹1550</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="card card-bx">
+                        <div class="card-body">
+                            <div class="media">
+                                <div class="media-35 m-r10">
+                                    <img src="../assets/images/w3badoo/icon/user.png" alt="">
+                                </div>
+                                <div>
+                                    <span class="heading font-15">Visitas</span>
+                                    <h6 class="mb-0 title font-15">₹1550</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="dz-subscribe-area">
+                <div class="subscribe-area-top">
+                    <div class="swiper subscription-swiper2">
+                        <div class="swiper-wrapper mb-3">
+                            <div class="swiper-slide" data-card="premium-plus">
+                                <div class="subscribe-box style-2 premium-plus">
+                                    <h5 class="title"><img src="../assets/images/w3badoo/icon/fire.png" alt="">W3Badoo Premium Plus</h5>
+                                    <p class="desc">Maximize your dating with all the benefits of Premium, plus extra features included</p>
+                                    <div class="plan-price">Upgrade From 1,125.00 INR</div>
+                                </div>
+                            </div>
+                            <div class="swiper-slide" data-card="premium">
+                                <div class="subscribe-box style-2 premium">
+                                    <h5 class="title"><img src="../assets/images/w3badoo/icon/fire.png" alt="">W3Badoo Premium</h5>
+                                    <p class="desc">Maximize your dating with all the benefits of Premium, plus extra features included</p>
+                                    <div class="plan-price">Upgrade From 1,125.00 INR</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-btn">
+                            <div class="swiper-pagination style-1 flex-1"></div>
+                        </div>
+                    </div>
+                </div>
+               
+            </div>
+        </div>
+    </div> 
+</div>
