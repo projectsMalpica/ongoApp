@@ -1,15 +1,39 @@
-.content-body {
+
+  
+  .content-body {
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background-color: rgb(0, 9, 45);
+    background: url('/assets/images/background-map.png') no-repeat center center;
+    background-size: cover;
+    position: relative;
+  }
+  
+  .content-body::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 9, 45, 0.85); /* Fondo oscuro transparente encima del mapa */
+    z-index: 0;
   }
   
   .welcome-area {
+    position: relative;
+    z-index: 1; /* Asegura que el contenido esté por encima del overlay */
     width: 100%;
     max-width: 400px;
     padding: 2rem;
+  }
+  
+  .logo-area img {
+    max-width: 150px;
+    margin-bottom: 0.5rem;
+  }
+  
+  .para-title {
+    color: #fff;
+    font-size: 1.1rem;
   }
   
   .logo-area {
@@ -27,15 +51,31 @@
     font-size: 1.1rem;
   }
   
+  
   .login-form {
-    background:#00092d2e;
+    background: rgba(0, 0, 0, 0.5);
     padding: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.62);
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px); /* Difumina el fondo del formulario */
+    color: white;
   }
   
   .form-group {
     margin-bottom: 1.5rem;
+  }
+  .form-group input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    background: rgba(255, 255, 255, 0.9);
+    color: #000;
+  }
+  
+  .form-group input::placeholder {
+    color: #999;
   }
   
   .form-group label {
@@ -44,13 +84,7 @@
     font-weight: 500;
   }
   
-  .form-group input {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 1rem;
-  }
+  
   
   .remember-forgot {
     display: flex;
@@ -93,18 +127,21 @@
     font-weight: 500;
     text-decoration: none;
   }
-  
   .btn-primary {
-    background-color: #430d7f;
+    background: linear-gradient(90deg, #ff4e8e, #f70192);
+    color: white;
     border: none;
     padding: 0.75rem;
+    border-radius: 8px;
     font-size: 1rem;
-    transition: background-color 0.3s;
+    transition: opacity 0.3s;
   }
   
   .btn-primary:hover {
-    background-color: #2d4a6d;
+    opacity: 0.85;
   }
+  
+  
   
   .btn-primary:disabled {
     background-color: #FF50A2;
@@ -182,3 +219,5 @@
   .modal-body {
     padding: 1.5rem;
   }
+
+  

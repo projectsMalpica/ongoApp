@@ -12,7 +12,7 @@ import PocketBase from 'pocketbase';
 export class HomeComponent implements OnInit {
   clientes: any[] = [];
   pb: PocketBase;
-  
+  touchStartTime = 0;
 constructor(public global: GlobalService){
   this.pb = this.global.pb;
 }
@@ -25,7 +25,8 @@ abrirChat(cliente: any) {
   this.global.selectedClient = cliente; // Guarda el cliente seleccionado
   this.global.activeRoute = 'chat-detail'; // Cambia a la vista de chat
 }
-
+ 
+  
 }
 
 

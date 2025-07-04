@@ -12,8 +12,7 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./chat-detail.component.css']
 })
 export class ChatDetailComponent implements OnInit {
-
-  @Input() user: any;
+  @Input() user!: any;
   messages: any[] = [];
   newMessage = '';
   private subscription!: Subscription;
@@ -28,12 +27,19 @@ export class ChatDetailComponent implements OnInit {
     this.chatService.subscribeToMessages(this.user.id);
   }
 
-  async sendMessage() {
+ /*  async sendMessage() {
     if (!this.newMessage.trim()) return;
     await this.chatService.sendMessage(this.user.id, this.newMessage.trim());
     this.newMessage = '';
+  } */
+  async sendMessage() {
+    if (!this.newMessage.trim()) return;
+    if (!this.user?.id) return; // ✅ Verifica que user esté definido
+  
+    await this.chatService.sendMessage(this.user.id, this.newMessage.trim());
+    this.newMessage = '';
   }
-
+  
   ngOnDestroy() {
     this.chatService.unsubscribe();
     this.subscription?.unsubscribe();
