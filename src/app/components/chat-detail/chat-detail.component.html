@@ -1,42 +1,29 @@
 <div class="page-content space-top p-b50">
     <div class="container"> 
         <div class="chat-box-area style-2"> 
-            <div class="chat-content">
+            <div *ngFor="let message of messages" [ngClass]="{'chat-content user': message.sender === 'me', 'chat-content': message.sender !== 'me'}">
                 <div class="message-item">
-                    <div class="bubble">Hi Richard , thanks for adding me</div>    
-                    <div class="message-time">08:35</div>    
-                </div>
-            </div>
-            <div class="chat-content user">
-                <div class="message-item">
-                    <div class="bubble">Hi Miselia , your welcome , nice to meet you too</div>    
-                    <div class="message-time">08:40</div>    
-                </div>
-            </div>
-            <div class="chat-content">
-                <div class="message-item">
-                    <div class="bubble">I look you're singer, can you sing for me</div>    
-                    <div class="message-time">9:44 AM</div>    
-                </div>
-            </div>
-            <div class="chat-content user">
-                <div class="message-item">
-                    <div class="bubble">Sure</div>    
-                    <div class="message-time">9.30 AM</div>    
-                </div>
-            </div>
-            <div class="chat-content">
-                <div class="message-item">
-                    <div class="bubble">Really!</div>    
-                    <div class="message-time">10:44 AM</div>    
-                </div>
-            </div>
-            <div class="chat-content user">
-                <div class="message-item">
-                    <div class="bubble">Why not</div>    
-                    <div class="message-time">10:44 AM</div>    
+                    <div class="bubble">{{ message.text }}</div>    
+                    <div class="message-time">{{ message.time }}</div>    
                 </div>
             </div>
         </div>
+        <div class="page-content space-top p-b50">
+            <div class="container"> 
+              <div class="chat-box-area style-2"> 
+                <div *ngFor="let message of messages" [ngClass]="{'chat-content user': message.sender === user.id, 'chat-content': message.sender !== user.id}">
+                  <div class="message-item">
+                    <div class="bubble">{{ message.text }}</div>    
+                    <div class="message-time">{{ message.created | date:'shortTime' }}</div>    
+                  </div>
+                </div>
+              </div>
+              <div class="input-group">
+                <input type="text" [(ngModel)]="newMessage" (keyup.enter)="sendMessage()" placeholder="Escribe un mensaje..." class="form-control">
+                <button (click)="sendMessage()" class="btn btn-primary">Enviar</button>
+              </div>
+            </div> 
+          </div>
+          
     </div> 
 </div>

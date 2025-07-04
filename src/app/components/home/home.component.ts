@@ -21,6 +21,11 @@ ngOnInit(): void {
     this.clientes = clientes;
   });
 }
+abrirChat(cliente: any) {
+  this.global.selectedClient = cliente; // Guarda el cliente seleccionado
+  this.global.activeRoute = 'chat-detail'; // Cambia a la vista de chat
+}
+
 }
 
 

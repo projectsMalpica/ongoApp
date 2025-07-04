@@ -239,12 +239,19 @@ export class AuthPocketbaseService {
     localStorage.setItem('user', user_string);
     localStorage.setItem('type', type);
   }
-  getCurrentUser(): any {
+  /* getCurrentUser(): any {
     return this.currentUser || JSON.parse(localStorage.getItem('user') || '{}');
+  } */
+  getCurrentUser(): any {
+    if (!this.currentUser) {
+      this.currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+    }
+    return this.currentUser;
   }
+  
   getUserId(): string {
     const userId = localStorage.getItem('userId');
-    return userId ? userId : ''; // Devuelve el usuario actual o null si no existe
+    return userId ? userId : '';    
   }
   getFullName(): string {
     const userString = localStorage.getItem('user');
@@ -254,4 +261,34 @@ export class AuthPocketbaseService {
     }
     return 'Usuario';
   }
+  restoreSession() {
+    try {
+      const authData = JSON.parse(localStorage.getItem('pocketbase_auth') || '{}');
+      const userData = JSON.parse(localStorage.getItem('user') || '{}');
+  
+      if (authData && authData.token) {
+        this.pb.authStore.save(authData.token, authData.model);
+      }
+  
+      if (userData && userData.id) {
+        this.currentUser = userData;
+      } else {
+        console.warn('No se encontró información del usuario en localStorage');
+      }
+    } catch (e) {
+      console.warn('No se pudo restaurar la sesión:', e);
+    }
+  }
+  
+  
+  async waitForAuthUser(retries = 10, delayMs = 300): Promise<boolean> {
+    for (let i = 0; i < retries; i++) {
+      if (this.currentUser?.id) {
+        return true;
+      }
+      await new Promise(resolve => setTimeout(resolve, delayMs));
+    }
+    return false;
+  }
+  
 }

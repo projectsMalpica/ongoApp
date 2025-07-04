@@ -30,3 +30,27 @@
 .page-content {
   padding-bottom: 120px; /* Adjust this value based on your footer/navbar height */
 }
+.chat-content.user .bubble {
+  background-color: #FF50A2;
+  color: white;
+  align-self: flex-end;
+}
+
+.chat-content .bubble {
+  background-color: #f1f1f1;
+  color: black;
+  align-self: flex-start;
+}
+
+.chat-content {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.message-item {
+  display: flex;
+  flex-direction: column;
+  max-width: 80%;
+}
+

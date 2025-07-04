@@ -27,7 +27,7 @@
                                 </div>
                                 <div>
                                     <span class="heading font-15">Actividad</span>
-                                    <h6 class="mb-0 title font-15">.</h6>
+                                    <h6 class="mb-0 title font-15">{{global.profileDataPartner.activity}}</h6>
                                 </div>
                             </div>
                         </div>
@@ -42,7 +42,7 @@
                                 </div>
                                 <div>
                                     <span class="heading font-15">Creditos</span>
-                                    <h6 class="mb-0 title font-15">₹1550</h6>
+                                    <h6 class="mb-0 title font-15">{{global.profileDataPartner.credits}}</h6>
                                 </div>
                             </div>
                         </div>
@@ -53,11 +53,11 @@
                         <div class="card-body">
                             <div class="media">
                                 <div class="media-35 m-r10">
-                                    <img src="../assets/images/w3badoo/icon/user.png" alt="">
+                                    <img src="{{global.profileDataPartner.avatar}}" alt="">
                                 </div>
                                 <div>
                                     <span class="heading font-15">Visitas</span>
-                                    <h6 class="mb-0 title font-15">₹1550</h6>
+                                    <h6 class="mb-0 title font-15">{{global.profileDataPartner.visits}}</h6>
                                 </div>
                             </div>
                         </div>
@@ -68,18 +68,12 @@
                 <div class="subscribe-area-top">
                     <div class="swiper subscription-swiper2">
                         <div class="swiper-wrapper mb-3">
-                            <div class="swiper-slide" data-card="premium-plus">
+                            <div class="swiper-slide" data-card="premium-plus" *ngFor="let planning of global.planningPartners$ | async">
                                 <div class="subscribe-box style-2 premium-plus">
-                                    <h5 class="title"><img src="../assets/images/w3badoo/icon/fire.png" alt="">W3Badoo Premium Plus</h5>
-                                    <p class="desc">Maximize your dating with all the benefits of Premium, plus extra features included</p>
-                                    <div class="plan-price">Upgrade From 1,125.00 INR</div>
-                                </div>
-                            </div>
-                            <div class="swiper-slide" data-card="premium">
-                                <div class="subscribe-box style-2 premium">
-                                    <h5 class="title"><img src="../assets/images/w3badoo/icon/fire.png" alt="">W3Badoo Premium</h5>
-                                    <p class="desc">Maximize your dating with all the benefits of Premium, plus extra features included</p>
-                                    <div class="plan-price">Upgrade From 1,125.00 INR</div>
+                                    <h5 class="title"><img src="{{planning.subscription}}" alt="">{{planning.name}}</h5>
+                                    <p class="desc">{{planning.items}}</p>
+                                    <div class="plan-price">{{planning.priceCOP}}<span>/mes</span></div>
+                                    <div class="plan-price">{{planning.priceUSD}}<span>/mes</span></div>
                                 </div>
                             </div>
                         </div>

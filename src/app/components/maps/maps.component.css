@@ -1,0 +1,45 @@
+/* Estilo general del contenedor */
+.map-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100vh; /* O ajusta a tu layout */
+    overflow: hidden;
+  }
+  
+  /* Geocoder encima del mapa */
+  .geocoder-container {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    z-index: 2;
+  }
+  
+  /* Mapa ocupando todo el espacio */
+  .map-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+  
+  /* Opcional: personalizar el marcador */
+  .custom-marker img {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    border: 2px solid white;
+    object-fit: cover;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+  }
+  
+  /* Opcional: ajustar popups */
+  .mapboxgl-popup {
+    max-width: 250px;
+  }
+  app-maps {
+    display: block;
+    height: 100vh;
+  }
+    

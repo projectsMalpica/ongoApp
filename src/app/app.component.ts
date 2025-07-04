@@ -10,7 +10,6 @@ import { GlobalService } from './services/global.service';
 import { ProfileComponent } from './components/profile/profile.component';
 import { AuthPocketbaseService } from './services/authPocketbase.service';
 import { ProfileLocalComponent } from './components/profile-local/profile-local.component';
-import { MapComponent } from './components/map/map.component';
 import { FavoritesComponent } from './components/favorites/favorites.component';
 import { ChatComponent } from './components/chat/chat.component';
 import { ChatDetailComponent } from './components/chat-detail/chat-detail.component';
@@ -18,6 +17,7 @@ import { DetailprofileComponent } from './components/detailprofile/detailprofile
 import { ExplorerComponent } from './components/explorer/explorer.component';
 import { DetailprofilelocalComponent } from './components/detailprofilelocal/detailprofilelocal.component';
 import { HomeLocalComponent } from './components/home-local/home-local.component';
+import { MapsComponent } from './components/maps/maps.component';
 
 @Component({
   selector: 'app-root',
@@ -31,14 +31,14 @@ import { HomeLocalComponent } from './components/home-local/home-local.component
     RegisterComponent,
     ProfileComponent,
     ProfileLocalComponent,
-    MapComponent,
     FavoritesComponent,
     ChatComponent,
     ChatDetailComponent,
     DetailprofileComponent,
     ExplorerComponent,
     DetailprofilelocalComponent,
-    HomeLocalComponent
+    HomeLocalComponent,
+    MapsComponent
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']

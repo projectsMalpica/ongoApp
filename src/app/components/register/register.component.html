@@ -34,25 +34,26 @@
       [pagination]="swiperConfig.pagination"
       class="get-started"
     >
-      <swiper-slide>
-        <div class="slide-info">
-          <div class="started">
-            <h2 class="title mb-3">OnGo</h2>
-            <p>Ve, sal y conecta!</p>
-          </div>
+    <swiper-slide>
+      <div class="slide-info">
+        <div class="started">
+          <h2 class="title mb-2">OnGo</h2>
+          <p class="subtitle">Ve, Sal y Conecta!</p>
         </div>
-      </swiper-slide>
+      </div>
+    </swiper-slide>
+    
     </swiper-container> 
   </div>
   <div class="bottom-btn container">
     <div class="row g-3">
       <div class="col-12">
-        <button (click)="selectUserType('partner')" class="btn btn-lg btn-primary w-100">
+        <button (click)="selectUserType('partner')" class="btn btn-lg btn-gradient-pink w-100">
           Soy un Local Nocturno
         </button>
       </div>
       <div class="col-12">
-        <button (click)="selectUserType('client')" class="btn btn-lg btn-secondary w-100">
+        <button (click)="selectUserType('client')" class="btn btn-lg btn-gradient-purple w-100">
           Soy un Cliente
         </button>
       </div>
@@ -213,18 +214,7 @@
       </div>
       
       <form [formGroup]="clientForm">
-        <!-- <div class="row g-3">
-          <div class="profile-title mb-4 text-center">
-            <figure class="image-box" style="display:inline-block;">
-              <img [src]="imageUrl || 'assets/images/default-avatar.png'" alt="Profile Image" style="width:100px; height:100px; object-fit:cover; border-radius:10%; border:2px solid #eee;" />
-            </figure>
-            <div class="upload-photo mt-2">
-              <input type="file" (change)="onFileSelected($event)" accept="image/*" />          
-              <a (click)="openProfileFileSelector()" style="cursor: pointer;"><i class="icon-Upload"></i> Cargar imagen</a>
-              <span class="d-block mt-1" style="font-size:0.9em;">Formato JPG, GIF o PNG. Max 2MB</span>
-            </div>
-          </div>
-          </div> -->
+       
         <div class="mb-3">
           <label class="form-label">Correo Electrónico *</label>
           <input type="email" class="form-control" formControlName="email"
@@ -396,18 +386,7 @@
     
     <!-- Envuelve todo en el formulario -->
       <form [formGroup]="clientForm">
-    <!-- <div class="row g-3">
-      <div class="profile-title mb-4 text-center">
-        <figure class="image-box" style="display:inline-block;">
-          <img [src]="imageUrl || 'assets/images/default-avatar.png'" alt="Profile Image" style="width:100px; height:100px; object-fit:cover; border-radius:10%; border:2px solid #eee;" />
-        </figure>
-        <div class="upload-photo mt-2">
-          <input type="file" (change)="onFileSelected($event)" accept="image/*" />          
-          <a (click)="openProfileFileSelector()" style="cursor: pointer;"><i class="icon-Upload"></i> Cargar imagen</a>
-          <span class="d-block mt-1" style="font-size:0.9em;">Formato JPG, GIF o PNG. Max 2MB</span>
-        </div>
-      </div>
-      </div> -->
+    
       
       <div class="form-check mt-4" style="margin-top:10.5rem !important;">
 <input

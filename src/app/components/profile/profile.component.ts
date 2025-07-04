@@ -97,17 +97,29 @@ constructor(
   public realtimeClientes: RealtimeClientesService
 ){}
 async ngOnInit() {
+  this.auth.restoreSession(); // ⚠️ Restaurar antes de cargar datos
+  const user = this.auth.getCurrentUser();
+if (user?.id) {
   await this.loadProfileData();
-  this.global.initPlanningClientsRealtime();
+} else {
+  console.warn('Usuario no autenticado, espera unos segundos y vuelve a intentar');
+}
+this.global.initPlanningClientsRealtime();
+
 }
 
+
 async loadProfileData() {
-  try {
-    // Obtener datos del usuario
-    const userData = await this.pb.collection('usuariosClient').getFirstListItem(
-      `userId="${this.auth.currentUser?.id}"`
-    );
-    
+  const user = this.auth.getCurrentUser();
+if (!user?.id) {
+  console.error('No hay usuario autenticado');
+  return;
+}
+
+try {
+  const userData = await this.pb.collection('usuariosClient').getFirstListItem(
+    `userId="${user.id}"`
+  );
     // Dentro de loadProfileData()
       this.profileData = {
         name: userData['name'] || '',
@@ -129,10 +141,19 @@ async loadProfileData() {
       };
     
     // Cargar fotos si existen
-    if (userData['photos']) {
-      const photosData = JSON.parse(userData['photos']);
-      this.photos = photosData.map((url: string) => ({ url }));
+    if (userData['photos'] && typeof userData['photos'] === 'string' && userData['photos'].trim().startsWith('[')) {
+      try {
+        const photosData = JSON.parse(userData['photos']);
+        this.photos = Array.isArray(photosData) ? photosData.map((url: string) => ({ url })) : [];
+      } catch (error) {
+        console.warn('No se pudo parsear photos:', error);
+        this.photos = Array(6).fill({});
+      }
+    } else {
+      // Si no hay fotos o es un string vacío, inicializa el arreglo vacío
+      this.photos = Array(6).fill({});
     }
+    
     
     // Inicializar intereses seleccionados
     if (this.profileData.interests) {

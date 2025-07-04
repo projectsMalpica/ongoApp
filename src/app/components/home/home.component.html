@@ -2,7 +2,7 @@
 	<div class="page-content space-top p-b65">
 		<div class="container fixed-full-area">
 			<div class="dzSwipe_card-cont dz-gallery-slider"*ngFor="let cliente of clientes">
-				<div class="dzSwipe_card" >
+				<div class="dzSwipe_card" (dblclick)="abrirChat(cliente)">
 					<div class="dz-media">
 						<img [src]="cliente.avatar || 'assets/images/avatar/1.png'" alt="">					
 					</div>
