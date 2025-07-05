@@ -90,7 +90,7 @@ position: relative;
 }
 
 .avatar-4 {
-  top: 75%;
+  top: 70%;
   left: 53%;
   animation: float 7.5s ease-in-out 1.5s infinite;
   border: 2px solid #f70192;
@@ -126,12 +126,12 @@ position: relative;
 
 .pin-1 {top: 39%;
   left: 17%; }
-.pin-2 { top: 90%;
-  left: 70%;}
-.pin-3 { top: 45%;
+.pin-2 { top: 53%;
+  left: 67%;}
+.pin-3 { top: 87%;
   left: 64%; }
-.pin-4 { top: 75%;
-  left: 19%; }
+.pin-4 { top: 76%;
+  left: 21%;}
 .pin-5 {top: 69%;
   left: 86%; }
 
