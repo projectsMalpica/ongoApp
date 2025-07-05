@@ -16,8 +16,8 @@
   font-weight: bold;
   font-variant: normal;
   text-transform: none;
-  line-height: 1;
-
+  /* line-height: 1; */
+  padding-left: 2px;
   /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
