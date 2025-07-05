@@ -11,3 +11,9 @@
   justify-content: flex-end;
   height: 100%;
 }
+
+.btn-gradient-pink {
+  background: linear-gradient(90deg, #ff4e8e, #f70192);
+  color: white;
+  border: none;
+}
