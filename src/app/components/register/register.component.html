@@ -1,6 +1,6 @@
 <!-- Paso 1: Selección de tipo de usuario -->
 <div class="content-body" *ngIf="currentStep === 1 && !userType">
-<div class="welcome-area bg-image">
+<div class="welcome-area bg-image" style="padding: 5px 28px;">
   <div class="map-background"></div>
  
   <div class="welcome-inner">
@@ -34,10 +34,11 @@
       <div class="location-pin pin-2"><i class="icon feather icon-map-pin"></i></div>
       <div class="location-pin pin-3"><i class="icon feather icon-map-pin"></i></div>
       <div class="location-pin pin-4"><i class="icon feather icon-map-pin"></i></div>
+      <div class="location-pin pin-5"><i class="icon feather icon-map-pin"></i></div>
     </div>
    
   </div>
-  <div class="bottom-btn container">
+  <div class="bottom-btn container" style="bottom: 95px;">
     <div class="row g-3">
       <div class="col-12">
         <button (click)="selectUserType('partner')" class="btn btn-lg btn-gradient-pink w-100">
