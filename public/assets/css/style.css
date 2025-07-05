@@ -83,7 +83,8 @@
 	==============
 ========================= */
 /*==== 1. Abstracts ====*/
-@import url("../icons/fontawesome/css/all.min.css");
+/* @import 'mapbox-gl/dist/mapbox-gl.css';
+ */@import url("../icons/fontawesome/css/all.min.css");
 @import url("../icons/feather/css/iconfont.css");
 @import url("../icons/flaticon/font/flaticon.css");
 @import url("../icons/flaticon1/font/flaticon_flaticon1.css");
@@ -18192,14 +18193,14 @@ label input {
     align-items: center;
     gap: 40px; }
     .profile-area .main-profile .about-profile .media {
-      max-width: 145px;
+      max-width: 200px;
       position: relative;
       margin: 0 auto 15px;
       width: 100%;
       height: 100%;
       top: 0;
       left: 0;
-      padding: 11px;
+      padding: 10px;
       align-items: center;
       justify-content: center;
       display: flex; }
@@ -18251,7 +18252,7 @@ label input {
   text-align: left;
   margin-bottom: 0; }
   .profile-area.style-2 .main-profile .about-profile .media {
-    max-width: 115px;
+    max-width: 200px;
     margin: 0 15px 0 0;
     padding: 10px; }
     .profile-area.style-2 .main-profile .about-profile .media .data-fill.style-2 {

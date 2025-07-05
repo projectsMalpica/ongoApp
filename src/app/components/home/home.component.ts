@@ -1,17 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { GlobalService } from '../../services/global.service';
 import { CommonModule } from '@angular/common';
 import PocketBase from 'pocketbase';
+
+
 @Component({
   selector: 'app-home',
-  standalone: true, 
-  imports: [CommonModule],
+  standalone: true,
+  imports: [CommonModule, ],
   templateUrl: './home.component.html',
-  styleUrl: './home.component.css'
+  styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  clientes: any[] = [];
-  pb: PocketBase;
+  
+  @Input() clientes: any[] = [];
+  currentIndex = 0;
+  startX = 0;
+  deltaX = 0;
+/*   clientes: any[] = [];
+ */  pb: PocketBase;
   touchStartTime = 0;
 constructor(public global: GlobalService){
   this.pb = this.global.pb;
@@ -22,11 +29,13 @@ ngOnInit(): void {
   });
 }
 abrirChat(cliente: any) {
-  this.global.selectedClient = cliente; // Guarda el cliente seleccionado
-  this.global.activeRoute = 'chat-detail'; // Cambia a la vista de chat
-}
- 
+  console.log('Abriendo chat con:', cliente); // ✅ Para confirmar en consola
+  this.global.selectedClient = cliente;
+  this.global.activeRoute = 'chat-detail';
   
+}
+
+ 
 }
 
 

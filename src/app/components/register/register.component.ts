@@ -5,7 +5,6 @@ import Swal from 'sweetalert2';
 import { AuthPocketbaseService } from '../../services/authPocketbase.service';
 import { GlobalService } from '../../services/global.service';
 import { register as registerSwiperElements } from 'swiper/element/bundle';
-import { CdkScrollable } from '@angular/cdk/scrolling';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { TermsComponent } from '../terms/terms.component';
 import { PrivacyComponent } from '../privacy/privacy.component';

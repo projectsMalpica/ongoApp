@@ -5,26 +5,34 @@
 
 
 /* Floating Avatars Container */
-.floating-avatars-container {
+/* .floating-avatars-container {
   position: relative;
   width: 100%;
   height: 425px;
   overflow: hidden;
   border-radius: 0px 0px 0px 85px;
   margin-bottom: 20px;
+} */
+.floating-avatars-container {
+position: relative;
+  width: 100%;
+  height: 500px;
+  overflow: hidden;
+  border-radius: 0px 0px 0px 85px;
+  margin-bottom: 150px;
 }
 
 /* Map Background */
 .map-background {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%; /* ✅ Esto es clave */
-  background-image: url('/assets/images/background-map.jpg');
+  background-image: url('/assets/images/maps.jpg');
   background-size: cover;
   background-position: center;
-  opacity: 1;
+  opacity: 0.2;
   z-index: 0;
 }
 
@@ -33,14 +41,23 @@
 /* Floating Avatars */
 .floating-avatar {
   position: absolute;
-  width: 50px;
-  height: 50px;
+  width: 70px;
+  height: 70px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.9);
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+.floating-avatar-1 {
+  position: absolute;
+  width: 70px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   z-index: 2;
 }
 
@@ -63,32 +80,35 @@
 .avatar-2 {
   top: 60%;
   left: 25%;
-  animation: float 7s ease-in-out 1s infinite;
 }
 
 .avatar-3 {
-  top: 30%;
-  left: 70%;
+  top: 45%;
+  left: 57%;
   animation: float 9s ease-in-out 0.5s infinite;
+  border: 2px solid #7b2ff7;
 }
 
 .avatar-4 {
-  top: 70%;
-  left: 65%;
+  top: 74%;
+  left: 63%;
   animation: float 7.5s ease-in-out 1.5s infinite;
+  border: 2px solid #f70192;
 }
 
 .avatar-5 {
-  top: 45%;
-  left: 45%;
+  top: 82%;
+  left: 12%;
   animation: float 8.5s ease-in-out 0.8s infinite;
+  border: 2px solid #f70192;
+
 }
 
 /* Location Pins */
 .location-pin {
   position: absolute;
-  width: 12px;
-  height: 12px;
+  width: 20px;
+  height: 20px;
   background: #f70192;
   border-radius: 50%;
   z-index: 1;
@@ -104,9 +124,14 @@
   animation: pulse 2s infinite;
 }
 
-.pin-1 { top: 30%; left: 25%; }
-.pin-2 { top: 65%; left: 60%; }
-.pin-3 { top: 45%; left: 75%; }
+.pin-1 { top: 42%;
+  left: 12%; }
+.pin-2 { top: 90%;
+  left: 70%;}
+.pin-3 { top: 60%;
+  left: 64%; }
+.pin-4 { top: 74%;
+  left: 32%; }
 
 /* Animations */
 @keyframes float {
@@ -295,6 +320,12 @@
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+.welcome-area .logo-area .para-title {
+  color: #0090fc;
+  font-weight: 700;
+  font-size: 20px;
 }
 
 

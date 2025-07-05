@@ -1,49 +1,41 @@
 <!-- Paso 1: Selección de tipo de usuario -->
 <div class="content-body" *ngIf="currentStep === 1 && !userType">
 <div class="welcome-area bg-image">
+  <div class="map-background"></div>
+ 
   <div class="welcome-inner">
     <div class="dz-media floating-avatars-container">
       <!-- Map Background -->
-      <div class="map-background"></div>
-
+      <div class="logo-area">
+        <img class="logo" src="../assets/images/logo.png" alt="" style="max-width: 40%;">
+        <p class="para-title">Ve, Sal y Conecta!</p>
+      </div>
       <!-- Floating Avatars -->
-        <div class="floating-avatar avatar-1">
-        <img src="https://i.pravatar.cc/150?img=1" alt="Avatar">
+        <div class="floating-avatar-1 ">
+        <img src="../assets/images/edificio.png" alt="Avatar">
         </div>
-        <div class="floating-avatar avatar-2">
-        <img src="https://i.pravatar.cc/150?img=5" alt="Avatar">
+        <div class="floating-avatar-1 avatar-2">
+        <img src="../assets/images/parque.png" alt="Avatar">
         </div>
         <div class="floating-avatar avatar-3">
-        <img src="https://i.pravatar.cc/150?img=9" alt="Avatar">
+        <img src="https://images.pexels.com/photos/59497/pexels-photo-59497.jpeg" alt="Avatar">
         </div>
         <div class="floating-avatar avatar-4">
-        <img src="https://i.pravatar.cc/150?img=15" alt="Avatar">
+        <img src="https://images.pexels.com/photos/23876/pexels-photo.jpg?_gl=1*1o25mjz*_ga*OTg4Mjk5NjU4LjE3NTE3NTUyOTg.*_ga_8JE65Q40S6*czE3NTE3NTUyOTgkbzEkZzAkdDE3NTE3NTUyOTgkajYwJGwwJGgw" alt="Avatar">
         </div>
         <div class="floating-avatar avatar-5">
-        <img src="https://i.pravatar.cc/150?img=20" alt="Avatar">
+        <img src="https://images.pexels.com/photos/30743458/pexels-photo-30743458.jpeg" alt="Avatar">
         </div>
+
+
       
       <!-- Location Pins -->
-      <div class="location-pin pin-1"></div>
-      <div class="location-pin pin-2"></div>
-      <div class="location-pin pin-3"></div>
+      <div class="location-pin pin-1"><i class="icon feather icon-map-pin"></i></div>
+      <div class="location-pin pin-2"><i class="icon feather icon-map-pin"></i></div>
+      <div class="location-pin pin-3"><i class="icon feather icon-map-pin"></i></div>
+      <div class="location-pin pin-4"><i class="icon feather icon-map-pin"></i></div>
     </div>
-    <swiper-container 
-      [slidesPerView]="swiperConfig.slidesPerView"
-      [spaceBetween]="swiperConfig.spaceBetween"
-      [pagination]="swiperConfig.pagination"
-      class="get-started"
-    >
-    <swiper-slide>
-      <div class="slide-info">
-        <div class="started">
-          <h2 class="title mb-2">OnGo</h2>
-          <p class="subtitle">Ve, Sal y Conecta!</p>
-        </div>
-      </div>
-    </swiper-slide>
-    
-    </swiper-container> 
+   
   </div>
   <div class="bottom-btn container">
     <div class="row g-3">
@@ -60,7 +52,8 @@
     </div>
   </div>
   <div class="register-link"> 
-    <p style="padding-top: 5px; text-align: center;">¿Tienes una cuenta? <a (click)="global.setRoute('login')" style="color: #f70192;">Inicia sesión</a></p>
+    <p style="padding-top: 5px; text-align: center; font-size: 1.1rem;
+  font-weight: 600;">¿Tienes una cuenta? <a (click)="global.setRoute('login')" style="color: #f70192;">Inicia sesión</a></p>
   </div>
 </div>
 </div>

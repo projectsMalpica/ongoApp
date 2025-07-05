@@ -220,4 +220,20 @@
     padding: 1.5rem;
   }
 
+  .btn-gradient-pink {
+    background: linear-gradient(90deg, #ff4e8e, #f70192);
+    color: white;
+    border: none;
+  }
+  
+  .btn-gradient-purple {
+    background: linear-gradient(90deg, #7b2ff7, #f70192);
+    color: white;
+    border: none;
+  }
+  
+  .btn-gradient-pink:hover,
+  .btn-gradient-purple:hover {
+    opacity: 0.85;
+  }
   

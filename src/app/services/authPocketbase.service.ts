@@ -39,8 +39,8 @@ export class AuthPocketbaseService {
   async findPartnerByUserId(userId: string): Promise<any> {
     return await this.pb
       .collection('usuariosPartner')
-      .getFirstListItem(`userId="${userId}"`);
-  }
+      .getFirstListItem(`id="${userId}"`);
+      }
   
   async updatePartnerField(partnerId: string, updateData: any): Promise<void> {
     await this.pb.collection('usuariosPartner').update(partnerId, updateData);
@@ -142,7 +142,7 @@ export class AuthPocketbaseService {
     );
   }
 
-  loginUser(email: string, password: string): Observable<any> {
+  /* loginUser(email: string, password: string): Observable<any> {
     return from(this.pb.collection('users').authWithPassword(email, password))
       .pipe(
         map((authData) => {
@@ -173,8 +173,50 @@ export class AuthPocketbaseService {
           localStorage.setItem('userId', authData.user.id);
         })
       );
-  }
-
+  } */
+      loginUser(email: string, password: string): Observable<any> {
+        return from(this.pb.collection('users').authWithPassword(email, password))
+          .pipe(
+            map((authData) => {
+              const pbUser = authData.record;
+    
+              const user: UserInterface = {
+                id: pbUser.id,
+                email: pbUser['email'],
+                password: '',
+                full_name: pbUser['name'],
+                phone: pbUser['phone'],
+                images: pbUser['images'] || {},
+                type: pbUser['type'],
+                username: pbUser['username'],
+                address: pbUser['address'],
+                created: pbUser['created'],
+                updated: pbUser['updated'],
+                avatar: pbUser['avatar'] || '',
+                status: pbUser['status'] || 'active',
+                dni: pbUser['dni'],
+                gender: pbUser['gender'],
+              };
+    
+              return { ...authData, user };
+            }),
+            tap(async (authData) => {
+              this.setUser(authData.user);
+              this.setToken(authData.token);
+              localStorage.setItem('isLoggedin', 'true');
+              localStorage.setItem('userId', authData.user.id);
+    
+              // 🚨 AQUÍ CARGAS EL PERFIL DE usuariosClient
+              try {
+                const profile = await this.pb.collection('usuariosClient').getFirstListItem(`userId="${authData.user.id}"`);
+                localStorage.setItem('profile', JSON.stringify(profile));
+              } catch (error) {
+                console.warn('⚠️ No se encontró el perfil en usuariosClient', error);
+              }
+            })
+          );
+      }
+    
   logoutUser(): Observable<any> {
     // Limpiar completamente el localStorage
     localStorage.clear();

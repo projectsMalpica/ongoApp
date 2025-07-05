@@ -24,6 +24,7 @@ public selectedClient: any =null;
 public photosPartner: any[] = [];
 public allServices: { value: string; label: string }[] = [];
 promosByPartner: any[] = [];
+selectedUser: any = null;
 public profileData: any = {
   name: '',
   gender: '',
@@ -76,11 +77,14 @@ profileDataPartner: any = {
     this.activeRoute = route;
   }
   async initClientesRealtime() {
-    // Fetch inicial
+    if (!this.pb.authStore.isValid) {
+      console.warn('No autenticado, omitiendo carga de clientes');
+      return;
+    }
+  
     const result = await this.pb.collection('usuariosClient').getFullList();
     this.clientesSubject.next(result);
-
-    // Suscripción realtime
+  
     this.pb.collection('usuariosClient').subscribe('*', (e: any) => {
       let current = this.clientesSubject.getValue();
       if (e.action === 'create') {
@@ -93,6 +97,7 @@ profileDataPartner: any = {
       this.clientesSubject.next(current);
     });
   }
+  
   async initPartnersRealtime() {
     // Fetch inicial
     const result = await this.pb.collection('usuariosPartner').getFullList();

@@ -96,16 +96,77 @@ constructor(
   public auth: AuthPocketbaseService,
   public realtimeClientes: RealtimeClientesService
 ){}
-async ngOnInit() {
-  this.auth.restoreSession(); // ⚠️ Restaurar antes de cargar datos
-  const user = this.auth.getCurrentUser();
-if (user?.id) {
-  await this.loadProfileData();
-} else {
-  console.warn('Usuario no autenticado, espera unos segundos y vuelve a intentar');
-}
-this.global.initPlanningClientsRealtime();
 
+
+async ngOnInit() {
+  // 1️⃣ Restaurar sesión
+  await this.auth.restoreSession();
+
+  // 2️⃣ Cargar el perfil desde PocketBase
+  await this.loadProfile(); // Aquí consultas PocketBase y asignas profileData
+
+  // 3️⃣ Guardar el perfil en GlobalService y en localStorage para reutilizar
+  this.global.profileData = { ...this.profileData };
+  localStorage.setItem('profile', JSON.stringify(this.profileData));
+  console.log('Perfil cargado:', this.profileData);
+
+  // 4️⃣ Inicializar clientes realtime solo si la sesión es válida
+  await this.global.initClientesRealtime();
+}
+
+
+async loadProfile() {
+  const user = this.auth.getCurrentUser();
+  console.log('Cargando perfil de usuario:', user);
+
+  if (!user?.id) {
+    console.error('No hay usuario autenticado');
+    return;
+  }
+
+  try {
+    const userData = await this.pb.collection('usuariosClient').getFirstListItem(`userId="${user.id}"`);
+
+    this.profileData = {
+      name: userData['name'] || '',
+      interestedIn: userData['interestedIn'] || '',
+      lookingFor: userData['lookingFor'] || '',
+      language: userData['language'] || '',
+      orientation: userData['orientation'] || '',
+      birthday: userData['birthday'] || '',
+      gender: userData['gender'] || '',
+      address: userData['address'] || '',
+      about: userData['about'] || '',
+      age: userData['age'] || '',
+      photos: userData['photos'] || [],
+      email: userData['email'] || '',
+      userId: userData['userId'] || '',
+      status: userData['status'] || '',
+      interests: userData['interests'] || '',
+      avatar: userData['avatar'] || '',
+    };
+
+    // Procesar las fotos
+    this.photos = this.parsePhotos(userData['photos']);
+    // Procesar los intereses
+    this.selectedInterests = this.profileData.interests ? this.profileData.interests.split(',').map((i: string) => i.trim()) : [];
+
+  } catch (error) {
+    console.error('❌ Error cargando perfil:', error);
+  }
+}
+
+parsePhotos(photosData: any): any[] {
+  if (typeof photosData === 'string' && photosData.trim().startsWith('[')) {
+    try {
+      return JSON.parse(photosData).map((url: string) => ({ url }));
+    } catch (error) {
+      console.warn('No se pudo parsear photos:', error);
+      return Array(6).fill({});
+    }
+  } else {
+    return Array(6).fill({});
+  }
 }
 
 
