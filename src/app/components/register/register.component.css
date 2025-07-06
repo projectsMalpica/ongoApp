@@ -3,6 +3,44 @@
 @import 'swiper/css/pagination';
 @import 'swiper/css/navigation';
 
+/* Mejora para visibilidad del enlace de registro en móviles */
+.welcome-area {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  position: relative;
+}
+
+/* .bottom-btn.container {
+  margin-bottom: 80px; 
+} */
+
+.register-link {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100vw;
+
+  z-index: 10;
+  padding: 12px 0 8px 0;
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .register-link {
+    position: static;
+    box-shadow: none;
+    padding: 0;
+    background: transparent;
+  }
+}
+
+@import 'swiper/css';
+@import 'swiper/css/pagination';
+@import 'swiper/css/navigation';
+
 
 /* Floating Avatars Container */
 /* .floating-avatars-container {
