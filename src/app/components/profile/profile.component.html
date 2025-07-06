@@ -220,7 +220,7 @@
             <div class="media rounded-circle">
               <img [src]="avatarPreview || auth.currentUser?.avatar" alt="profile-image">
               <input type="file" accept="image/*" (change)="onAvatarSelected($event)" class="d-none" #avatarInput>
-              <button type="button" class="btn btn-sm btn-primary mt-2" (click)="avatarInput.click()">
+              <button type="button" class="btn btn-sm btn-gradient-pink mt-2" (click)="avatarInput.click()">
                 Cambiar foto
               </button>
             </div>
@@ -544,7 +544,7 @@
       </div>
     </div>
     <div class="mt-3">
-      <button class="btn btn-primary w-100" 
+      <button class="btn btn-gradient-pink w-100" 
               data-bs-dismiss="offcanvas"
               (click)="saveInterests()">
         Guardar

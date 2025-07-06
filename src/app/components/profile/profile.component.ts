@@ -99,16 +99,22 @@ constructor(
 
 
 async ngOnInit() {
-  // 1️⃣ Restaurar sesión
+  // 1️⃣ Restaurar sesión y perfil automáticamente
   await this.auth.restoreSession();
 
-  // 2️⃣ Cargar el perfil desde PocketBase
-  await this.loadProfile(); // Aquí consultas PocketBase y asignas profileData
-
-  // 3️⃣ Guardar el perfil en GlobalService y en localStorage para reutilizar
-  this.global.profileData = { ...this.profileData };
-  localStorage.setItem('profile', JSON.stringify(this.profileData));
-  console.log('Perfil cargado:', this.profileData);
+  // 2️⃣ Cargar el perfil desde el servicio de autenticación
+  const profile = this.auth.getCurrentProfile();
+  if (profile && profile.id) {
+    this.profileData = { ...profile };
+    this.global.profileData = { ...profile };
+    console.log('Perfil cargado desde auth service:', this.profileData);
+  } else {
+    // Si no hay perfil, intenta cargarlo del backend
+    await this.loadProfile();
+    this.global.profileData = { ...this.profileData };
+    localStorage.setItem('profile', JSON.stringify(this.profileData));
+    console.log('Perfil cargado desde backend:', this.profileData);
+  }
 
   // 4️⃣ Inicializar clientes realtime solo si la sesión es válida
   await this.global.initClientesRealtime();

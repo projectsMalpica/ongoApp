@@ -303,6 +303,7 @@
             
             <!-- Usar formGroupName para agrupar los checkboxes -->
             <div formGroupName="orientation">
+              
               <div class="form-check">
                 <input class="form-check-input" type="checkbox" formControlName="heterosexual" id="heterosexual">
                 <label class="form-check-label" for="heterosexual">Heterosexual</label>
@@ -338,6 +339,7 @@
                 <label class="form-check-label" for="demisexual">Demisexual</label>
               </div>
             </div>
+            
           </div>
         
         <div class="mb-4">
@@ -367,22 +369,40 @@
 
 <!-- Paso 4: Fotos -->
   <!-- Paso 4: Fotos -->
-<div class="page-content p-b70" *ngIf="currentStep === 4">
+<div class="page-content p-b60" *ngIf="currentStep === 4">
 <div class="container">
+  <!-- Tag visual de éxito -->
+  <div *ngIf="successTag.show" class="alert alert-success alert-dismissible fade show mt-3" role="alert" style="font-size:1.1rem;">
+    <span>{{ successTag.message }}</span>
+    <button type="button" class="btn-close" aria-label="Cerrar" (click)="closeSuccessTag()"></button>
+  </div>
   <div class="account-area">
     <a (click)="prevStep()" class="back-btn dz-flex-box">
       <i class="icon feather icon-chevron-left"></i>
     </a>
     <div class="section-head ps-0">
       <h3>Agrega tus fotos</h3>
-      <p>Sube al menos 1 foto para tu perfil</p>
+<p>Sube al menos 1 foto para tu perfil</p>
+
+<!-- Cargador de imágenes -->
+<div class="mb-4">
+  <label class="form-label">Selecciona una imagen de perfil *</label>
+  <input type="file" accept="image/*" (change)="onImageSelected($event)" class="form-control">
+</div>
+<div class="mb-4" *ngIf="selectedImage">
+  <label class="form-label">Previsualización:</label>
+  <div style="margin-bottom: 10px;">
+    <img [src]="selectedImage" alt="Previsualización" style="max-width: 50px; max-height: 50px; border-radius: 8px; border: 1px solid #ccc;" />
+  </div>
+  <button type="button" class="btn btn-outline-danger btn-sm" (click)="removeImage()">Eliminar imagen</button>
+</div>
     </div>
     
     <!-- Envuelve todo en el formulario -->
       <form [formGroup]="clientForm">
     
       
-      <div class="form-check mt-4" style="margin-top:10.5rem !important;">
+      <div class="form-check mt-4 terms-check">
 <input
 class="form-check-input"
 type="checkbox"
@@ -416,7 +436,7 @@ Debes aceptar los términos y políticas de privacidad
       </button>
     </div>
     <div class="col-6" [class.offset-6]="currentStep === 1">
-      <button (click)="nextStep()" class="btn btn-primary w-100">
+      <button (click)="nextStep()" class="btn btn-gradient-pink w-100">
         Siguiente
       </button>
     </div>
@@ -427,7 +447,7 @@ Debes aceptar los términos y políticas de privacidad
 <!-- Footer para enviar -->
 <div class="footer fixed bg-white" *ngIf="userType && currentStep === (userType === 'partner' ? 3 : 4)">
 <div class="container">
-  <ng-container *ngIf="userType === 'partner'">
+  <ng-container *ngIf="userType === 'partner'" style="padding-bottom: 20px;">
     <button
 type="button"
 (click)="onSubmit()"
@@ -440,7 +460,7 @@ class="btn btn-success w-100"
 
   </ng-container>
   
-  <ng-container *ngIf="userType === 'client'">
+  <ng-container *ngIf="userType === 'client'" style="padding-bottom: 20px;">
     <button
 type="button"
 (click)="onSubmit()"

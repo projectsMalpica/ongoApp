@@ -19,6 +19,7 @@ registerSwiperElements();
   schemas: [NO_ERRORS_SCHEMA]
 })
 export class RegisterComponent {
+  public selectedImage: string | null = null; // Para previsualización de imagen
   showModal: boolean = false;
   modalTitle: string = '';
   isSubmitting = false;
@@ -89,9 +90,9 @@ export class RegisterComponent {
     
       // Paso 3 - Preferencias
       orientation: this.fb.group({
-        straight: [false],
+        heterosexual: [false],
         gay: [false],
-        lesbian: [false],
+        lesbiana: [false],
         bisexual: [false],
         asexual: [false],
         queer: [false],
@@ -208,7 +209,7 @@ async uploadImage() {
       // Optionally update the UI
       this.imageUrl = fileUrl;
     } catch (error) {
-      console.error('Image upload or user update failed:', error);
+      console.error('Falla al cargar una imagen:', error);
     }
   }
   async onSubmit() {
@@ -299,56 +300,7 @@ async uploadImage() {
       this.isSubmitting = false;
     }
     
-    /* async registerClient() {
-      this.isSubmitting = true;
-      if (this.clientForm.invalid) {
-        this.markClientFieldsAsTouched(this.currentStep);
-        this.isSubmitting = false;
-        return;
-      }
-    
-      const formData = this.clientForm.value;
-    
-      // 1. Registrar usuario base
-      const userResponse = await this.auth.onlyRegisterUser(
-        formData.email,
-        formData.password,
-        'client',
-        formData.firstName
-      ).toPromise();
-    
-      // 2. Preparar y guardar perfil en usuariosClient
-      const clientData: any = {
-        userId: userResponse.id,
-        name: formData.firstName,
-        address: formData.address,
-        birthday: new Date(formData.birthday).toISOString(),
-        gender: formData.gender,
-        orientation: formData.orientation,
-        interestedIn: formData.interestedIn,
-        lookingFor: formData.lookingFor,
-        email: formData.email,
-        profileComplete: true,
-        status: 'pending',
-        photo: this.imageUrl
-      };
-    
-      await this.auth.pb.collection('usuariosClient').create(clientData);
-    
-      // 3. Autologin y redirección
-      await this.auth.loginUser(formData.email, formData.password).toPromise();
-      this.global.setRoute('profile');
-    
-      Swal.fire({
-        title: 'Registro Completo',
-        text: 'Tu perfil ha sido creado exitosamente',
-        icon: 'success',
-        confirmButtonText: 'Continuar'
-      });
-    
-      this.isSubmitting = false;
-    } */
-    
+  
       async registerClient() {
         this.isSubmitting = true;
         if (this.clientForm.invalid) {
@@ -400,17 +352,19 @@ async uploadImage() {
           formData.email,
           formData.password,
           'client',
-          formData.firstName
+          formData.name
         ).toPromise();
       
         // Preparar y guardar perfil en usuariosClient
+        const orientationGroup = formData.orientation;
+        const selectedOrientation = Object.keys(orientationGroup).find(key => orientationGroup[key]) || '';
         const clientData: any = {
           userId: userResponse.id,
-          name: formData.firstName,
+          name: formData.name,
           address: formData.address,
           birthday: new Date(formData.birthday).toISOString(),
           gender: formData.gender,
-          orientation: formData.orientation,
+          orientation: selectedOrientation, // ✅ Solo la orientación seleccionada       
           interestedIn: formData.interestedIn,
           lookingFor: formData.lookingFor,
           email: formData.email,
@@ -421,19 +375,23 @@ async uploadImage() {
       
         await this.auth.pb.collection('usuariosClient').create(clientData);
       
-        // Autologin y redirección
-        await this.auth.loginUser(formData.email, formData.password).toPromise();
+        // Autologin y redirección        await this.auth.loginUser(formData.email, formData.password).toPromise();
         this.global.setRoute('profile');
       
-        Swal.fire({
-          title: 'Registro Completo',
-          text: 'Tu perfil ha sido creado exitosamente',
-          icon: 'success',
-          confirmButtonText: 'Continuar'
-        });
+        this.successTag = {
+          show: true,
+          message: `¡Bienvenido/a, ${formData.name}! Tu perfil ha sido creado exitosamente. Ahora puedes explorar, conectar y personalizar tu experiencia en OngoMatch.`
+        };
+
       
         this.isSubmitting = false;
       }
+
+  // Tag visual de éxito
+  public successTag: { show: boolean, message: string } = { show: false, message: '' };
+  public closeSuccessTag() {
+    this.successTag.show = false;
+  }
   // Generar contraseña aleatoria para clientes (que usan OTP)
   generateRandomPassword(): string {
     return Math.random().toString(36).slice(-8);
@@ -634,6 +592,25 @@ async uploadImage() {
     }
   }
 
+  // Método para el cargador de imagen de perfil simple
+  public onImageSelected(event: any): void {
+    const file = event.target.files && event.target.files[0];
+    if (!file) {
+      this.selectedImage = null;
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      this.selectedImage = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // Método para eliminar la imagen seleccionada
+  public removeImage(): void {
+    this.selectedImage = null;
+  }
+
   // Manejo de imágenes
  handleFileInput(event: any, index: number) {
       const file = event.target.files[0];
@@ -671,4 +648,10 @@ async uploadImage() {
   get photosArray(): FormArray {
     return this.clientForm.get('photos') as FormArray;
   }
+  orientationValidator(control: AbstractControl): ValidationErrors | null {
+    const group = control.value;
+    const hasSelected = Object.values(group).some(value => value);
+    return hasSelected ? null : { required: true };
+  }
+  
 }

@@ -1,7 +1,8 @@
 	<!-- Menubar -->
 		 <div class="menubar-area footer-fixed" [hidden]="global.activeRoute === 'profile'">
 		<div class="toolbar-inner menubar-nav">
-			<a class="nav-link active" (click)="global.setRoute(auth.isPartner() ? 'home-local' : 'home')">				<i class="flaticon flaticon-dog-house"></i>
+			<a class="nav-link active" (click)="global.setRoute(auth.isPartner() ? 'home-local' : 'home')">				
+				<i class="flaticon flaticon-dog-house" style="color: #fff;"></i>
 			</a>
 			<a class="nav-link" (click)="global.setRoute('maps')">
 				<i class="fas fa-map-marker-alt"></i>
@@ -20,7 +21,7 @@
 	<div class="menubar-area footer-fixed" [hidden]="global.activeRoute === (auth.isPartner() ? 'profile-local' : 'profile')">
 		<div class="toolbar-inner menubar-nav">
 		  <a class="nav-link active" (click)="global.setRoute(auth.isPartner() ? 'home-local' : 'home')">
-			<i class="flaticon flaticon-dog-house"></i>
+			<i class="flaticon flaticon-dog-house" style="color: #fff;"></i>
 		  </a>
 		  <a class="nav-link" (click)="global.setRoute('maps')">
 			<i class="fas fa-map-marker-alt"></i>

@@ -19574,4 +19574,21 @@ body.theme-dark.body-bg2 {
     height: 72px;
     opacity: 0; } }
 
+    .btn-gradient-pink {
+  background: linear-gradient(90deg, #ff4e8e, #f70192);
+  color: white;
+  border: none;
+}
+
+/* Gradiente en los iconos del menú inferior */
+.menubar-nav .nav-link i {
+  background: linear-gradient(90deg, #ff4e8e, #f70192);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  font-size: 1.6em;
+  transition: filter 0.2s;
+}
+
 /*# sourceMappingURL=style.css.map */
