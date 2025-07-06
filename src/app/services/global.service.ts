@@ -1,182 +1,148 @@
 import { Injectable } from '@angular/core';
 import PocketBase from 'pocketbase';
 import { BehaviorSubject } from 'rxjs';
+import { AuthPocketbaseService } from './authPocketbase.service';
+import { UserInterface } from '../interface/user-interface ';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class GlobalService {
-activeRoute: string = 'register';
-pb = new PocketBase('https://db.ongomatch.com:8090');
-private clientesSubject = new BehaviorSubject<any[]>([]);
-clientes$ = this.clientesSubject.asObservable();
-private partnersSubject = new BehaviorSubject<any[]>([]);
-partners$ = this.partnersSubject.asObservable();
-private promosSubject = new BehaviorSubject<any[]>([]);
-promos$ = this.promosSubject.asObservable();
-private planningPartnersSubject = new BehaviorSubject<any[]>([]);
-planningPartners$ = this.planningPartnersSubject.asObservable();
-private planningClientsSubject = new BehaviorSubject<any[]>([]);
-planningClients$ = this.planningClientsSubject.asObservable();
-public selectedPartner: any = null;
-public selectedServicesPartner: string[] = [];
-public selectedClient: any =null;
-public photosPartner: any[] = [];
-public allServices: { value: string; label: string }[] = [];
-promosByPartner: any[] = [];
-selectedUser: any = null;
-public profileData: any = {
-  name: '',
-  gender: '',
-  userId: '',
-  status: '',
-  photos: [],
-  birthday: '',
-  interestedIn: '',
-  email: '',
-  orientation: '',
-  lookingFor: '',
-  address: '',
-  language: '',
-  about: '',
-  age: null,
-  interests: [],
-  avatar: '',
-};
+  activeRoute: string = 'register';
+  pb = new PocketBase('https://db.ongomatch.com:8090');
 
-profileDataPartner: any = {
-  avatar: '',
-  venueName: '',
-  userId: '',
-  status: '',
-  files: [],
-  birthday: '',
-  address: '',
-  email: '',
-  description: '',
-  phone: '',
-  capacity: '',
-  openingHours: '',
-  lat: '',
-  lng: '',
-  services: '',
-  about: '',    
+  // Observables de datos
+  private clientesSubject = new BehaviorSubject<any[]>([]);
+  clientes$ = this.clientesSubject.asObservable();
+  private partnersSubject = new BehaviorSubject<any[]>([]);
+  partners$ = this.partnersSubject.asObservable();
+  private promosSubject = new BehaviorSubject<any[]>([]);
+  promos$ = this.promosSubject.asObservable();
+  private planningPartnersSubject = new BehaviorSubject<any[]>([]);
+  planningPartners$ = this.planningPartnersSubject.asObservable();
+  private planningClientsSubject = new BehaviorSubject<any[]>([]);
+  planningClients$ = this.planningClientsSubject.asObservable();
+
+  // Variables de navegación y selección
+  public selectedPartner: any = null;
+  public selectedClient: any = null;
+  public chatReceiverId: string = '';
+  public profileData: any = {};
+  public profileDataPartner: any = {};
+  public promosByPartner: any[] = [];
+  selectedServicesPartner: any[] = [];
+  allServices: { value: string; label: string }[] = [];
   
-};
+  constructor(public auth: AuthPocketbaseService) {}
 
-  constructor(
-   
-  ) { 
-    this.initClientesRealtime();
-    this.initPartnersRealtime();
-    this.initPromosRealtime();
-    this.initPlanningPartnersRealtime();
-    this.initPlanningClientsRealtime();
+  /**
+   * ✅ Llama este método DESPUÉS del login
+   */
+  async initialize() {
+    await this.loadProfile();
+    await this.initRealtimeData();
   }
+
+  /**
+   * ✅ Carga datos realtime SOLO si hay sesión válida
+   */
+  private async initRealtimeData() {
+    if (!this.pb.authStore.isValid) {
+      console.warn('No autenticado, omitiendo realtime');
+      return;
+    }
+
+    await this.initClientesRealtime();
+    await this.initPartnersRealtime();
+    await this.initPromosRealtime();
+    await this.initPlanningPartnersRealtime();
+    await this.initPlanningClientsRealtime();
+  }
+
   setRoute(route: string) {
     this.activeRoute = route;
   }
-  async initClientesRealtime() {
-    if (!this.pb.authStore.isValid) {
-      console.warn('No autenticado, omitiendo carga de clientes');
-      return;
-    }
-  
-    const result = await this.pb.collection('usuariosClient').getFullList();
-    this.clientesSubject.next(result);
-  
-    this.pb.collection('usuariosClient').subscribe('*', (e: any) => {
-      let current = this.clientesSubject.getValue();
-      if (e.action === 'create') {
-        current = [...current, e.record];
-      } else if (e.action === 'update') {
-        current = current.map((c: any) => c.id === e.record.id ? e.record : c);
-      } else if (e.action === 'delete') {
-        current = current.filter((c: any) => c.id !== e.record.id);
-      }
-      this.clientesSubject.next(current);
-    });
-  }
-  
-  async initPartnersRealtime() {
-    // Fetch inicial
-    const result = await this.pb.collection('usuariosPartner').getFullList();
-    this.partnersSubject.next(result);
 
-    // Suscripción realtime
-    this.pb.collection('usuariosPartner').subscribe('*', (e: any) => {
-      let current = this.partnersSubject.getValue();
-      if (e.action === 'create') {
-        current = [...current, e.record];
-      } else if (e.action === 'update') {
-        current = current.map((c: any) => c.id === e.record.id ? e.record : c);
-      } else if (e.action === 'delete') {
-        current = current.filter((c: any) => c.id !== e.record.id);
-      }
-      this.partnersSubject.next(current);
-    });
-  }
   previewPartner(partner: any) {
     this.selectedPartner = partner;
     this.activeRoute = 'detail-profile-local';
   }
+
   previewClient(client: any) {
     this.selectedClient = client;
     this.activeRoute = 'detail-profile';
   }
-  async initPromosRealtime() {
-    // Fetch inicial
+
+  /**
+   * ✅ Carga el perfil y lo guarda en memoria y localStorage
+   */
+  async loadProfile() {
+    const user = this.auth.getCurrentUser();
+    if (!user?.id) {
+      console.error('No hay usuario autenticado');
+      return;
+    }
+
+    try {
+      const userData = await this.pb
+        .collection('usuariosClient')
+        .getFirstListItem(`userId="${user.id}"`);
+      this.profileData = userData;
+      this.auth.setUser(userData as unknown as UserInterface);
+      localStorage.setItem('profile', JSON.stringify(userData));
+    } catch (error) {
+      console.error('Error al cargar el perfil:', error);
+    }
+  }
+
+  // ========================== //
+  // Realtime Collections       //
+  // ========================== //
+
+  public async initClientesRealtime() {
+    const result = await this.pb.collection('usuariosClient').getFullList();
+    this.clientesSubject.next(result);
+    this.subscribeRealtime('usuariosClient', this.clientesSubject);
+  }
+
+  public async initPartnersRealtime() {
+    const result = await this.pb.collection('usuariosPartner').getFullList();
+    this.partnersSubject.next(result);
+    this.subscribeRealtime('usuariosPartner', this.partnersSubject);
+  }
+
+  public async initPromosRealtime() {
     const result = await this.pb.collection('promos').getFullList();
     this.promosSubject.next(result);
-
-    // Suscripción realtime
-    this.pb.collection('promos').subscribe('*', (e: any) => {
-      let current = this.promosSubject.getValue();
-      if (e.action === 'create') {
-        current = [...current, e.record];
-      } else if (e.action === 'update') {
-        current = current.map((c: any) => c.id === e.record.id ? e.record : c);
-      } else if (e.action === 'delete') {
-        current = current.filter((c: any) => c.id !== e.record.id);
-      }
-      this.promosSubject.next(current);
-    });
+    this.subscribeRealtime('promos', this.promosSubject);
   }
-  async initPlanningPartnersRealtime() {
-    // Fetch inicial
+  public async initPlanningPartnersRealtime() {
     const result = await this.pb.collection('planningPartners').getFullList();
     this.planningPartnersSubject.next(result);
-
-    // Suscripción realtime
-    this.pb.collection('planningPartners').subscribe('*', (e: any) => {
-      let current = this.planningPartnersSubject.getValue();
-      if (e.action === 'create') {
-        current = [...current, e.record];
-      } else if (e.action === 'update') {
-        current = current.map((c: any) => c.id === e.record.id ? e.record : c);
-      } else if (e.action === 'delete') {
-        current = current.filter((c: any) => c.id !== e.record.id);
-      }
-      this.planningPartnersSubject.next(current);
-    });
+    this.subscribeRealtime('planningPartners', this.planningPartnersSubject);
   }
-  async initPlanningClientsRealtime() {
-    // Fetch inicial
+
+  public async initPlanningClientsRealtime() {
     const result = await this.pb.collection('planningClients').getFullList();
     this.planningClientsSubject.next(result);
+    this.subscribeRealtime('planningClients', this.planningClientsSubject);
+  }
 
-    // Suscripción realtime
-    this.pb.collection('planningClients').subscribe('*', (e: any) => {
-      let current = this.planningClientsSubject.getValue();
+  /**
+   * ✅ Simplificación del patrón de actualización realtime
+   */
+  public subscribeRealtime(collection: string, subject: BehaviorSubject<any[]>) {
+    this.pb.collection(collection).subscribe('*', (e: any) => {
+      let current = subject.getValue();
       if (e.action === 'create') {
         current = [...current, e.record];
       } else if (e.action === 'update') {
-        current = current.map((c: any) => c.id === e.record.id ? e.record : c);
+        current = current.map((c: any) => (c.id === e.record.id ? e.record : c));
       } else if (e.action === 'delete') {
         current = current.filter((c: any) => c.id !== e.record.id);
       }
-      this.planningClientsSubject.next(current);
+      subject.next(current);
     });
   }
- 
 }
+

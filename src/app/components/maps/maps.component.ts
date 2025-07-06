@@ -11,6 +11,8 @@ import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 })
 
 export class MapsComponent implements AfterViewInit, OnDestroy {
+  @ViewChild('mapRef', { static: false }) mapRef!: ElementRef;
+
   @ViewChild('mapContainer', { static: true }) mapContainer!: ElementRef;
   private map!: mapboxgl.Map;
   private pb = new PocketBase('https://db.ongomatch.com:8090');

@@ -7,11 +7,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { OnInit } from '@angular/core';
 import PocketBase from 'pocketbase';
 import * as bootstrap from 'bootstrap';
-
+/* import { SwiperModule } from 'swiper/angular';
+ */import 'swiper/css';
+import Swiper from 'swiper';
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [ FormsModule, ReactiveFormsModule, CommonModule, ],  
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'
 })
@@ -99,26 +101,22 @@ constructor(
 
 
 async ngOnInit() {
-  // 1️⃣ Restaurar sesión y perfil automáticamente
   await this.auth.restoreSession();
 
-  // 2️⃣ Cargar el perfil desde el servicio de autenticación
-  const profile = this.auth.getCurrentProfile();
-  if (profile && profile.id) {
-    this.profileData = { ...profile };
-    this.global.profileData = { ...profile };
-    console.log('Perfil cargado desde auth service:', this.profileData);
-  } else {
-    // Si no hay perfil, intenta cargarlo del backend
-    await this.loadProfile();
-    this.global.profileData = { ...this.profileData };
-    localStorage.setItem('profile', JSON.stringify(this.profileData));
-    console.log('Perfil cargado desde backend:', this.profileData);
-  }
+  // ✔️ Siempre carga el perfil actualizado del backend
+  await this.loadProfile();
 
-  // 4️⃣ Inicializar clientes realtime solo si la sesión es válida
+  // ✔️ Guarda el perfil actualizado en auth y global
+  this.auth.profile = { ...this.profileData };
+  localStorage.setItem('profile', JSON.stringify(this.profileData));
+  this.global.profileData = { ...this.profileData };
+
+  console.log('Perfil cargado correctamente:', this.profileData);
+
+  // ✔️ Inicializa realtime solo si estás logueado
   await this.global.initClientesRealtime();
 }
+
 
 
 async loadProfile() {
@@ -261,6 +259,11 @@ saveInterests() {
 saveRelationshipGoal() {
   // Guardar en perfil
 }
+async enableEditProfile() {
+  await this.loadProfile();
+  this.avatarPreview = null; // Limpia la previsualización previa del avatar
+  this.isEditProfile = true;
+}
 
 selectLanguage(lang: any) {
   this.profileData.language = lang.name;
@@ -355,11 +358,13 @@ saveGender() {
       console.log('Error al guardar los cambios');
     }
   }
+
 cancelEdit() {
-  // Volver a cargar los datos originales
-  this.loadProfileData();
+  this.loadProfile();
+  this.avatarPreview = null;
   this.isEditProfile = false;
 }
+
 
 onPhotoSelected(event: any, index: number) {
   const file = event.target.files[0];

@@ -12,9 +12,13 @@
                             <circle class="complete" cx="40" cy="40" r="35" style="stroke-dashoffset: 39.58406743523136;"></circle>
                         </svg>
                     </div>
-                    <a (click)="isEditProfile = true" class="edit-profile dz-icon">
-                        <i class="flaticon flaticon-pencil-2"></i>
-                    </a>
+                    <div class="edit-profile-container">
+                      <button type="button" class="btn btn-pink rounded-pill px-4 py-2 d-flex align-items-center gap-2"
+                              (click)="isEditProfile = true">
+                        <i class="feather icon-edit"></i> Editar perfil
+                      </button>
+                    </div>
+                    
                 </div>
                 
                 <div class="profile-detail">
@@ -110,7 +114,7 @@
                                     </div>
                                     <div class="card-content">
                                         <p>Super Likes</p>
-                                        <div class="stat-value">0</div>
+                                        <div class="stat-value">{{profileData.superLikes}}</div>
                                     </div>
                                 </a>
                             </div>
@@ -125,7 +129,7 @@
                                     </div>
                                     <div class="card-content">
                                         <p>Subscripciones</p>
-                                        <div class="stat-value">0</div>
+                                        <div class="stat-value">{{profileData.subscriptions}}</div>
                                     </div>
                                 </a>
                             </div>
@@ -134,32 +138,33 @@
                 </div>
             </div>
             
-            <div class="subscription-section">
-                <h3 class="section-title">Mejora tu experiencia</h3>
-                <p class="section-subtitle">Desbloquea características exclusivas con nuestros planes premium</p>
-                
-                <div class="swiper subscription-swiper">
-                    <div class="swiper-wrapper">
-                        <div class="swiper-slide" *ngFor="let planning of global.planningClients$ | async">
-                            <div class="dz-content subscription-card">
-                                <div class="card-header">
-                                    <h5 class="title">{{planning.name}}</h5>
-                                    <div class="price">{{planning.priceCOP}}<span>/mes</span></div>
-                                    <div class="price">{{planning.priceUSD}}<span>/mes</span></div>
-                                </div>
-                                <ul class="features-list">
-                                    <li>{{planning.items}}</li>
-                                </ul>
-                                <a class="btn rounded-xl">Suscribirse</a>
-                            </div>
+            <!-- <div class="subscription-section">
+              <h3 class="section-title">Mejora tu experiencia</h3>
+              <p class="section-subtitle">Desbloquea características exclusivas con nuestros planes premium</p>
+            
+             <swiper [slidesPerView]="1.1" [spaceBetween]="16" [pagination]="{ clickable: true }" class="mySwiper">
+                <ng-container *ngFor="let planning of global.planningClients$ | async">
+                  <ng-template swiperSlide>
+                    <div class="card subscription-card">
+                      <div class="card-body d-flex flex-column">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                          <h5 class="title mb-0">{{ planning.name }}</h5>
+                          <div>
+                            <span class="price">{{ planning.priceCOP }} <small>/mes</small></span> /
+                            <span class="price">{{ planning.priceUSD }} <small>/mes</small></span>
+                          </div>
                         </div>
-                       
+                        <ul class="features-list mb-3">
+                          <li>{{ planning.items }}</li>
+                        </ul>
+                        <button class="btn btn-pink rounded-pill w-100">Suscribirse</button>
+                      </div>
                     </div>
-                    <div class="swiper-btn">
-                        <div class="swiper-pagination style-1 flex-1"></div>
-                    </div>
-                </div>
-            </div>
+                  </ng-template>
+                </ng-container>
+              </swiper>
+            </div> -->
+            
         </div>
     </div> 
 </div>
@@ -216,41 +221,43 @@
       <!-- Sección de avatar -->
       <div class="profile-area">
         <div class="main-profile">
-          <div class="about-profile">
-            <div class="media rounded-circle">
-              <img [src]="avatarPreview || auth.currentUser?.avatar" alt="profile-image">
-              <input type="file" accept="image/*" (change)="onAvatarSelected($event)" class="d-none" #avatarInput>
-              <button type="button" class="btn btn-sm btn-gradient-pink mt-2" (click)="avatarInput.click()">
-                Cambiar foto
-              </button>
-            </div>
+          <div class="profile-avatar-wrapper">
+            <img [src]="avatarPreview || profileData.avatar || 'assets/images/default-avatar.png'" class="avatar-img" alt="Avatar">
+            <input type="file" #avatarInput accept="image/*" (change)="onAvatarSelected($event)" hidden>
+            <button type="button" class="btn btn-pink btn-sm mt-2" (click)="avatarInput.click()">
+              Cambiar foto
+            </button>
           </div>
+          
         </div>
       </div>
       
       <!-- Galería de imágenes y campos editables -->
       <div class="gallery-section">
         <div class="row g-2 m-b30" data-masonry='{"percentPosition": true }'>
-          <div class="col-4" *ngFor="let photo of photos; let i = index">
-            <div class="dz-drop-box style-2">
-              <div class="drop-bx">
-                <div class="imagePreview" [style.backgroundImage]="'url(' + (photo.url || '../assets/images/recent-pic/drop-bx2.png') + ')'">
-                  <label [attr.for]="'imageUpload' + i" class="add-btn">
-                    <i class="icon feather icon-plus"></i>
-                  </label>
-                  <div class="remove-img remove-btn" (click)="removePhoto(i)">
+          
+            <div class="col-4" *ngFor="let photo of photos; let i = index">
+              <div class="photo-container">
+                <div class="photo-preview" [ngStyle]="{'background-image': photo.url ? 'url(' + photo.url + ')' : 'none'}">
+                  <ng-container *ngIf="!photo.url">
+                    <label [attr.for]="'imageUpload' + i" class="add-photo-btn">
+                      <i class="icon feather icon-plus"></i>
+                    </label>
+                  </ng-container>
+                  <div class="remove-photo-btn" *ngIf="photo.url" (click)="removePhoto(i)">
                     <i class="icon feather icon-x"></i>
                   </div>
-                  <input type="file" [id]="'imageUpload' + i" class="form-control d-none imageUpload" 
-                         (change)="onPhotoSelected($event, i)" accept=".png, .jpg, .jpeg">
+                  <input type="file" [id]="'imageUpload' + i" class="d-none" (change)="onPhotoSelected($event, i)" accept=".png, .jpg, .jpeg">
                 </div>
               </div>
             </div>
-          </div>
+          
+        
+          <button class="btn btn-pink w-100 mt-3 rounded-xl" (click)="addPhoto()">
+            Añadir más fotos
+          </button>
+        
         </div>
-        <button class="btn btn-gradient mb-3 btn-block rounded-xl" (click)="addPhoto()">
-          AÑADIR MEDIA
-        </button>
         
         <!-- Campos editables -->
         <div class="card style-4">

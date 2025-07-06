@@ -215,10 +215,12 @@
                 };
       
                 return { ...authData, user };
+                
               }),
               tap(async (authData) => {
                 this.setUser(authData.user);
-                
+                this.setToken(authData.token, authData.record);
+
                 // ✅ Guarda el token y el modelo en el authStore de PocketBase
                 this.pb.authStore.save(authData.token, authData.record);
               
@@ -227,7 +229,6 @@
                 localStorage.setItem('isLoggedin', 'true');
                 localStorage.setItem('userId', authData.user.id);
                 localStorage.setItem('user', JSON.stringify(authData.user));
-              
                 // 🚨 AQUÍ CARGAS EL PERFIL DE usuariosClient
                 try {
                   const profile = await this.pb.collection('usuariosClient').getFirstListItem(`userId="${authData.user.id}"`);
@@ -334,27 +335,20 @@
     async restoreSession() {
       try {
         const token = localStorage.getItem('accessToken');
-        const userString = localStorage.getItem('user');
+        const recordString = localStorage.getItem('record');
+        if (token && recordString) {
+          const record = JSON.parse(recordString);
+          this.pb.authStore.save(token, record);
+          this.currentUser = JSON.parse(localStorage.getItem('user') || '{}');
     
-        if (token && userString) {
-          const user = JSON.parse(userString);
-          this.pb.authStore.save(token, user); // ✅ Esta es la forma correcta
-          this.currentUser = user;
-          localStorage.setItem('isLoggedin', 'true');
-          localStorage.setItem('userId', this.currentUser.id);
-    
-          // Opcionalmente carga el perfil
-          const profileString = localStorage.getItem('profile');
-          if (profileString) {
-            this.profile = JSON.parse(profileString);
-          } else {
-            await this.loadProfileFromBackend();
-          }
+          // ✔️ Carga siempre el perfil más reciente
+          await this.loadProfileFromBackend();
         }
       } catch (e) {
         console.warn('No se pudo restaurar la sesión:', e);
       }
     }
+    
     
     
     

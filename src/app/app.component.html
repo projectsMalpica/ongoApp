@@ -10,10 +10,12 @@
   <app-profile-local [hidden]="global.activeRoute!='profile-local'"></app-profile-local>
   <app-favorites [hidden]="global.activeRoute!='favorites'"></app-favorites>
   <app-chat [hidden]="global.activeRoute!='chat'"></app-chat>
-  <app-chat-detail [hidden]="global.activeRoute != 'chat-detail'" [user]="global.selectedClient"></app-chat-detail>
-  <app-detailprofile [hidden]="global.activeRoute!='detail-profile'"></app-detailprofile>
+<!--   <app-chat-detail [hidden]="global.activeRoute != 'chat-detail'" [user]="global.selectedClient"></app-chat-detail>
+ -->  <app-detailprofile [hidden]="global.activeRoute!='detail-profile'"></app-detailprofile>
   <app-explorer [hidden]="global.activeRoute!='explorer'"></app-explorer>
   <app-detailprofilelocal [hidden]="global.activeRoute!='detail-profile-local'"></app-detailprofilelocal>
   <app-home-local [hidden]="global.activeRoute!='home-local'"></app-home-local>
   <app-maps [hidden]="global.activeRoute!='maps'"></app-maps>
+  <app-chat-detail *ngIf="global.activeRoute == 'chat-detail'" [user]="auth.currentUser" [receiverId]="global.chatReceiverId"></app-chat-detail>
+
 </div>

@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TermsComponent } from '../terms/terms.component';
 import { PrivacyComponent } from '../privacy/privacy.component';
+import { ChatPocketbaseService } from 'src/app/services/chat.service';
 
 @Component({
   selector: 'app-login',
@@ -24,7 +25,8 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private auth: AuthPocketbaseService,
-    public global: GlobalService
+    public global: GlobalService,
+    public chatService: ChatPocketbaseService
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -54,15 +56,16 @@ export class LoginComponent {
   }
 
   onSubmit() {
-    if (this.loginForm.invalid) {
-      return;
-    }
-
+    if (this.loginForm.invalid) return;
+  
     const { email, password } = this.loginForm.value;
-    
+  
     this.auth.loginUser(email, password).subscribe({
-      next: () => {
-        this.auth.permision(); // Redirigir a la página principal
+      next: async () => {
+        console.log('✅ Login correcto, inicializando chat');
+        
+        await this.chatService.initialize(this.auth.pb);  // Inicializa PocketBase ya autenticado
+        this.auth.permision(); // Luego redirige a la página principal
       },
       error: (error) => {
         console.error('Error en el login:', error);
@@ -75,4 +78,5 @@ export class LoginComponent {
       }
     });
   }
+  
 }
