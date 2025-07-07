@@ -160,7 +160,7 @@
 }
 
 .dz-tag {
-  background: #f8f9fa;
+  background: #ff50a20a;
   border-radius: 20px;
   padding: 0.5rem 1rem;
   font-size: 0.9rem;
@@ -273,3 +273,31 @@
   background-color: #e23350;
 }
 
+.profile-area .main-profile .about-profile .media {
+  max-width: 150px;
+  position: relative;
+  margin: 0 auto 15px;
+  width: 100px;
+  height: 100px;
+  top: 0;
+  left: 0;
+  padding: 10px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+.btn-gradient-pink {
+  background: linear-gradient(90deg, #ff4e8e, #f70192);
+  color: white;
+  border: none;
+}
+.btn-gradient-purple {
+  background: linear-gradient(90deg, #7b2ff7, #f70192);
+  color: white;
+  border: none;
+}
+
+.btn-gradient-pink:hover,
+.btn-gradient-purple:hover {
+  opacity: 0.85;
+}

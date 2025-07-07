@@ -17,3 +17,6 @@
     background-clip: initial !important;
     color: #fff !important;
 }
+.menubar-area .menubar-nav .nav-link.active {
+    color: white;
+  }

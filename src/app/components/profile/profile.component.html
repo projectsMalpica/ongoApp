@@ -13,7 +13,7 @@
                         </svg>
                     </div>
                     <div class="edit-profile-container">
-                      <button type="button" class="btn btn-pink rounded-pill px-4 py-2 d-flex align-items-center gap-2"
+                      <button type="button" class="btn btn-gradient-purple rounded-pill px-4 py-2 d-flex align-items-center gap-2"
                               (click)="isEditProfile = true">
                         <i class="feather icon-edit"></i> Editar perfil
                       </button>
@@ -100,6 +100,17 @@
                       </li>
                       
                   </ul>
+              </div>
+              <div class="gallery-section">
+                <div class="row g-2 m-b30" data-masonry='{"percentPosition": true }'>
+                  <div class="col-4" *ngFor="let photo of photos; let i = index">      
+                    <div class="photo-container">
+                      <div class="photo-preview" [ngStyle]="{'background-image': 'url(' + photo.url + ')'}"
+                      >
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
               </div>
           </div>
@@ -224,7 +235,7 @@
           <div class="profile-avatar-wrapper">
             <img [src]="avatarPreview || profileData.avatar || 'assets/images/default-avatar.png'" class="avatar-img" alt="Avatar">
             <input type="file" #avatarInput accept="image/*" (change)="onAvatarSelected($event)" hidden>
-            <button type="button" class="btn btn-pink btn-sm mt-2" (click)="avatarInput.click()">
+            <button type="button" class="btn btn-gradient-purple btn-sm mt-2" (click)="avatarInput.click()">
               Cambiar foto
             </button>
           </div>
@@ -238,7 +249,9 @@
           
             <div class="col-4" *ngFor="let photo of photos; let i = index">
               <div class="photo-container">
-                <div class="photo-preview" [ngStyle]="{'background-image': photo.url ? 'url(' + photo.url + ')' : 'none'}">
+                <div class="photo-preview"
+                [ngStyle]="{'background-image': 'url(' + photo.url + ')'}"
+>
                   <ng-container *ngIf="!photo.url">
                     <label [attr.for]="'imageUpload' + i" class="add-photo-btn">
                       <i class="icon feather icon-plus"></i>
@@ -253,9 +266,9 @@
             </div>
           
         
-          <button class="btn btn-pink w-100 mt-3 rounded-xl" (click)="addPhoto()">
+         <!--  <button class="btn btn-gradient-purple w-100 mt-3 rounded-xl" (click)="addPhoto()">
             Añadir más fotos
-          </button>
+          </button> -->
         
         </div>
         
@@ -367,7 +380,7 @@
           <button type="button" class="btn btn-light flex-grow-1" (click)="cancelEdit()">
             Cancelar
           </button>
-          <button type="button" class="btn btn-primary flex-grow-1" (click)="saveProfile()">
+          <button type="button" class="btn btn-gradient-purple flex-grow-1" (click)="saveProfile()">
             Guardar
           </button>
         </div>
@@ -405,7 +418,7 @@
       </li>
     </ul>
     <div class="mt-3">
-      <button class="btn btn-primary w-100" 
+      <button class="btn btn-gradient-purple w-100" 
               data-bs-dismiss="offcanvas"
               (click)="saveInterests()">
         Guardar
@@ -435,7 +448,7 @@
       </div>
     </div>
     <div class="mt-3">
-      <button class="btn btn-primary w-100" 
+      <button class="btn btn-gradient-purple w-100" 
               data-bs-dismiss="offcanvas"
               (click)="saveRelationshipGoal()">
         Guardar
@@ -492,7 +505,7 @@
       </div>
     </div>
     <div class="mt-3">
-      <button class="btn btn-primary w-100" 
+      <button class="btn btn-gradient-purple w-100" 
               data-bs-dismiss="offcanvas"
               (click)="saveSexualOrientation()">
         Guardar
@@ -521,7 +534,7 @@
       </div>
     </div>
     <div class="mt-3">
-      <button class="btn btn-primary w-100" 
+      <button class="btn btn-gradient-purple w-100" 
               data-bs-dismiss="offcanvas"
               (click)="saveGender()">
         Guardar

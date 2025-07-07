@@ -119,6 +119,7 @@ async ngOnInit() {
 
 
 
+
 async loadProfile() {
   const user = this.auth.getCurrentUser();
   console.log('Cargando perfil de usuario:', user);
@@ -161,16 +162,25 @@ async loadProfile() {
 }
 
 parsePhotos(photosData: any): any[] {
-  if (typeof photosData === 'string' && photosData.trim().startsWith('[')) {
+  let photosArray: { url: string }[] = [];
+
+  if (Array.isArray(photosData)) {
+    photosArray = photosData.map((url: string) => ({ url }));
+  } else if (typeof photosData === 'string' && photosData.trim().startsWith('[')) {
     try {
-      return JSON.parse(photosData).map((url: string) => ({ url }));
+      const parsed = JSON.parse(photosData);
+      photosArray = Array.isArray(parsed) ? parsed.map((url: string) => ({ url })) : [];
     } catch (error) {
       console.warn('No se pudo parsear photos:', error);
-      return Array(6).fill({});
     }
-  } else {
-    return Array(6).fill({});
   }
+
+  // Rellenar hasta 6 slots
+  while (photosArray.length < 6) {
+    photosArray.push({ url: '' });
+  }
+
+  return photosArray;
 }
 
 

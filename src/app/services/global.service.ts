@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import PocketBase from 'pocketbase';
 import { BehaviorSubject } from 'rxjs';
-import { AuthPocketbaseService } from './authPocketbase.service';
 import { UserInterface } from '../interface/user-interface ';
 
 @Injectable({
@@ -33,7 +32,8 @@ export class GlobalService {
   selectedServicesPartner: any[] = [];
   allServices: { value: string; label: string }[] = [];
   
-  constructor(public auth: AuthPocketbaseService) {}
+  currentUser: any;
+  constructor() {}
 
   /**
    * ✅ Llama este método DESPUÉS del login
@@ -77,7 +77,11 @@ export class GlobalService {
    * ✅ Carga el perfil y lo guarda en memoria y localStorage
    */
   async loadProfile() {
-    const user = this.auth.getCurrentUser();
+    if (!this.pb.authStore.isValid) {
+      console.warn('No autenticado, omitiendo realtime');
+      return;
+    }
+    const user = this.getCurrentUser();
     if (!user?.id) {
       console.error('No hay usuario autenticado');
       return;
@@ -88,11 +92,18 @@ export class GlobalService {
         .collection('usuariosClient')
         .getFirstListItem(`userId="${user.id}"`);
       this.profileData = userData;
-      this.auth.setUser(userData as unknown as UserInterface);
+      this.setUser(userData as unknown as UserInterface);
       localStorage.setItem('profile', JSON.stringify(userData));
     } catch (error) {
       console.error('Error al cargar el perfil:', error);
     }
+  }
+  setUser(user: UserInterface) {
+    this.currentUser = user;
+  }
+
+  getCurrentUser() {
+    return this.currentUser;
   }
 
   // ========================== //
