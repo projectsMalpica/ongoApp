@@ -20,6 +20,7 @@ export class ChatDetailComponent implements OnInit, AfterViewInit {
 
   form: FormGroup;
   messages: any[] = [];
+  currentUserId: string = '';
   
   constructor(
     private chatService: ChatPocketbaseService,
@@ -29,24 +30,57 @@ export class ChatDetailComponent implements OnInit, AfterViewInit {
   }
 
 
-  async ngOnInit() {
+  
+  /* async ngOnInit() {
     console.log('🟢 Chat iniciado con:', this.receiverId);
-
+  
+    this.currentUserId = this.chatService.getCurrentUserId();
+    console.log('Usuario actual:', this.currentUserId);
+  
+    this.chatService.chatReceiverId = this.receiverId;
     await this.chatService.loadMessages(this.receiverId);
-
+  
     this.chatService.messages$.subscribe(messages => {
+      console.log('🔍 Mensajes recibidos:', messages);
       this.messages = messages;
       this.scrollToBottom();
     });
-  }
-
+  } */
+  
+    async ngOnInit() {
+      this.currentUserId = this.chatService.getCurrentUserId();
+      console.log('🔍 currentUserId:', this.currentUserId);
+    
+      this.chatService.chatReceiverId = this.receiverId;
+    
+      await this.chatService.loadMessages(this.receiverId);
+    
+      this.chatService.messages$.subscribe(messages => {
+        console.log('🟢 Mensajes actualizados:', messages);
+        this.messages = messages;
+        this.scrollToBottom();
+      });
+    }
+    
+  
   async send() {
     const message = this.form.value.message?.trim();
     if (!message) return;
-
-    await this.chatService.sendMessage(message, this.receiverId);
-    this.form.reset();
+  
+/*     await this.chatService.sendMessage(message, this.receiverId);
+ */    
+    await this.chatService.pb.collection('messages').create({
+      text: message,
+      sender: this.currentUserId,
+      receiver: this.receiverId
+    }).then((record) => {
+      const current = this.chatService.messagesSubject.getValue();
+      this.chatService.messagesSubject.next([...current, record]);
+      this.form.reset();
+    });
+    
   }
+  
     
   ngAfterViewInit() {
     this.scrollToBottom();

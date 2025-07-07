@@ -11,9 +11,10 @@ import { GlobalService } from 'src/app/services/global.service';
 export class DetailprofileComponent {
 constructor(public global: GlobalService){}
 abrirChat(cliente: any) {
-  console.log('Abriendo chat con:', cliente); // ✅ Para confirmar en consola
-  this.global.selectedClient = cliente;
+  console.log('Abriendo chat con:', cliente);
+  this.global.selectedClient = cliente;  // ✅ Guarda el cliente completo
   this.global.activeRoute = 'chat-detail';
 }
+
 
 }

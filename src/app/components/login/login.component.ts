@@ -62,10 +62,15 @@ export class LoginComponent {
   
     this.auth.loginUser(email, password).subscribe({
       next: async () => {
-        console.log('✅ Login correcto, inicializando chat');
+        console.log('✅ Login exitoso');
+  
+        await this.auth.permision();  // Ejemplo: carga permisos o redirige
         
-        await this.chatService.initialize(this.auth.pb);  // Inicializa PocketBase ya autenticado
-        this.auth.permision(); // Luego redirige a la página principal
+        // Carga datos iniciales
+        await this.global.loadProfile();  // ⬅️ Centraliza la carga del perfil
+        await this.global.initClientesRealtime(); // ⬅️ Realtime solo si logueado
+  
+        this.global.activeRoute = 'home';  // Redirige a home
       },
       error: (error) => {
         console.error('Error en el login:', error);
@@ -78,5 +83,6 @@ export class LoginComponent {
       }
     });
   }
+  
   
 }

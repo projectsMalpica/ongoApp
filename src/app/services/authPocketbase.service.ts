@@ -236,7 +236,7 @@
                 } catch (error) {
                   console.warn('⚠️ No se encontró el perfil en usuariosClient', error);
                 }
-              })
+                            })
               
             );
         }

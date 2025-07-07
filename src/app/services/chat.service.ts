@@ -1,103 +1,89 @@
-import { Injectable } from '@angular/core';
-import PocketBase from 'pocketbase';
-import { BehaviorSubject } from 'rxjs';
+import { Injectable } from "@angular/core";
+import PocketBase, { RecordModel } from "pocketbase";
+import { BehaviorSubject } from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatPocketbaseService {
-
-  private pb = new PocketBase('http://db.ongomatch.com:8090'); // Cambia a https cuando tengas SSL
-  private messagesSubject = new BehaviorSubject<any[]>([]);
+  public pb = new PocketBase('https://db.ongomatch.com:8090');
+  public messagesSubject = new BehaviorSubject<RecordModel[]>([]);
   public messages$ = this.messagesSubject.asObservable();
-  public currentUser: any = null;
-  public chatReceiverId: string = '';
+
+  private userId = '';
+  chatReceiverId: string = '';
   constructor() {
+    if (this.pb.authStore.model) {
+      this.userId = this.pb.authStore.model.id;
+    }
   }
 
- /*  private initRealtime() {
-    const userId = this.pb.authStore.model?.id;
-    if (!userId) {
-      console.error('[ChatPocketbaseService] No autenticado: no se puede suscribir a realtime.');
-      return;
-    }
-    this.pb.collection('messages').subscribe('*', (event) => {
-      console.log('Evento realtime:', event);
-      if (event.action === 'create') {
-        const current = this.messagesSubject.getValue();
-        this.messagesSubject.next([...current, event.record]);
-      }
-    });
-  } */
-  private initRealtime() {
-    const userId = this.pb.authStore.model?.id;
-    if (!userId) {
-      console.error('[ChatPocketbaseService] No autenticado: no se puede suscribir a realtime.');
-      return;
-    }
-  
+  getCurrentUserId(): string {
+    return this.userId;
+  }
+
+  async initRealtime(receiverId: string) {
+    if (!this.userId) return;
+
+    await this.pb.collection('messages').unsubscribe('*'); // Limpiar subs previas
+
     this.pb.collection('messages').subscribe('*', (event) => {
       if (event.action !== 'create') return;
       const record = event.record;
-      
-      // Solo agregar el mensaje si el usuario es parte del chat actual
       const involved = [record['sender'], record['receiver']];
-      if (involved.includes(userId) && involved.includes(this.chatReceiverId)) {
+
+      if (involved.includes(this.userId) && involved.includes(receiverId)) {
         const current = this.messagesSubject.getValue();
         this.messagesSubject.next([...current, record]);
       }
     });
   }
-  
-  public async initialize(pbInstance: PocketBase) {
-    this.pb = pbInstance;
-    this.initRealtime();
-  }
 
   async sendMessage(text: string, receiverId: string) {
-    const senderId = this.pb.authStore.model?.id;
-    if (!senderId) {
-      console.error('[ChatPocketbaseService] No autenticado: no se puede enviar mensaje.');
-      return;
-    }
-    if (!receiverId) {
-      console.error('[ChatPocketbaseService] receiverId indefinido: no se puede enviar mensaje.');
-      return;
-    }
     try {
-      await this.pb.collection('messages').create({
+      const record = await this.pb.collection('messages').create({
         text,
-        sender: senderId,
-        receiver: receiverId,
+        sender: this.userId,
+        receiver: receiverId
       });
-      console.log('[ChatPocketbaseService] Mensaje enviado correctamente');
+      // Agregamos el mensaje manualmente (opcional si realtime funciona bien)
+      const current = this.messagesSubject.getValue();
+      this.messagesSubject.next([...current, record]);
+      console.log('[ChatPocketbaseService] Mensaje enviado:', record);
     } catch (error) {
       console.error('[ChatPocketbaseService] Error enviando mensaje:', error);
     }
   }
 
   async loadMessages(receiverId: string) {
-    const userId = this.pb.authStore.model?.id;
-    if (!userId) {
-      console.error('[ChatPocketbaseService] No autenticado: no se pueden cargar mensajes.');
-      this.messagesSubject.next([]);
-      return;
-    }
-    if (!receiverId) {
-      console.error('[ChatPocketbaseService] receiverId indefinido: no se pueden cargar mensajes.');
-      this.messagesSubject.next([]);
-      return;
-    }
     try {
+      await this.initRealtime(receiverId);
+
       const res = await this.pb.collection('messages').getFullList({
-        filter: `(sender="${userId}" && receiver="${receiverId}") || (sender="${receiverId}" && receiver="${userId}")`,
+        filter: `(sender="${this.userId}" && receiver="${receiverId}") || (sender="${receiverId}" && receiver="${this.userId}")`,
         sort: '-created'
       });
+
       this.messagesSubject.next(res.reverse());
       console.log(`[ChatPocketbaseService] Mensajes cargados (${res.length})`);
     } catch (error) {
       console.error('[ChatPocketbaseService] Error cargando mensajes:', error);
       this.messagesSubject.next([]);
     }
+  }
+
+  async login(email: string, password: string) {
+    try {
+      const authData = await this.pb.collection('users').authWithPassword(email, password);
+      this.userId = authData.record.id;
+      console.log('[ChatPocketbaseService] Login exitoso:', authData);
+    } catch (error) {
+      console.error('[ChatPocketbaseService] Error al iniciar sesión:', error);
+    }
+  }
+
+  logout() {
+    this.pb.authStore.clear();
+    console.log('[ChatPocketbaseService] Sesión cerrada');
   }
 }
