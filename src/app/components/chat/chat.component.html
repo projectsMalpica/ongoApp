@@ -8,7 +8,7 @@
             </div>
             <input type="text" class="form-control" placeholder="Buscar...">								
         </div>
-        <h6 class="tiltle mb-3">Nuevos Matches</h6>
+        <!-- <h6 class="tiltle mb-3">Nuevos Matches</h6>
         <div class="swiper chat-swiper">
             <div class="swiper-wrapper">
                 <div class="swiper-slide">
@@ -68,163 +68,30 @@
                     </a>
                 </div>
             </div>
-        </div>
+        </div> -->
         <div class="title-bar">
             <h6 class="title">Mensajes</h6>
         </div>
         <ul class="message-list">
-            <li>
-                <a (click)="global.activeRoute = 'chat-detail'">
-                    <div class="media media-60">
-                        <img src="../assets/images/user/pic1.jpg" alt="image">
-                    </div>
-                    <div class="media-content">
-                        <div>
-                            <h6 class="name">Leneve</h6>
-                            <p class="last-msg">Would love to!</p>
-                        </div>
-                        <div class="right-content">
-                            <span class="date">2m ago</span>
-                            <div class="seen-btn active dz-flex-box">
-                                <i class="icon feather icon-check"></i>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </li>
-            <li class="active">
-                <a>
-                    <div class="media media-60">
-                        <img src="../assets/images/user/pic2.jpg" alt="image">
-                    </div>
-                    <div class="media-content">
-                        <div>
-                            <h6 class="name">Matt</h6>
-                            <p class="last-msg">Is that because we like the...</p>
-                        </div>
-                        <div class="right-content">
-                            <span class="date">4m ago</span>
-                            <div class="seen-btn dz-flex-box">
-                                <i class="icon feather icon-check"></i>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </li>
-            <li>
-                <a>
-                    <div class="media media-60">
-                        <img src="../assets/images/user/pic3.jpg" alt="image">
-                    </div>
-                    <div class="media-content">
-                        <div>
-                            <h6 class="name">Karthik</h6>
-                            <p class="last-msg">How do you know john?</p>
-                        </div>
-                        <div class="right-content">
-                            <span class="date">8h ago</span>
-                            <div class="seen-btn active dz-flex-box">
-                                <i class="icon feather icon-check"></i>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </li>
-            <li class="active">
-                <a>
-                    <div class="media media-60">
-                        <img src="../assets/images/user/pic4.jpg" alt="image">
-                    </div>
-                    <div class="media-content">
-                        <div>
-                            <h6 class="name">Elisha</h6>
-                            <p class="last-msg">Have you even been...</p>
-                        </div>
-                        <div class="right-content">
-                            <span class="date">1d ago</span>
-                            <div class="seen-btn dz-flex-box">
-                                <i class="icon feather icon-check"></i>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </li>
-            <li>
-                <a>
-                    <div class="media media-60">
-                        <img src="../assets/images/user/pic5.jpg" alt="image">
-                    </div>
-                    <div class="media-content">
-                        <div>
-                            <h6 class="name">Wyatt</h6>
-                            <p class="last-msg">that so awesome!</p>
-                        </div>
-                        <div class="right-content">
-                            <span class="date">3h ago</span>
-                            <div class="seen-btn dz-flex-box">
-                                <i class="icon feather icon-check"></i>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </li>
-            <li>
-                <a>
-                    <div class="media media-60">
-                        <img src="../assets/images/user/pic6.jpg" alt="image">
-                    </div>
-                    <div class="media-content">
-                        <div>
-                            <h6 class="name">Leneve</h6>
-                            <p class="last-msg">Is that because we like the...</p>
-                        </div>
-                        <div class="right-content">
-                            <span class="date">5d ago</span>
-                            <div class="seen-btn active dz-flex-box">
-                                <i class="icon feather icon-check"></i>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </li>
-            <li class="active">
-                <a>
-                    <div class="media media-60">
-                        <img src="../assets/images/user/pic7.jpg" alt="image">
-                    </div>
-                    <div class="media-content">
-                        <div>
-                            <h6 class="name">Matt</h6>
-                            <p class="last-msg">Would love to!</p>
-                        </div>
-                        <div class="right-content">
-                            <span class="date">2m ago</span>
-                            <div class="seen-btn active dz-flex-box">
-                                <i class="icon feather icon-check"></i>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </li>
-            <li>
-                <a>
-                    <div class="media media-60">
-                        <img src="../assets/images/user/pic8.jpg" alt="image">
-                    </div>
-                    <div class="media-content">
-                        <div>
-                            <h6 class="name">Wyatt</h6>
-                            <p class="last-msg">Would love to!</p>
-                        </div>
-                        <div class="right-content">
-                            <span class="date">4m ago</span>
-                            <div class="seen-btn dz-flex-box">
-                                <i class="icon feather icon-check"></i>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </li>
-        </ul>
+  <li *ngFor="let msg of messages">
+    <a (click)="global.activeRoute = 'chat-detail'">
+      <div class="media media-60">
+        <img src="../assets/images/user/pic1.jpg" alt="image">
+      </div>
+      <div class="media-content">
+        <div>
+          <h6 class="name">{{msg['sender']}}</h6>
+          <p class="last-msg">{{msg['text']}}</p>
+        </div>
+        <div class="right-content">
+          <span class="date">2m ago</span>
+          <div class="seen-btn active dz-flex-box">
+            <i class="icon feather icon-check"></i>
+          </div>
+        </div>
+      </div>
+    </a>
+  </li>
+</ul>
     </div>    
 </div>

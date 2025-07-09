@@ -301,3 +301,18 @@
 .btn-gradient-purple:hover {
   opacity: 0.85;
 }
+
+/* detailprofile.component.css */
+.fixed-bottom-action {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+  background: #242a34; /* o transparente si prefieres */
+  padding: 12px 16px 20px 16px;
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.06);
+  display: flex;
+  justify-content: center;
+  border-radius: 5px 5px;
+}
