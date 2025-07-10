@@ -18,6 +18,8 @@ import { ExplorerComponent } from './components/explorer/explorer.component';
 import { DetailprofilelocalComponent } from './components/detailprofilelocal/detailprofilelocal.component';
 import { HomeLocalComponent } from './components/home-local/home-local.component';
 import { MapsComponent } from './components/maps/maps.component';
+import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 
 @Component({
   selector: 'app-root',
@@ -38,7 +40,9 @@ import { MapsComponent } from './components/maps/maps.component';
     ExplorerComponent,
     DetailprofilelocalComponent,
     HomeLocalComponent,
-    MapsComponent
+    MapsComponent,
+    ForgotPasswordComponent,
+    ResetPasswordComponent
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
@@ -56,6 +60,17 @@ export class AppComponent {
     if (localStorage.getItem('isLoggedin')) {
       this.auth.permision();
     }
+    this.handleVirtualRouting();
+  }
+  private handleVirtualRouting() {
+    const hash = window.location.hash; // Ej: #reset-password=TOKEN123
+
+    if (hash.startsWith('#reset-password=')) {
+      const token = hash.replace('#reset-password=', '');
+      localStorage.setItem('resetToken', token);  // Guarda temporalmente el token
+      this.global.setRoute('reset-password');     // Cambia la vista al reset-password
+    }
+    // Puedes agregar más rutas virtuales aquí
   }
   
 }

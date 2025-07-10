@@ -34,7 +34,7 @@
               <input type="checkbox" id="remember" class="form-check-input" formControlName="remember">
               <label for="remember" class="form-check-label" style="color: #0375ea;">Recordarme</label>
             </div>
-            <a class="forgot-password">¿Olvidaste tu contraseña?</a>
+            <a class="forgot-password" (click)="goToForgotPassword()">¿Olvidaste tu contraseña?</a>
           </div>
           
           <button type="submit" class="btn btn-lg btn-gradient-purple w-100" [disabled]="loginForm.invalid">

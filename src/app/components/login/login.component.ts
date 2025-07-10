@@ -83,6 +83,9 @@ export class LoginComponent {
       }
     });
   }
-  
-  
+  goToForgotPassword() {
+    this.global.setRoute('forgot-password'); // Si usas routing virtual
+    // this.router.navigate(['/forgot-password']); // Si usas Angular Router
+  }
+   
 }

@@ -62,6 +62,10 @@ export class GlobalService {
   setRoute(route: string) {
     this.activeRoute = route;
   }
+  
+  getRoute(): string {
+    return this.activeRoute;
+  }
 
   previewPartner(partner: any) {
     this.selectedPartner = partner;

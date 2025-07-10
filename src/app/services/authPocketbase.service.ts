@@ -348,10 +348,7 @@
         console.warn('No se pudo restaurar la sesión:', e);
       }
     }
-    
-    
-    
-    
+
     async waitForAuthUser(retries = 10, delayMs = 300): Promise<boolean> {
       for (let i = 0; i < retries; i++) {
         if (this.currentUser?.id) {
@@ -360,6 +357,26 @@
         await new Promise(resolve => setTimeout(resolve, delayMs));
       }
       return false;
+    }
+
+    async requestPasswordReset(email: string): Promise<void> {
+      try {
+        await this.pb.collection('users').requestPasswordReset(email);
+        console.log('✔️ Solicitud de reseteo enviada correctamente.');
+      } catch (error) {
+        console.error('❌ Error al solicitar el reseteo de contraseña:', error);
+        throw error;
+      }
+    }
+
+    async confirmPasswordReset(token: string, newPassword: string, confirmPassword: string): Promise<void> {
+      try {
+        await this.pb.collection('users').confirmPasswordReset(token, newPassword, confirmPassword);
+        console.log('✔️ Contraseña actualizada correctamente');
+      } catch (error) {
+        console.error('❌ Error al actualizar la contraseña:', error);
+        throw error;
+      }
     }
     
   }
