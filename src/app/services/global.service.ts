@@ -162,8 +162,7 @@ export class GlobalService {
     });
   }
   public clearUrlHash() {
-    history.replaceState(null, '', window.location.pathname);
-  }
+    history.replaceState(null, '', window.location.pathname);  }
   
 }
 

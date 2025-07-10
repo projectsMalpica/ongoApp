@@ -63,15 +63,22 @@ export class AppComponent {
     this.handleVirtualRouting();
   }
   private handleVirtualRouting() {
-    const hash = window.location.hash; // Ej: #reset-password=TOKEN123
-
-    if (hash.startsWith('#reset-password=')) {
-      const token = hash.replace('#reset-password=', '');
-      localStorage.setItem('resetToken', token);
-      this.global.clearUrlHash();
+    const hash = window.location.hash; // Ej: #reset-password/abc123
+  
+    if (!hash) return;
+  
+    const parts = hash.substring(1).split('/'); // Quita el '#' y separa por "/"
+    const route = parts[0]; // 'reset-password'
+    const param = parts[1]; // 'abc123'
+  
+    if (route === 'reset-password' && param) {
+      localStorage.setItem('resetToken', param);
       this.global.setRoute('reset-password');
-    } 
-    
+      this.global.clearUrlHash();
+    }
+  
+    // Opcional: manejar otras rutas virtuales
   }
+  
   
 }
