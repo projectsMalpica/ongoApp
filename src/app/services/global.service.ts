@@ -33,7 +33,9 @@ export class GlobalService {
   allServices: { value: string; label: string }[] = [];
   
   currentUser: any;
-  constructor() {}
+  constructor() {
+    this.clearUrlHash();
+  }
 
   /**
    * ✅ Llama este método DESPUÉS del login
@@ -159,5 +161,9 @@ export class GlobalService {
       subject.next(current);
     });
   }
+  public clearUrlHash() {
+    history.replaceState(null, '', window.location.pathname);
+  }
+  
 }
 

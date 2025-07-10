@@ -67,10 +67,11 @@ export class AppComponent {
 
     if (hash.startsWith('#reset-password=')) {
       const token = hash.replace('#reset-password=', '');
-      localStorage.setItem('resetToken', token);  // Guarda temporalmente el token
-      this.global.setRoute('reset-password');     // Cambia la vista al reset-password
-    }
-    // Puedes agregar más rutas virtuales aquí
+      localStorage.setItem('resetToken', token);
+      this.global.clearUrlHash();
+      this.global.setRoute('reset-password');
+    } 
+    
   }
   
 }
