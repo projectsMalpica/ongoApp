@@ -35,22 +35,32 @@ export class ResetPasswordComponent implements OnInit {
   }
 
   async onSubmit() {
+    const { password, passwordConfirm } = this.resetForm.value;
     const token = localStorage.getItem('resetToken') || '';
 
     if (!token) {
-      this.error = 'Token no válido. Por favor, vuelve a solicitar el enlace.';
+      this.error = 'Token no encontrado. Por favor, vuelve a solicitar el enlace.';
       return;
     }
-    
-    await this.authService.confirmPasswordReset(token, this.resetForm.value.password, this.resetForm.value.passwordConfirm);
-    
-    // Limpia el token después del cambio
-    localStorage.removeItem('resetToken');
-    
-    this.message = 'Contraseña actualizada correctamente';
-    await this.authService.confirmPasswordReset(token, this.resetForm.value.password, this.resetForm.value.passwordConfirm);
-localStorage.removeItem('resetToken');
-this.global.setRoute('login');
 
+    if (password !== passwordConfirm) {
+      this.error = 'Las contraseñas no coinciden.';
+      return;
+    }
+
+    try {
+      await this.authService.confirmPasswordReset(token, password, passwordConfirm);
+      this.message = '¡Contraseña actualizada correctamente!';
+      
+      // Limpia el token y redirige a login
+      localStorage.removeItem('resetToken');
+      setTimeout(() => {
+        this.global.setRoute('login');
+      }, 1500);
+    } catch (error) {
+      this.error = 'Error al actualizar la contraseña. Por favor, verifica el enlace o inténtalo más tarde.';
+      console.error(error);
+    }
   }
+
 }

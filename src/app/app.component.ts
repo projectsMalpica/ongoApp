@@ -57,28 +57,37 @@ export class AppComponent {
   }
   ngOnInit(): void {
     // Verificar autenticación al iniciar la aplicación
-    if (localStorage.getItem('isLoggedin')) {
+   /*  if (localStorage.getItem('isLoggedin')) {
       this.auth.permision();
-    }
+    } */
     this.handleVirtualRouting();
+
+    if (!this.global.getRoute()) {
+      // Verificar si hay sesión
+      if (localStorage.getItem('isLoggedin')) {
+        this.auth.permision(); // ✔️ Redirige según el tipo de usuario
+      } else {
+        this.global.setRoute('register'); // ✔️ Solo si no detectó otra ruta
+      }
+    }
   }
   private handleVirtualRouting() {
-    const hash = window.location.hash; // Ej: #reset-password/abc123
+    const hash = window.location.hash;
   
     if (!hash) return;
   
-    const parts = hash.substring(1).split('/'); // Quita el '#' y separa por "/"
+    const parts = hash.substring(1).split('/');
     const route = parts[0]; // 'reset-password'
-    const param = parts[1]; // 'abc123'
+    const param = parts.slice(1).join('/'); // Toma el resto por si hay más barras
   
     if (route === 'reset-password' && param) {
+      console.log('🔑 Token detectado:', param);
       localStorage.setItem('resetToken', param);
       this.global.setRoute('reset-password');
-      this.global.clearUrlHash();
+      this.global.clearUrlHash(); // Limpia el hash de la URL
     }
-  
-    // Opcional: manejar otras rutas virtuales
   }
+  
   
   
 }

@@ -7,7 +7,8 @@ import { UserInterface } from '../interface/user-interface ';
   providedIn: 'root',
 })
 export class GlobalService {
-  activeRoute: string = 'register';
+  /* activeRoute: string = 'register'; */
+  activeRoute: string = ''; // Sin valor inicial
   pb = new PocketBase('https://db.ongomatch.com:8090');
 
   // Observables de datos
