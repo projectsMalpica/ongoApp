@@ -23,63 +23,100 @@ constructor(public global: GlobalService){}
       this.map.resize();
     }); 
   }
-  async ngAfterViewInit() {
+ /*  async ngAfterViewInit() {
     this.map = new mapboxgl.Map({
       container: this.mapContainer.nativeElement,
-      style: 'mapbox://styles/mapbox/dark-v11',  // mapa oscuro
-      center: [-75.576, 6.244],                  // valor “fallback”
-      zoom: 13,
-      accessToken: 'pk.eyJ1Ijoib25nb21hdGNoIiwiYSI6ImNtYnNnMDJyeTBrYWQycHB4aHIzYXpybTIifQ.8Wc3ow1OKOUh_fxiXMgTtQ',      // ¡no quemes el token!
-      attributionControl:false
-    });
-  
-    /* Control nativo que localiza y sigue al usuario */
-    this.map.addControl(new mapboxgl.GeolocateControl({
-      positionOptions: { enableHighAccuracy:true },
-      trackUserLocation:true,
-      showUserHeading:true,
-    }));
-  
-    /* Si solo quieres centrar una vez: */
-    navigator.geolocation.getCurrentPosition(({coords})=>{
-      this.map.setCenter([coords.longitude, coords.latitude]);
-    });
-    /* this.map = new mapboxgl.Map({
-      container: this.mapContainer.nativeElement,
-      style: 'mapbox://styles/mapbox/streets-v12',
-      center: [-75.576, 6.244], // Medellín
+      style: 'mapbox://styles/mapbox/dark-v11',
+      center: [-75.576, 6.244],
       zoom: 13,
       accessToken: 'pk.eyJ1Ijoib25nb21hdGNoIiwiYSI6ImNtYnNnMDJyeTBrYWQycHB4aHIzYXpybTIifQ.8Wc3ow1OKOUh_fxiXMgTtQ',
       attributionControl: false
-    }); */
-
-    this.map.addControl(new mapboxgl.NavigationControl());
-    this.map.on('load', () => {
-      setTimeout(() => this.map.resize(), 300);
     });
-    
+  
+    // Control para centrar en ubicación actual
+    this.map.addControl(new mapboxgl.GeolocateControl({
+      positionOptions: { enableHighAccuracy: true },
+      trackUserLocation: true,
+      showUserHeading: true,
+    }));
+  
+    // Botones de zoom y rotación
+    this.map.addControl(new mapboxgl.NavigationControl());
+  
+    // Una vez cargado el mapa, fuerza redimensionado
+    this.map.on('load', () => {
+      this.map.resize(); // resuelve problema de render incompleto :contentReference[oaicite:1]{index=1}
+    });
+  
+    // Carga marcadores y ajusta límites
     await this.cargarLocales();
     this.fitToBounds();
-    // Real-time updates
-    this.pb.collection('usuariosPartner').subscribe('*', (e) => {
+  
+    // Suscripción a cambios en tiempo real
+    this.pb.collection('usuariosPartner').subscribe('*', e => {
       this.actualizarMarcadores(e.record);
     });
-
+  
+    // Control de búsqueda geocodificada
+    const geocoder = new MapboxGeocoder({
+    accessToken: 'pk.eyJ1Ijoib25nb21hdGNoIiwiYSI6ImNtYnNnMDJyeTBrYWQycHB4aHIzYXpybTIifQ.8Wc3ow1OKOUh_fxiXMgTtQ',
+      mapboxgl,
+      marker: false,
+      placeholder: 'Buscar lugar'
+    });
+    this.map.addControl(geocoder, 'top-left');
+    geocoder.on('result', e => {
+      const [lng, lat] = e.result.center as [number, number];
+      this.map.flyTo({ center: [lng, lat], zoom: 14 });
+    });
+  } */
+  
+  async ngAfterViewInit() {
+    this.map = new mapboxgl.Map({
+      container: this.mapContainer.nativeElement,
+      style: 'mapbox://styles/mapbox/dark-v11',
+      center: [-75.576, 6.244],
+      zoom: 13,
+      accessToken: 'pk.eyJ1Ijoib25nb21hdGNoIiwiYSI6ImNtYnNnMDJyeTBrYWQycHB4aHIzYXpybTIifQ.8Wc3ow1OKOUh_fxiXMgTtQ',
+      attributionControl: false
+    });
+  
+    this.map.addControl(new mapboxgl.FullscreenControl());
+    this.map.addControl(new mapboxgl.GeolocateControl({
+      positionOptions: { enableHighAccuracy: true },
+      trackUserLocation: true,
+      showUserHeading: true,
+    }));
+  
+    this.map.addControl(new mapboxgl.NavigationControl());
+    this.map.addControl(new mapboxgl.FullscreenControl());
+  
+    this.map.on('load', () => {
+      this.map.resize();
+  
+      this.cargarLocales().then(() => {
+        this.fitToBounds();
+      });
+    });
+  
+    this.pb.collection('usuariosPartner').subscribe('*', e => {
+      this.actualizarMarcadores(e.record);
+      this.fitToBounds();
+    });
+  
     const geocoder = new MapboxGeocoder({
       accessToken: 'pk.eyJ1Ijoib25nb21hdGNoIiwiYSI6ImNtYnNnMDJyeTBrYWQycHB4aHIzYXpybTIifQ.8Wc3ow1OKOUh_fxiXMgTtQ',
       mapboxgl,
-      marker:false,
-      placeholder:'Buscar lugar'
+      marker: false,
+      placeholder: 'Buscar lugar'
     });
-  
-    /* this.map.addControl(geocoder); */
-    geocoder.addTo('#geocoder');
-
-geocoder.on('result', (e)=>{
-  const [lng,lat] = e.result.center;
-  this.map.flyTo({ center:[lng,lat], zoom:14 });
-});
+    this.map.addControl(geocoder, 'top-left');
+    geocoder.on('result', e => {
+      const [lng, lat] = e.result.center as [number, number];
+      this.map.flyTo({ center: [lng, lat], zoom: 14 });
+    });
   }
+  
 
   fitToBounds() {
     const bounds = new mapboxgl.LngLatBounds();
@@ -105,7 +142,7 @@ geocoder.on('result', (e)=>{
         el.className = 'custom-marker';
       
         const img = document.createElement('img');
-        img.src = local['files'][0] || '';
+        img.src = local['avatar'][0] || '';
         img.alt = local['venueName'] || 'Local';
         img.style.width = '40px';
         img.style.height = '40px';
