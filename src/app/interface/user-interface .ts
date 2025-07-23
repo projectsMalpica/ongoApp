@@ -3,7 +3,7 @@ export interface UserInterface {
     email: string;
     address: string;
     password: string;
-    full_name: string;
+    name: string;
     images: string[];
     username:string;
     created: string;
@@ -13,7 +13,6 @@ export interface UserInterface {
     type: string;
     biography?: string; 
     phone: string;
-    dni: string;
     gender: string;
 
   }

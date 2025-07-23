@@ -2,7 +2,7 @@
   import { Injectable, Inject, PLATFORM_ID, Renderer2, model } from '@angular/core';
   import { isPlatformBrowser } from '@angular/common';
   import { GlobalService } from './global.service';
-  import { Observable, from, tap, map } from 'rxjs';
+  import { Observable, from, tap, map, of } from 'rxjs';
   import { UserInterface } from '../interface/user-interface ';
   import { RecordModel } from 'pocketbase';
   /* import { RealtimeOrdersService } from './realtime-orders.service';  
@@ -77,9 +77,14 @@
 
     isClient() {
       const userType = localStorage.getItem('type');
-      return userType === '"usuariosClient"';
+      return userType === '"client"';
     }
 
+    async findClientByUserId(userId: string): Promise<any> {
+      return await this.pb
+        .collection('usuariosClient')
+        .getFirstListItem(`userId="${userId}"`);
+    }
     registerUser(email: string, password: string, type: string, name: string, address: string // Añadimos el parámetro address
     ): Observable<any> {
       const userData = {
@@ -158,109 +163,119 @@
       );
     }
 
-    /* loginUser(email: string, password: string): Observable<any> {
-      return from(this.pb.collection('users').authWithPassword(email, password))
-        .pipe(
-          map((authData) => {
-            const pbUser = authData.record;
-            const user: UserInterface = {
-              id: pbUser.id,
-              email: pbUser['email'],
-              password: '', // No almacenamos la contraseña por seguridad
-              full_name: pbUser['name'],
-              phone: pbUser['phone'],
-              images: pbUser['images'] || {},
-              type: pbUser['type'],
-              username: pbUser['username'],
-              address: pbUser['address'],
-              created: pbUser['created'],
-              updated: pbUser['updated'],
-              avatar: pbUser['avatar'] || '',
-              status: pbUser['status'] || 'active',
-              dni: pbUser['dni'],
-              gender: pbUser['gender'],
-            };
-            return { ...authData, user };
-          }),
-          tap((authData) => {
-            this.setUser(authData.user);
-            this.setToken(authData.token);
-            localStorage.setItem('isLoggedin', 'true');
-            localStorage.setItem('userId', authData.user.id);
-          })
-        );
-    } */
-        loginUser(email: string, password: string): Observable<any> {
-          return from(this.pb.collection('users').authWithPassword(email, password))
-            .pipe(
-              map((authData) => {
-                const pbUser = authData.record;
-      
-                const user: UserInterface = {
-                  id: pbUser.id,
-                  email: pbUser['email'],
-                  password: '',
-                  full_name: pbUser['name'],
-                  phone: pbUser['phone'],
-                  images: pbUser['images'] || {},
-                  type: pbUser['type'],
-                  username: pbUser['username'],
-                  address: pbUser['address'],
-                  created: pbUser['created'],
-                  updated: pbUser['updated'],
-                  avatar: pbUser['avatar'] || '',
-                  status: pbUser['status'] || 'active',
-                  dni: pbUser['dni'],
-                  gender: pbUser['gender'],
-                };
-      
-                return { ...authData, user };
-                
-              }),
-              tap(async (authData) => {
-                this.setUser(authData.user);
-                this.setToken(authData.token, authData.record);
-
-                // ✅ Guarda el token y el modelo en el authStore de PocketBase
-                this.pb.authStore.save(authData.token, authData.record);
-              
-                // Además guarda en localStorage por si lo usas después
-                localStorage.setItem('accessToken', authData.token);
-                localStorage.setItem('isLoggedin', 'true');
-                localStorage.setItem('userId', authData.user.id);
-                localStorage.setItem('user', JSON.stringify(authData.user));
-                // 🚨 AQUÍ CARGAS EL PERFIL DE usuariosClient
-                try {
-                  const profile = await this.pb.collection('usuariosClient').getFirstListItem(`userId="${authData.user.id}"`);
-                  localStorage.setItem('profile', JSON.stringify(profile));
-                } catch (error) {
-                  console.warn('⚠️ No se encontró el perfil en usuariosClient', error);
-                }
-                            })
-              
-            );
-        }
-      
-    logoutUser(): Observable<any> {
-      // Limpiar completamente el localStorage
-      localStorage.clear();
-      
-      // Limpiar la autenticación de PocketBase
-      this.pb.authStore.clear();
-      
-      // Redireccionar a home
-      this.global.setRoute('login');
-
-      return new Observable<any>((observer) => {
-        observer.next(''); // Indicar que la operación de cierre de sesión ha completado
-        observer.complete();
-      });
+    loginUser(email: string, password: string): Observable<any> {
+      return from(this.pb.collection('users').authWithPassword(email, password)).pipe(
+        map((authData) => {
+          const pbUser = authData.record;
+          const userTypeRaw = pbUser['type'];
+          const userType = Array.isArray(userTypeRaw) ? userTypeRaw[0] : userTypeRaw;
+    
+          const user: UserInterface = {
+            id: pbUser.id,
+            email: pbUser['email'],
+            password: '',
+            name: pbUser['name'],
+            phone: pbUser['phone'],
+            images: pbUser['images'] || {},
+            type: userType,
+            username: pbUser['username'],
+            address: pbUser['address'],
+            created: pbUser['created'],
+            updated: pbUser['updated'],
+            avatar: pbUser['avatar'] || '',
+            status: pbUser['status'] || 'active',
+            gender: pbUser['gender'],
+          };
+    
+          return { ...authData, user };
+        }),
+        tap(async (authData) => {
+          const user = authData.user;
+          const token = authData.token;
+          // 🚪 Limpia cualquier conexión anterior
+          await this.pb.realtime.unsubscribe();
+          this.pb.authStore.clear();
+          this.pb.authStore.save(token, authData.record);
+    
+          // Guarda en localStorage
+          this.setUser(user);
+          localStorage.setItem('accessToken', token);
+          localStorage.setItem('userId', user.id);
+          localStorage.setItem('user', JSON.stringify(user));
+          localStorage.setItem('type', JSON.stringify(user.type));
+    
+          console.log(`🔎 Login OK. Buscando perfil para tipo=${user.type}, userId=${user.id}`);
+    
+          // 🧩 Carga perfil asociado
+          try {
+            const coll = user.type === 'partner'
+              ? 'usuariosPartner'
+              : user.type === 'client'
+              ? 'usuariosClient'
+              : null;
+    
+            if (!coll) throw new Error(`Tipo inválido: ${user.type}`);
+    
+            const list = await this.pb.collection(coll).getList(1, 1, {
+              filter: `userId="${user.id}"`,
+            });
+    
+            if (list.items.length) {
+              this.profile = list.items[0];
+              console.log('✅ Perfil cargado:', this.profile);
+              localStorage.setItem('profile', JSON.stringify(this.profile));
+            } else {
+              console.warn(`⚠️ Sin perfil en ${coll} para userId ${user.id}`);
+            }
+          } catch (err) {
+            console.error('[AUTH] Error obteniendo perfil:', err);
+          }
+        })
+      );
     }
-
+         
+      
+    async logoutUser(): Promise<any> {
+      await this.pb.realtime.unsubscribe();
+      this.pb.authStore.clear();
+      localStorage.clear();
+      this.global.setRoute('login');
+      return of(null);
+    }
+    
     setToken(token: string, model: RecordModel): void {
       this.pb.authStore.save(token, model);
     }
-    permision(): void {
+    async permision() {
+      // Espera hasta que authStore esté listo
+      await new Promise(resolve => {
+        const check = () => this.pb.authStore.isValid ? resolve(true) : setTimeout(check, 50);
+        check();
+      });
+    
+      if (!this.isAuthenticated()) {
+        this.global.setRoute('home');
+        return;
+      }
+      
+      const user = this.getCurrentUser();
+      if (!user?.type) {
+        this.global.setRoute('home');
+        return;
+      }
+    
+      // Redirige según rol
+      if (user.type === 'partner') {
+        this.global.setRoute('profile-local');
+      } else if (user.type === 'client') {
+        this.global.setRoute('profile');
+      } else {
+        this.global.setRoute('login');
+      }
+    }
+    
+    
+   /*  permision(): void {
       if (!this.isAuthenticated()) {
         this.global.setRoute('home');
         return;
@@ -290,9 +305,8 @@
         console.error('Error checking permissions:', error);
         localStorage.clear();
         this.pb.authStore.clear();
-        this.global.setRoute('home');
       });
-    }
+    } */
 
     isAuthenticated(): boolean {
       return !!this.pb.authStore.isValid;
@@ -324,14 +338,7 @@
       const userId = localStorage.getItem('userId');
       return userId ? userId : '';    
     }
-    getFullName(): string {
-      const userString = localStorage.getItem('user');
-      if (userString) {
-        const user = JSON.parse(userString);
-        return user.full_name || 'Usuario';
-      }
-      return 'Usuario';
-    }
+   
     async restoreSession() {
       try {
         const token = localStorage.getItem('accessToken');

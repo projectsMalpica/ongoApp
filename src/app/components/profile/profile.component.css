@@ -62,10 +62,9 @@
 
 /* Contenedor principal con espacio para los botones */
 .page-content {
-  height: calc(100vh - 60px); /* Ajusta según el header */
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
+  height: calc(100vh - 60px); /* Ajustar según la altura del header */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Contenido scrollable */

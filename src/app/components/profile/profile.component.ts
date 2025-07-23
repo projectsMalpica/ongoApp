@@ -101,6 +101,8 @@ constructor(
 
 
 async ngOnInit() {
+  this.fetchClientData();
+
   await this.auth.restoreSession();
 
   // ✔️ Siempre carga el perfil actualizado del backend
@@ -111,13 +113,47 @@ async ngOnInit() {
   localStorage.setItem('profile', JSON.stringify(this.profileData));
   this.global.profileData = { ...this.profileData };
 
-  console.log('Perfil cargado correctamente:', this.profileData);
 
   // ✔️ Inicializa realtime solo si estás logueado
   await this.global.initClientesRealtime();
 }
 
+countries = [
+  { code: '+57', name: 'Colombia', flag: '🇦🇷' },
+  { code: '+56', name: 'Chile', flag: '🇨🇱' },
+  { code: '+54', name: 'Argentina', flag: '🇦🇷' }
+];
+selectedCountry = this.countries[0]; // Default to colombia
+getCountryFromPhone(phone: string): typeof this.countries[0] {
+  if (!phone) return this.countries[0];
+  
+  for (const country of this.countries) {
+    if (phone.startsWith(country.code)) {
+      return country;
+    }
+  }
+  return this.countries[0];
+}
+async fetchClientData(): Promise<void> {
+  try {
+    const userId = this.auth.getUserId();
+    const clientRecord = await this.auth.findClientByUserId(userId);
 
+    if (clientRecord) {
+      this.profileData = {
+        name: clientRecord.name || '',
+        email: clientRecord.email || '',
+        phone: clientRecord.phone || '',
+        gender: clientRecord.gender || ''
+      };
+      // Set the correct country based on the loaded phone number
+      if (this.profileData.phone) {
+        this.selectedCountry = this.getCountryFromPhone(this.profileData.phone);
+      }
+    }
+  } catch (error) {
+  }
+}
 
 
 async loadProfile() {
@@ -157,7 +193,6 @@ async loadProfile() {
     this.selectedInterests = this.profileData.interests ? this.profileData.interests.split(',').map((i: string) => i.trim()) : [];
 
   } catch (error) {
-    console.error('❌ Error cargando perfil:', error);
   }
 }
 

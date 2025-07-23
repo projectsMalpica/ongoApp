@@ -1,43 +1,29 @@
-	<!-- Menubar -->
-		 <div class="menubar-area footer-fixed" [hidden]="global.activeRoute === 'profile'">
-		<div class="toolbar-inner menubar-nav">
-			<a class="nav-link active" (click)="global.setRoute(auth.isPartner() ? 'home-local' : 'home')">				
-				<i class="flaticon flaticon-dog-house" style="color: #fff;"></i>
-			</a>
-			<a class="nav-link" (click)="global.setRoute('maps')">
-				<i class="fas fa-map-marker-alt"></i>
-			</a>
-			<a class="nav-link" (click)="global.setRoute('explorer')">
-				<i class="flaticon flaticon-search"></i>
-			</a>
-			<a class="nav-link" (click)="global.setRoute('chat')">
-				<i class="flaticon flaticon-chat-1"></i>
-			</a>
-			<a class="nav-link" (click)="global.setRoute('profile')">
-				<i class="flaticon flaticon-user"></i>
-			</a>
-		</div>
-	</div> 
-	<div class="menubar-area footer-fixed" [hidden]="global.activeRoute === (auth.isPartner() ? 'profile-local' : 'profile')">
-		<div class="toolbar-inner menubar-nav">
-		  <a class="nav-link active" (click)="global.setRoute(auth.isPartner() ? 'home-local' : 'home')">
-			<i class="flaticon flaticon-dog-house" style="color: #fff;"></i>
-		  </a>
-		  <a class="nav-link" (click)="global.setRoute('maps')">
-			<i class="fas fa-map-marker-alt"></i>
-		  </a>
-		  <a class="nav-link" (click)="global.setRoute('explorer')">
-			<i class="flaticon flaticon-search"></i>
-		  </a>
-		  <a *ngIf="!auth.isPartner()" class="nav-link" (click)="global.setRoute('chat')">
-			<i class="flaticon flaticon-chat-1"></i>
-		  </a>
-		  <a *ngIf="auth.isPartner()" class="nav-link" (click)="global.setRoute('profile-local')">
-			<i class="flaticon flaticon-user"></i>
-		  </a>
-		  <a *ngIf="!auth.isPartner()" class="nav-link" (click)="global.setRoute('profile')">
-			<i class="flaticon flaticon-user"></i>
-		  </a>
-		</div>
-	  </div>
-	<!-- Menubar -->
+	<!-- Menubar Mejorado -->
+<div class="menubar-area footer-fixed">
+  <div class="toolbar-inner menubar-nav">
+    <!-- Home / Home-local -->
+    <a class="nav-link" [ngClass]="{'active': global.activeRoute === (auth.isPartner() ? 'home-local' : 'home')}" (click)="global.setRoute(auth.isPartner() ? 'home-local' : 'home')" title="Inicio">
+      <i class="flaticon flaticon-dog-house" style="color: #fff;"></i>
+    </a>
+    <!-- Maps -->
+    <a class="nav-link" [ngClass]="{'active': global.activeRoute === 'maps'}" (click)="global.setRoute('maps')" title="Mapas">
+      <i class="fas fa-map-marker-alt" style="color: #fff;"></i>
+    </a>
+    <!-- Explorer -->
+    <a class="nav-link" [ngClass]="{'active': global.activeRoute === 'explorer'}" (click)="global.setRoute('explorer')" title="Explorar">
+      <i class="flaticon flaticon-search" style="color: #fff;"></i>
+    </a>
+    <!-- Chat solo para client -->
+    <a *ngIf="auth.isClient()" class="nav-link" [ngClass]="{'active': global.activeRoute === 'chat'}" (click)="global.setRoute('chat')" title="Chat">
+      <i class="flaticon flaticon-chat-1" style="color: #fff;"></i>
+    </a>
+    <!-- Profile para client y profile-local para partner -->
+    <a *ngIf="auth.isPartner()" class="nav-link" [ngClass]="{'active': global.activeRoute === 'profile-local'}" (click)="global.setRoute('profile-local')" title="Perfil">
+      <i class="flaticon flaticon-user" style="color: #fff;"></i>
+    </a>
+    <a *ngIf="auth.isClient()" class="nav-link" [ngClass]="{'active': global.activeRoute === 'profile'}" (click)="global.setRoute('profile')" title="Perfil">
+      <i class="flaticon flaticon-user" style="color: #fff;"></i>
+    </a>
+  </div>
+</div>
+<!-- Menubar Mejorado -->

@@ -62,15 +62,10 @@ export class LoginComponent {
   
     this.auth.loginUser(email, password).subscribe({
       next: async () => {
-        console.log('✅ Login exitoso');
-  
-        await this.auth.permision();  // Ejemplo: carga permisos o redirige
-        
-        // Carga datos iniciales
-        await this.global.loadProfile();  // ⬅️ Centraliza la carga del perfil
-        await this.global.initClientesRealtime(); // ⬅️ Realtime solo si logueado
-  
-        this.global.activeRoute = 'home';  // Redirige a home
+        await this.auth.permision();
+        await this.global.loadProfile();
+        await this.global.initClientesRealtime();
+        await this.global.initPartnersRealtime();
       },
       error: (error) => {
         console.error('Error en el login:', error);
@@ -85,7 +80,6 @@ export class LoginComponent {
   }
   goToForgotPassword() {
     this.global.setRoute('forgot-password'); // Si usas routing virtual
-    // this.router.navigate(['/forgot-password']); // Si usas Angular Router
   }
    
 }

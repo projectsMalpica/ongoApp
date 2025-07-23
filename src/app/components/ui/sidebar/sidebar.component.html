@@ -6,8 +6,8 @@
 				<div class="dz-media">
 					<img [src]="global.profileData.avatar || 'assets/images/user/pic1.jpg'" alt="author-image">				</div>
 				<div class="dz-info">
-					<h5 class="name">{{auth.currentUser?.name || 'Usuario'}}</h5>
-					<span>{{auth.currentUser?.email || 'No disponible'}}</span>
+					<h5 class="name">{{global.profileData.name || 'Usuario'}}</h5>
+					<span>{{global.profileData.email || 'No disponible'}}</span>
 				</div>
 			</a>
 			<ul class="nav navbar-nav">	

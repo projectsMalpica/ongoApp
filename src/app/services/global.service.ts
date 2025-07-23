@@ -83,7 +83,7 @@ export class GlobalService {
   /**
    * ✅ Carga el perfil y lo guarda en memoria y localStorage
    */
-  async loadProfile() {
+  /*  async loadProfile() {
     if (!this.pb.authStore.isValid) {
       console.warn('No autenticado, omitiendo realtime');
       return;
@@ -104,12 +104,56 @@ export class GlobalService {
     } catch (error) {
       console.error('Error al cargar el perfil:', error);
     }
-  }
-  setUser(user: UserInterface) {
+  }   */
+ 
+      async loadProfile() {
+      if (!this.pb.authStore.isValid) {
+        console.warn('No autenticado, omitiendo realtime');
+        return;
+      }
+      const user = this.getCurrentUser();
+      if (!user?.id) {
+        console.error('No hay usuario autenticado');
+        return;
+      }
+    
+      try {
+        let userData;
+        if (user.type === 'partner') {
+          userData = await this.pb
+            .collection('usuariosPartner')
+            .getFirstListItem(`userId="${user.id}"`);
+        } else {
+          userData = await this.pb
+            .collection('usuariosClient')
+            .getFirstListItem(`userId="${user.id}"`);
+        }
+        this.profileData = userData;
+        this.setUser(userData as unknown as UserInterface);
+        localStorage.setItem('profile', JSON.stringify(userData));
+      } catch (error: any) {
+        if (error && error.status === 404) {
+          console.warn('No se encontró el perfil del usuario en la colección correspondiente.');
+          // Aquí podrías redirigir a completar perfil o mostrar un aviso al usuario
+        } else {
+          console.error('Error al cargar el perfil:', error);
+        }
+      }
+    }  
+    setUser(user: UserInterface) {
     this.currentUser = user;
   }
 
+  /* getCurrentUser() {
+    return this.currentUser;
+  } */
   getCurrentUser() {
+    if (!this.currentUser) {
+      const userString = localStorage.getItem('user');
+      if (userString) {
+        this.currentUser = JSON.parse(userString);
+      }
+    }
     return this.currentUser;
   }
 

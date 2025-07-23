@@ -42,9 +42,9 @@ export class RegisterComponent {
   };
   profileImage: string | null = null;
   selectedProfileFile: File | null = null;
-  imageUrl: string = 'assets/images/avatar/1.png'; 
+  imageUrl: string = 'assets/images/avatar/1.jpg'; 
   selectedFile: File | null = null;
-  private baseUrl: string = 'https://db.buckapi.com:8015';
+  private baseUrl: string = 'https://db.ongomatch.com:8090';
   
   @ViewChild('profileFileInput') profileFileInput!: ElementRef;
 
