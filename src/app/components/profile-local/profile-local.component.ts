@@ -1,10 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthPocketbaseService } from 'src/app/services/authPocketbase.service';
 import { GlobalService } from 'src/app/services/global.service';
 import PocketBase from 'pocketbase';
 import * as bootstrap from 'bootstrap';
+import mapboxgl from 'mapbox-gl';
+import Swal from 'sweetalert2';
 @Component({
 selector: 'app-profile-local',
 standalone: true,
@@ -13,6 +15,20 @@ templateUrl: './profile-local.component.html',
 styleUrl: './profile-local.component.css'
 })
 export class ProfileLocalComponent implements OnInit, AfterViewInit {
+  // Toast para feedback de ubicación
+  toastMessage: string = '';
+  toastType: 'success' | 'error' | 'info' = 'info';
+  showToast: boolean = false;
+  @ViewChild('mapContainer') mapContainer?: ElementRef;
+  map?: mapboxgl.Map;
+private mapInitialized = false;
+
+selectedLat: number | null = null;
+selectedLng: number | null = null;
+marker!: mapboxgl.Marker;
+ /* map!: mapboxgl.Map; */
+  
+  coordenadasSeleccionadas: { lat: number, lng: number } | null = null;
   isEditingPromo: boolean = false;
   editingPromoId: string | null = null;
 showSuccessToast = false;
@@ -30,7 +46,8 @@ servicesPartner = [
 { value: 'Cenas', label: 'Cenas' },
 { value: 'Tragos', label: 'Tragos' }
 ];
-
+lat: number = 0;
+lng: number = 0;
 newPromo = {
 name: '',
 description: '',
@@ -45,6 +62,9 @@ promoImageFile: File | null = null;
 successPromoToast = false
 private pb = new PocketBase('https://db.ongomatch.com:8090');
 promosByPartner: any[] = [];
+seleccionMarker!: mapboxgl.Marker;
+selectedMarker!:mapboxgl.Marker;
+
 constructor(
 public global: GlobalService,
 public auth: AuthPocketbaseService
@@ -57,6 +77,8 @@ async ngOnInit() {
 
   await this.loadProfileDataPartner();
   this.global.initPlanningPartnersRealtime();
+  this.initMapIfReady();
+  
 }
 
 ngAfterViewInit() {
@@ -71,7 +93,91 @@ ngAfterViewInit() {
       });
     }
   });
+  
+  /* if (!this.mapContainer) {
+    console.error('mapContainer no está definido');
+    return;
+  }
+
+  this.map = new mapboxgl.Map({
+    container: this.mapContainer.nativeElement,
+    style: 'mapbox://styles/mapbox/streets-v11',
+    center: [
+      this.global.profileDataPartner.lng || -74.08175,
+      this.global.profileDataPartner.lat || 4.60971
+    ],
+    zoom: 12,
+    accessToken: 'pk.eyJ1Ijoib25nb21hdGNoIiwiYSI6ImNtYnNnMDJyeTBrYWQycHB4aHIzYXpybTIifQ.8Wc3ow1OKOUh_fxiXMgTtQ'
+  });
+
+  this.map.on('click', (event) => this.onMapClick(event)); */
+
 }
+
+
+async ngAfterViewChecked() {
+  if (!this.mapInitialized && this.mapContainer) {
+    this.mapInitialized = true;
+
+    const [lng, lat] = await this.getCurrentLocation();
+
+    setTimeout(() => {
+      this.map = new mapboxgl.Map({
+        container: this.mapContainer!.nativeElement,
+        style: 'mapbox://styles/mapbox/streets-v11',
+        center: [lng, lat],
+        zoom: 14,
+        accessToken: 'pk.eyJ1Ijoib25nb21hdGNoIiwiYSI6ImNtYnNnMDJyeTBrYWQycHB4aHIzYXpybTIifQ.8Wc3ow1OKOUh_fxiXMgTtQ'
+      });
+      this.map.on('click', (event) => this.onMapClick(event));
+    }, 0);
+  }
+}
+
+
+
+private initMapIfReady() {
+  // Solo inicializa una vez y cuando el div existe
+  if (!this.mapInitialized && this.mapContainer) {
+    this.mapInitialized = true;
+    this.map = new mapboxgl.Map({
+      container: this.mapContainer.nativeElement,
+      style: 'mapbox://styles/mapbox/streets-v11',
+      center: [
+        this.global.profileDataPartner.lng || -74.08175,
+        this.global.profileDataPartner.lat || 4.60971
+      ],
+      zoom: 12,
+      accessToken: 'pk.eyJ1Ijoib25nb21hdGNoIiwiYSI6ImNtYnNnMDJyeTBrYWQycHB4aHIzYXpybTIifQ.8Wc3ow1OKOUh_fxiXMgTtQ'
+    });
+    this.map.on('click', (event) => this.onMapClick(event));
+  }
+}
+private getCurrentLocation(): Promise<[number, number]> {
+  return new Promise((resolve) => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          resolve([position.coords.longitude, position.coords.latitude]);
+        },
+        () => {
+          // Si el usuario no acepta, usa la del perfil o centro por defecto
+          resolve([
+            Number(this.global.profileDataPartner.lng) || -74.08175,
+            Number(this.global.profileDataPartner.lat) || 4.60971
+          ]);
+        },
+        { enableHighAccuracy: true }
+      );
+    } else {
+      resolve([
+        Number(this.global.profileDataPartner.lng) || -74.08175,
+        Number(this.global.profileDataPartner.lat) || 4.60971
+      ]);
+    }
+  });
+}
+
 async fetchPartnerData(): Promise<void> {
   try {
     const userId = this.auth.getUserId();
@@ -132,6 +238,18 @@ async loadProfileDataPartner() {
       this.global.profileDataPartner = this.global.profileDataPartner;
 
       } catch (error) {
+  }
+}
+async saveLocation() {
+  try {
+    await this.pb.collection('usuariosPartner')
+      .update(this.global.profileDataPartner.id, {
+        lat: this.lat?.toString(),
+        lng: this.lng?.toString()
+      });
+    alert('Ubicación guardada');
+  } catch (e) {
+    console.error('Error al guardar ubicación', e);
   }
 }
 
@@ -256,6 +374,7 @@ this.isEditProfile = false;
 }
 activarEdicion() {
 this.isEditProfile = true;
+this.mapInitialized = false; // así se puede volver a inicializar al salir de edición
 console.log('isEditProfile:', this.isEditProfile);
 }
 selectServices(lang: any) {
@@ -534,4 +653,72 @@ openPromoModal() {
   }
 }
 
+async guardarPerfil() {
+  if (!this.coordenadasSeleccionadas) return;
+
+  const { lat, lng } = this.coordenadasSeleccionadas;
+  await this.pb.collection('usuariosPartner').update(this.global.profileDataPartner.id, {
+    lat: lat.toString(),
+    lng: lng.toString()
+  });
+
+  alert('Ubicación actualizada correctamente');
+}
+
+
+onMapClick(event: mapboxgl.MapMouseEvent): void {
+  const { lng, lat } = event.lngLat;
+
+  this.selectedLat = lat;
+  this.selectedLng = lng;
+
+  // Actualiza marcador
+  if (this.marker) {
+    this.marker.setLngLat([lng, lat]);
+  } else {
+    this.marker = new mapboxgl.Marker({ color: '#FF50A2' })
+      .setLngLat([lng, lat])
+      .addTo(this.map!);
+  }
+
+  // Feedback opcional
+  console.log(`Nueva ubicación: ${lat}, ${lng}`);
+}
+
+async guardarUbicacion(): Promise<void> {
+  if (this.selectedLat && this.selectedLng) {
+    try {
+      // ID del registro actual de usuariosPartner
+      const userId = this.auth.currentUser?.id || this.global.profileDataPartner.userId;
+      const partner = await this.pb.collection('usuariosPartner').getFirstListItem(`userId="${userId}"`);
+      const partnerId = partner.id;
+
+      // Actualiza solo lat y lng
+      const result = await this.pb.collection('usuariosPartner').update(partnerId, {
+        lat: this.selectedLat.toString(),
+        lng: this.selectedLng.toString(),
+      });
+
+      // Actualiza el perfil global con la info nueva (buena práctica)
+      this.global.profileDataPartner.lat = result['lat'];
+      this.global.profileDataPartner.lng = result['lng'];
+
+      this.toastMessage = 'Ubicación guardada correctamente';
+      this.toastType = 'success';
+      this.showToast = true;
+      setTimeout(() => this.showToast = false, 3000);
+    } catch (error) {
+      console.error(error);
+      this.toastMessage = 'No se pudo guardar la ubicación';
+      this.toastType = 'error';
+      this.showToast = true;
+      setTimeout(() => this.showToast = false, 3000);
+    }
+  } else {
+    this.toastMessage = 'Haz clic en el mapa para seleccionar una ubicación';
+    this.toastType = 'info';
+    this.showToast = true;
+    setTimeout(() => this.showToast = false, 3000);
+  }
+}
 }
