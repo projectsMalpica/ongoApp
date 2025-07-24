@@ -285,29 +285,49 @@ if (fileInput) {
 fileInput.value = '';
 }
 }
+onPhotoSelected(event: any, index: number) {
+  const file = event.target.files[0];
+  if (file) {
+    // Crear URL temporal para previsualización
+    const url = URL.createObjectURL(file);
+    this.photosPartner[index] = {
+      url: url,
+      file: file
+    };
+  }
+}
+editProfile() {
+  this.isEditProfile = true;
+  // Sincroniza las fotos guardadas con el array editable
+  this.photosPartner = (this.global.profileDataPartner.files || []).map((url: string) => ({
+    url,
+    file: null
+  }));
+  // Si quieres un máximo de slots (por ejemplo 6)
+  while (this.photosPartner.length < 6) {
+    this.photosPartner.push({ url: '', file: null });
+  }
+}
 
-addPhoto() {
-const emptyIndex = this.photosPartner.findIndex(p => !p.url);
-if (emptyIndex !== -1) {
-const inputId = 'imageUpload' + emptyIndex;
-document.getElementById(inputId)?.click();
-} else {
-console.log('Máximo de fotos alcanzado');
-}
-}
-onPhotoSelectedPartner(event: any, index: number) {
-const file = event.target.files[0];
-if (file) {
-// Crear URL temporal para previsualización
-const url = URL.createObjectURL(file);
-this.photosPartner[index] = {
-url: url,
-file: file
-};
-}
-}
 async saveProfile() {
 try {
+  // Subir fotos nuevas
+  const uploadedPhotosPartner = [];
+  for (const photo of this.photosPartner) {
+    if (photo.file) {
+      const formData = new FormData();
+      formData.append('file', photo.file);
+
+      // Subir la imagen a PocketBase
+      const record = await this.pb.collection('files').create(formData);
+      // Obtener URL de la imagen subida
+      const url = this.pb.files.getUrl(record, record['file']);
+      uploadedPhotosPartner.push(url);
+    } else if (photo.url) {
+      // Mantener las URLs existentes
+      uploadedPhotosPartner.push(photo.url);
+    }
+  }
 const formData = new FormData();
 formData.append('venueName', this.global.profileDataPartner.venueName || '');
 formData.append('description', this.global.profileDataPartner.description || '');
@@ -319,6 +339,7 @@ formData.append('openingHours', this.global.profileDataPartner.openingHours || '
 formData.append('lat', String(this.global.profileDataPartner.lat || 0));
 formData.append('lng', String(this.global.profileDataPartner.lng || 0));
 formData.append('services', this.selectedServices.join(', '));
+formData.append('files', JSON.stringify(uploadedPhotosPartner));
 
 // Fotos
 const uploadedPhotos = [];
@@ -420,7 +441,7 @@ return !this.filteredServices.some(s => s.value && typeof s.value === 'string' &
 saveServices() {
 // Guarda los servicios seleccionados en el perfil global
 this.global.profileDataPartner.services = this.selectedServices.join(', ');
-this.isEditProfile = false;
+this.isEditProfile = true;
 }
 
 async savePromotion() {

@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { GlobalService } from '../../../services/global.service';
 import { AuthPocketbaseService } from '../../../services/authPocketbase.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-sidebar',
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css']
 })

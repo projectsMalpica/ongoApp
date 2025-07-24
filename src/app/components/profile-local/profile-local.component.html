@@ -14,7 +14,7 @@
                         </svg>
                     </div>
                     
-                    <a (click)="activarEdicion()" class="edit-profile dz-icon">
+                    <a (click)="editProfile()" class="edit-profile dz-icon">
                       <i class="flaticon flaticon-pencil-2"></i>
                   </a>
                 </div>
@@ -76,6 +76,15 @@
                         </li>
                        
                     </ul>                
+                </div>
+                <div class="gallery-section">
+                  <div class="row g-2 m-b30" data-masonry='{"percentPosition": true }'>
+                    <div class="col-4" *ngFor="let url of global.profileDataPartner.files">
+                      <div class="photo-container">
+                        <div class="photo-preview" [ngStyle]="{'background-image': 'url(' + url + ')'}"></div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
           </div>
@@ -177,27 +186,24 @@
     
     <!-- Galería de imágenes y campos editables -->
     <div class="gallery-section">
-      <!-- <div class="row g-2 m-b30" data-masonry='{"percentPosition": true }'>
+       <div class="row g-2 m-b30" data-masonry='{"percentPosition": true }'>
         <div class="col-4" *ngFor="let photo of photosPartner; let i = index">
-          <div class="dz-drop-box style-2">
-            <div class="drop-bx">
-              <div class="imagePreview" [style.backgroundImage]="'url(' + (photo.url || '../assets/images/recent-pic/drop-bx2.png') + ')'">
-                <label [attr.for]="'imageUpload' + i" class="add-btn">
+          <div class="photo-container">
+            <div class="photo-preview"
+            [ngStyle]="{'background-image': 'url(' + photo.url + ')'}"
+>
+              <ng-container *ngIf="!photo.url">
+                <label [attr.for]="'imageUpload' + i" class="add-photo-btn">
                   <i class="icon feather icon-plus"></i>
                 </label>
-                <div class="remove-img remove-btn" (click)="removePhoto(i)">
-                  <i class="icon feather icon-x"></i>
-                </div>
-                <input type="file" [id]="'imageUpload' + i" class="form-control d-none imageUpload" 
-                       (change)="onPhotoSelectedPartner($event, i)" accept=".png, .jpg, .jpeg">
+              </ng-container>
+              <div class="remove-photo-btn" *ngIf="photo.url" (click)="removePhoto(i)">
+                <i class="icon feather icon-x"></i>
               </div>
+              <input type="file" [id]="'imageUpload' + i" class="d-none" (change)="onPhotoSelected($event, i)" accept=".png, .jpg, .jpeg">
             </div>
           </div>
         </div>
-      </div>
-      <button class="btn btn-gradient mb-3 btn-block rounded-xl" (click)="addPhoto()">
-        AÑADIR MEDIA
-      </button> -->
       
       <!-- Campos editables -->
       <div class="card style-4">
