@@ -5,8 +5,13 @@ import { AuthPocketbaseService } from 'src/app/services/authPocketbase.service';
 import { GlobalService } from 'src/app/services/global.service';
 import PocketBase from 'pocketbase';
 import * as bootstrap from 'bootstrap';
-import mapboxgl from 'mapbox-gl';
-import Swal from 'sweetalert2';
+/* import mapboxgl from 'mapbox-gl';
+ */
+import * as mapboxgl from 'mapbox-gl';
+import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+import 'mapbox-gl/dist/mapbox-gl.css';
+import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
+
 @Component({
 selector: 'app-profile-local',
 standalone: true,
@@ -16,6 +21,8 @@ styleUrl: './profile-local.component.css'
 })
 export class ProfileLocalComponent implements OnInit, AfterViewInit {
   // Toast para feedback de ubicación
+  @ViewChild('mapRef', { static: false }) mapRef!: ElementRef;
+
   toastMessage: string = '';
   toastType: 'success' | 'error' | 'info' = 'info';
   showToast: boolean = false;
@@ -94,26 +101,8 @@ ngAfterViewInit() {
     }
   });
   
-  /* if (!this.mapContainer) {
-    console.error('mapContainer no está definido');
-    return;
-  }
-
-  this.map = new mapboxgl.Map({
-    container: this.mapContainer.nativeElement,
-    style: 'mapbox://styles/mapbox/streets-v11',
-    center: [
-      this.global.profileDataPartner.lng || -74.08175,
-      this.global.profileDataPartner.lat || 4.60971
-    ],
-    zoom: 12,
-    accessToken: 'pk.eyJ1Ijoib25nb21hdGNoIiwiYSI6ImNtYnNnMDJyeTBrYWQycHB4aHIzYXpybTIifQ.8Wc3ow1OKOUh_fxiXMgTtQ'
-  });
-
-  this.map.on('click', (event) => this.onMapClick(event)); */
-
+  
 }
-
 
 async ngAfterViewChecked() {
   if (!this.mapInitialized && this.mapContainer) {
@@ -134,9 +123,7 @@ async ngAfterViewChecked() {
   }
 }
 
-
-
-private initMapIfReady() {
+/* private initMapIfReady() {
   // Solo inicializa una vez y cuando el div existe
   if (!this.mapInitialized && this.mapContainer) {
     this.mapInitialized = true;
@@ -152,7 +139,52 @@ private initMapIfReady() {
     });
     this.map.on('click', (event) => this.onMapClick(event));
   }
-}
+} */
+
+  private initMapIfReady() {
+    if (!this.mapInitialized && this.mapContainer) {
+      this.mapInitialized = true;
+  
+      this.map = new mapboxgl.Map({
+        container: this.mapContainer.nativeElement,
+        style: 'mapbox://styles/mapbox/streets-v11',
+        center: [
+          this.global.profileDataPartner.lng || -74.08175,
+          this.global.profileDataPartner.lat || 4.60971
+        ],
+        zoom: 12,
+        accessToken: 'pk.eyJ1Ijoib25nb21hdGNoIiwiYSI6ImNtYnNnMDJyeTBrYWQycHB4aHIzYXpybTIifQ.8Wc3ow1OKOUh_fxiXMgTtQ'
+      });
+  
+      const geocoder = new MapboxGeocoder({
+        accessToken: 'pk.eyJ1Ijoib25nb21hdGNoIiwiYSI6ImNtYnNnMDJyeTBrYWQycHB4aHIzYXpybTIifQ.8Wc3ow1OKOUh_fxiXMgTtQ',
+        mapboxgl: mapboxgl, 
+        marker: false
+      });
+  
+      this.map.addControl(geocoder);
+      geocoder.on('result', e => {
+        const [lng, lat] = e.result.center;
+        this.placeMarker(lng, lat);
+      });
+    }
+  }
+  
+  private placeMarker(lng: number, lat: number) {
+    // Coloca o mueve marcador existente
+    if (this.marker) {
+      this.marker.setLngLat([lng, lat]);
+    } else {
+      this.marker = new mapboxgl.Marker({ color: '#FF50A2' })
+        .setLngLat([lng, lat])
+        .addTo(this.map!);
+    }
+  
+    // Actualiza coordenadas seleccionadas
+    this.selectedLng = lng;
+    this.selectedLat = lat;
+  }
+    
 private getCurrentLocation(): Promise<[number, number]> {
   return new Promise((resolve) => {
     if (navigator.geolocation) {

@@ -11,12 +11,14 @@ export interface Service {
 
 export interface Partner {
   id: string;
+  vuename: string;
   name: string;
   gender: string;
   images?: string[]; // JSON array
   services?: Service[];
   IdMember?: string;
   status?: string;
+  avatar?: string;
 }
 
 @Injectable({
@@ -24,18 +26,18 @@ export interface Partner {
 })
 export class RealtimePartnerService implements OnDestroy {
   private pb: PocketBase;
-  private clientesSubject = new BehaviorSubject<Partner[]>([]);
+  private partnersSubject = new BehaviorSubject<Partner[]>([]);
 
   // Observable for components to subscribe to
-  public clientes$: Observable<Partner[]> =
-    this.clientesSubject.asObservable();
+  public partners$: Observable<Partner[]> =
+    this.partnersSubject.asObservable();
 
   constructor() {
     this.pb = new PocketBase('https://db.ongomatch.com:8090');
-    this.subscribeToClientes();
+    this.subscribeToPartners();
   }
 
-  private async subscribeToClientes() {
+  private async subscribeToPartners() {
     try {
       // (Optional) Authentication
       await this.pb
@@ -74,11 +76,12 @@ export class RealtimePartnerService implements OnDestroy {
         ...record,
         images: Array.isArray(record.images) ? record.images : [],
         services: Array.isArray(record.services) ? record.services : [],
+        avatar: record.avatar,
       })) as Partner[];
 
-      this.clientesSubject.next(partners);
+      this.partnersSubject.next(partners);
     } catch (error) {
-      console.error('Error updating clientes list:', error);
+      console.error('Error updating partners list:', error);
     }
   }
 

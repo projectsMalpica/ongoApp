@@ -10,7 +10,7 @@ import { GlobalService } from 'src/app/services/global.service';
   styleUrl: './home-local.component.css'
 })
 export class HomeLocalComponent {
-
+  
   constructor(public global: GlobalService) {}
 
   ngOnInit(): void {

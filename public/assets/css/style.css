@@ -1,8 +1,5 @@
 /* 	=========================
-	Template Name 	 : Dating Kit
-	Author			 : DexignZone
-	Version			 : 1.0
-	Author Portfolio : https://themeforest.net/user/dexignzone/portfolio
+
 	=========================
 	
 	=========================
@@ -89,6 +86,7 @@
 @import url("../icons/flaticon/font/flaticon.css");
 @import url("../icons/flaticon1/font/flaticon_flaticon1.css");
 @import url("../icons/themify-icons/css/themify-icons.css");
+
 :root {
   --primary: #FF50A2;
   --primary-light: #ffacd3;
@@ -18246,7 +18244,7 @@ label input {
 
 .profile-area.style-2 .main-profile {
   flex-direction: row;
-  justify-content: start;
+  justify-content: space-evenly;
   box-shadow: unset;
   padding: 15px 15px 30px;
   text-align: left;

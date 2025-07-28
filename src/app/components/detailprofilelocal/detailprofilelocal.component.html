@@ -4,8 +4,13 @@
         <div class="detail-area" *ngIf="global.selectedPartner">
             <div class="dz-media-card style-2">
                 <div class="dz-media profile-picture">
-                    <img src="{{global.selectedPartner.files[0]}}" alt="Foto de perfil">
-                </div>
+                    <img *ngIf="global.selectedPartner.avatar"
+     [src]="global.selectedPartner.avatar"
+     (error)="global.selectedPartner.avatar = 'assets/images/user/pic1.jpg'"
+     alt="Foto de perfil"
+     class="profile-avatar-rect">
+
+                               </div>
                   
                 <div class="dz-content">
                     <div class="left-content">
@@ -49,24 +54,11 @@
                         </div>
                         <div class="card-body">
                             <div class="dz-lightgallery row g-2" id="lightgallery-3">
-                                <a class="col-4" href="../assets/images/slider/pic1.png">
-                                    <img src="../assets/images/slider/pic1.png" alt="image">
+                              <ng-container *ngFor="let url of global.selectedPartner.files">
+                                <a class="col-4" [href]="url" target="_blank">
+                                  <img [src]="url" alt="Imagen del local">
                                 </a>
-                                <a class="col-4" href="../assets/images/slider/pic2.png">
-                                    <img src="../assets/images/slider/pic2.png" alt="image">
-                                </a>
-                                <a class="col-4" href="../assets/images/slider/pic3.png">
-                                    <img src="../assets/images/slider/pic3.png" alt="image">
-                                </a>
-                                <a class="col-4" href="../assets/images/slider/pic4.png">
-                                    <img src="../assets/images/slider/pic4.png" alt="image">
-                                </a>
-                                <a class="col-4" href="../assets/images/slider/pic1.png">
-                                    <img src="../assets/images/slider/pic1.png" alt="image">
-                                </a>
-                                <a class="col-4" href="../assets/images/slider/pic2.png">
-                                    <img src="../assets/images/slider/pic2.png" alt="image">
-                                </a>
+                              </ng-container>
                             </div>
                         </div>
                     </div>

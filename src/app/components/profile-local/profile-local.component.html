@@ -6,12 +6,9 @@
             <div class="main-profile">
                 <div class="about-profile">
                   
-                    <div class="media rounded-circle position-relative">
-                      <img [src]="global.profileDataPartner.avatar" alt="profile-image" class="profile-avatar">
-                      <svg class="radial-progress m-b20" data-percentage="40" viewBox="0 0 80 80">
-                            <circle class="incomplete" cx="40" cy="40" r="35"></circle>
-                            <circle class="complete" cx="40" cy="40" r="35" style="stroke-dashoffset: 39.58406743523136;"></circle>
-                        </svg>
+                    
+                    <div class="media-rect position-relative">
+                      <img [src]="global.profileDataPartner.avatar" alt="profile-image" class="profile-avatar-rect">
                     </div>
                     
                     <a (click)="editProfile()" class="edit-profile dz-icon">
@@ -136,7 +133,8 @@
                                 <div class="card-header">
                                     <h5 class="title">{{planning.name}}</h5>
                                     <div class="price">{{planning.priceCOP}}<span>/mes</span></div>
-                                    <div class="price">{{planning.priceUSD}}<span>/mes</span></div>
+                                    <div class="price">{{planning.PriceUSD}}<span>/mes</span></div>
+                                    
                                 </div>
                                 <ul class="features-list">
                                     <li class="feature-item list-item">{{planning.items}}</li>

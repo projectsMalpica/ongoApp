@@ -24,12 +24,12 @@ export class GlobalService {
   planningClients$ = this.planningClientsSubject.asObservable();
 
   // Variables de navegación y selección
-  public selectedPartner: any = null;
-  public selectedClient: any = null;
-  public chatReceiverId: string = '';
-  public profileData: any = {};
-  public profileDataPartner: any = {};
-  public promosByPartner: any[] = [];
+  selectedPartner: any = null;
+  selectedClient: any = null;
+  chatReceiverId: string = '';
+  profileData: any = {};
+  profileDataPartner: any = {};
+  promosByPartner: any[] = [];
   selectedServicesPartner: any[] = [];
   allServices: { value: string; label: string }[] = [];
   
@@ -83,29 +83,7 @@ export class GlobalService {
   /**
    * ✅ Carga el perfil y lo guarda en memoria y localStorage
    */
-  /*  async loadProfile() {
-    if (!this.pb.authStore.isValid) {
-      console.warn('No autenticado, omitiendo realtime');
-      return;
-    }
-    const user = this.getCurrentUser();
-    if (!user?.id) {
-      console.error('No hay usuario autenticado');
-      return;
-    }
 
-    try {
-      const userData = await this.pb
-        .collection('usuariosClient')
-        .getFirstListItem(`userId="${user.id}"`);
-      this.profileData = userData;
-      this.setUser(userData as unknown as UserInterface);
-      localStorage.setItem('profile', JSON.stringify(userData));
-    } catch (error) {
-      console.error('Error al cargar el perfil:', error);
-    }
-  }   */
- 
       async loadProfile() {
       if (!this.pb.authStore.isValid) {
         console.warn('No autenticado, omitiendo realtime');
@@ -144,9 +122,6 @@ export class GlobalService {
     this.currentUser = user;
   }
 
-  /* getCurrentUser() {
-    return this.currentUser;
-  } */
   getCurrentUser() {
     if (!this.currentUser) {
       const userString = localStorage.getItem('user');
@@ -171,6 +146,12 @@ export class GlobalService {
     const result = await this.pb.collection('usuariosPartner').getFullList();
     this.partnersSubject.next(result);
     this.subscribeRealtime('usuariosPartner', this.partnersSubject);
+
+    const parsed = result.map(p => ({
+      ...p,
+      avatar: this.pb.getFileUrl(p, p['avatar'])
+    }));
+    this.partnersSubject.next(parsed);
   }
 
   public async initPromosRealtime() {

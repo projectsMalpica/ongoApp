@@ -15,11 +15,16 @@ promos: any[] = [];
 constructor(public global: GlobalService){
 }
 ngOnInit(): void {
-  this.global.partners$.subscribe((partners : any[]) => {
+  this.global.initPartnersRealtime(); // Forzamos la carga
+  this.global.initPromosRealtime();   // Si quieres asegurar también esto
+
+  this.global.partners$.subscribe((partners: any[]) => {
     this.partners = partners;
   });
-  this.global.promos$.subscribe((promos : any[]) => {
+
+  this.global.promos$.subscribe((promos: any[]) => {
     this.promos = promos;
   });
 }
+
 }

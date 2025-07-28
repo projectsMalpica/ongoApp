@@ -3,13 +3,9 @@
         <div class="profile-area style-2">
             <div class="main-profile">
                 <div class="about-profile">
-                    <div class="media rounded-circle">
-                        <img [src]="global.profileDataPartner.avatar" alt="profile-image">
-                        <svg class="radial-progress m-b20" data-percentage="40" viewBox="0 0 80 80">
-                            <circle class="incomplete" cx="40" cy="40" r="35"></circle>
-                            <circle class="complete" cx="40" cy="40" r="35" style="stroke-dashoffset: 39.58406743523136;"></circle>
-                        </svg>
-                    </div>
+                    <div class="media-rect position-relative">
+                        <img [src]="global.profileDataPartner.avatar" alt="profile-image" class="profile-avatar-rect">
+                      </div>
                 </div>
                 <div class="profile-detail">
                     <h4 class="name">{{global.profileDataPartner.venueName}}</h4>
@@ -73,7 +69,7 @@
                                     <h5 class="title"><img src="{{planning.subscription}}" alt="">{{planning.name}}</h5>
                                     <p class="desc">{{planning.items}}</p>
                                     <div class="plan-price">{{planning.priceCOP}}<span>/mes</span></div>
-                                    <div class="plan-price">{{planning.priceUSD}}<span>/mes</span></div>
+                                    <div class="plan-price">{{planning.PriceUSD}}<span>/mes</span></div>
                                 </div>
                             </div>
                         </div>

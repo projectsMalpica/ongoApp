@@ -16,6 +16,7 @@ export interface Cliente {
   services?: Service[];
   IdMember?: string;
   status?: string;
+  avatar?: string;
 }
 
 @Injectable({
@@ -73,6 +74,7 @@ export class RealtimeClientesService implements OnDestroy {
         ...record,
         images: Array.isArray(record.images) ? record.images : [],
         services: Array.isArray(record.services) ? record.services : [],
+        avatar: record.avatar,
       })) as Cliente[];
 
       this.clientesSubject.next(clientes);
