@@ -112,7 +112,7 @@
                   </div>
                 </div>
               </div>
-              </div>
+            </div>
           </div>
             <div class="stats-cards">
                 <div class="row g-2 mb-4">
@@ -149,40 +149,34 @@
                 </div>
             </div>
             
-            <!-- <div class="subscription-section">
-              <h3 class="section-title">Mejora tu experiencia</h3>
-              <p class="section-subtitle">Desbloquea características exclusivas con nuestros planes premium</p>
-            
-             <swiper [slidesPerView]="1.1" [spaceBetween]="16" [pagination]="{ clickable: true }" class="mySwiper">
-                <ng-container *ngFor="let planning of global.planningClients$ | async">
-                  <ng-template swiperSlide>
-                    <div class="card subscription-card">
-                      <div class="card-body d-flex flex-column">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                          <h5 class="title mb-0">{{ planning.name }}</h5>
-                          <div>
-                            <span class="price">{{ planning.priceCOP }} <small>/mes</small></span> /
-                            <span class="price">{{ planning.priceUSD }} <small>/mes</small></span>
+            <div class="dz-subscribe-area">
+              <div class="subscribe-area-top">
+                  <div class="swiper subscription-swiper2">
+                      <div class="swiper-wrapper mb-3">
+                          <div class="swiper-slide" data-card="premium-plus" *ngFor="let planning of global.planningClients$ | async">
+                              <div class="subscribe-box style-2 premium-plus">
+                                  <h5 class="title"><img src="{{planning.subscription}}" alt="">{{planning.name}}</h5>
+                                  <ul class="desc">
+                                    <li *ngFor="let item of planning.items.split(',')">{{ item }}</li>
+                                  </ul>
+                                  <div class="plan-price">{{planning.priceCOP}}<span>/mes</span></div>
+                                  <div class="plan-price">{{planning.PriceUSD}}<span>/mes</span></div>
+                              </div>
                           </div>
-                        </div>
-                        <ul class="features-list mb-3">
-                          <li>{{ planning.items }}</li>
-                        </ul>
-                        <button class="btn btn-pink rounded-pill w-100">Suscribirse</button>
                       </div>
-                    </div>
-                  </ng-template>
-                </ng-container>
-              </swiper>
-            </div> -->
-            
+                      <div class="swiper-btn">
+                          <div class="swiper-pagination style-1 flex-1"></div>
+                      </div>
+                  </div>
+              </div>
+            </div>  
         </div>
     </div> 
 </div>
 <!-- Page Content End -->
 
 <!-- Like OffCanvas -->
-<div class="offcanvas offcanvas-bottom" tabindex="-1" id="offcanvasBottom">
+<!-- <div class="offcanvas offcanvas-bottom" tabindex="-1" id="offcanvasBottom">
     <button type="button" class="btn-close drage-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     <div class="offcanvas-body p-4">
         <div class="subscription-box">
@@ -223,7 +217,7 @@
             <a href="javascript:void(0);" class="btn btn-gradient w-100 dz-flex-box btn-shadow rounded-xl" data-bs-dismiss="offcanvas" aria-label="Close">GET SUPER LINKS</a>
         </div>
     </div>
-</div>
+</div> -->
 <!-- Like OffCanvas -->
 
 

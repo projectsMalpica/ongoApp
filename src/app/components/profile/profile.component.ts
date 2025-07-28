@@ -116,6 +116,7 @@ async ngOnInit() {
 
   // ✔️ Inicializa realtime solo si estás logueado
   await this.global.initClientesRealtime();
+  await this.global.initPlanningClientsRealtime();
 }
 
 countries = [
