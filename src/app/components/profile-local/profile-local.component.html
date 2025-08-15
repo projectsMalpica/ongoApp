@@ -74,15 +74,24 @@
                        
                     </ul>                
                 </div>
-                <div class="gallery-section">
-                  <div class="row g-2 m-b30" data-masonry='{"percentPosition": true }'>
-                    <div class="col-4" *ngFor="let url of global.profileDataPartner.files">
-                      <div class="photo-container">
-                        <div class="photo-preview" [ngStyle]="{'background-image': 'url(' + url + ')'}"></div>
+                <div class="col-12">
+                  <div class="card">
+                      <div class="card-header">
+                          <h5 class="card-title">Galeria</h5>
                       </div>
-                    </div>
+                      <div class="card-body">
+                          <div class="dz-lightgallery row g-2" id="lightgallery-3">
+                            <ng-container *ngFor="let url of global.profileDataPartner.files">
+                              <!-- <a class="col-4" [href]="url" target="_blank"> -->
+                                <a class="col-4">
+                                  <img [src]="url" alt="Imagen del local">
+                                </a>
+                              </ng-container>
+                          </div>
+                      </div>
                   </div>
-                </div>
+              </div>
+              
               </div>
           </div>
             <div class="stats-cards">
@@ -90,15 +99,16 @@
                   <div class="col-6">
                     <div class="card style-2 stats-card">
                       <div class="card-body">
-                        <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#promoOptionsModal">
+                        <a (click)="openPromoOptions()" style="cursor: pointer;">
                           <div class="card-icon">
                             <i class="flaticon flaticon-star-1"></i>
                           </div>
                           <div class="card-content">
                             <p>Promociones</p>
-                            <div class="stat-value">{{global.promosByPartner.length || 0}}</div>
+                            <div class="stat-value">{{ global.promosByPartner.length || 0 }}</div>
                           </div>
                         </a>
+                        
                         
                       </div>
                     </div>
@@ -107,7 +117,7 @@
                     <div class="col-6">
                         <div class="card style-2 stats-card">
                             <div class="card-body">
-                                <a>
+                                <a (click)="openSubscriptionsModal()" style="cursor: pointer;">
                                     <div class="card-icon">
                                         <i class="flaticon flaticon-bell"></i>
                                     </div>
@@ -122,35 +132,59 @@
                 </div>
             </div>
             
-            <div class="subscription-section">
-                <h3 class="section-title">Mejora tu experiencia</h3>
-                <p class="section-subtitle">Desbloquea características exclusivas con nuestros planes premium</p>
-                
-                <div class="swiper subscription-swiper">
-                    <div class="swiper-wrapper">
-                        <div class="swiper-slide" *ngFor="let planning of global.planningPartners$ | async">
-                            <div class="dz-content subscription-card">
-                                <div class="card-header">
-                                    <h5 class="title">{{planning.name}}</h5>
-                                    <div class="price">{{planning.priceCOP}}<span>/mes</span></div>
-                                    <div class="price">{{planning.PriceUSD}}<span>/mes</span></div>
-                                    
-                                </div>
-                                <ul class="features-list">
-                                    <li class="feature-item list-item">{{planning.items}}</li>
-                                </ul>
-                                
-                                <a class="btn rounded-xl">Suscribirse</a>
-                            </div>
-                        </div>
-                       
-                    </div>
-                    <div class="swiper-btn">
-                        <div class="swiper-pagination style-1 flex-1"></div>
-                    </div>
-                </div>
-            </div>
+            <!-- <div class="dz-subscribe-area">
+              <div class="subscribe-area-top">
+                  <div class="swiper subscription-swiper2">
+                      <div class="swiper-wrapper mb-3">
+                          <div class="swiper-slide" data-card="premium-plus" *ngFor="let planning of global.planningPartners$ | async">
+                              <div class="subscribe-box style-2 premium-plus">
+                                  <h5 class="title"><img src="{{planning.subscription}}" alt="">{{planning.name}}</h5>
+                                  <ul>
+                                    <li *ngFor="let item of planning.items.split(',')" style="text-align: left;">
+                                      <span class="star">★</span> {{ item.trim() }}
+                                    </li>
+                                  </ul>
+                                  <div class="plan-price">{{planning.priceCOP}} <span>COP/mes</span></div>
+                                  <div class="plan-price">{{planning.PriceUSD}} <span>USD/mes</span></div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="swiper-btn">
+                          <div class="swiper-pagination style-1 flex-1"></div>
+                      </div>
+                  </div>
+              </div>
+            </div> -->
 
+            <div class="dz-subscribe-area">
+              <div class="subscribe-area-top">
+                <div class="swiper subscription-swiper2">
+                  <div class="swiper-wrapper mb-3">
+                    <div class="swiper-slide" data-card="premium-plus" *ngFor="let planning of global.planningPartners$ | async">
+                      <div class="subscribe-box style-2 premium-plus">
+                        <h5 class="title">
+                          <img [src]="planning.subscription" alt="">{{ planning.name }}
+                        </h5>
+                        <ul>
+                          <li *ngFor="let item of planning.items.split(',')" style="text-align: left;">
+                            <span class="star">★</span> {{ item.trim() }}
+                          </li>
+                        </ul>
+                        <div class="plan-price">{{ planning.priceCOP }} <span>COP/mes</span></div>
+                        <div class="plan-price">{{ planning.PriceUSD }} <span>USD/mes</span></div>
+            
+                        <button class="btn btn-primary mt-3 w-100" (click)="subscribeToPlan(planning)">
+                          Suscribirse
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="swiper-btn">
+                    <div class="swiper-pagination style-1 flex-1"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
             
            
         </div>
@@ -343,7 +377,7 @@
   ✅ Perfil actualizado correctamente.
 </div>
 
-<div class="modal fade" id="promoModal" tabindex="-1" aria-labelledby="promoModalLabel" aria-hidden="true">
+<div #promoModal class="modal fade" id="promoModal" tabindex="-1" aria-labelledby="promoModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content rounded-4">
       <div class="modal-header border-0">
@@ -389,24 +423,7 @@
   🎉 Promoción guardada exitosamente.
 </div>
 
-<div class="modal fade" id="promoOptionsModal" tabindex="-1" aria-labelledby="promoOptionsLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="promoOptionsLabel">Promociones</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-      </div>
-      <div class="modal-body text-center">
-        <button class="btn btn-primary mb-2 w-100" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#promoModal">
-          ➕ Agregar nueva promoción
-        </button>
-        <button class="btn btn-outline-info w-100" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#promoListModal">
-          👁 Ver promociones
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
+
 
 <!-- Modal para ver promociones -->
 <div class="modal fade" id="promoListModal" tabindex="-1" aria-labelledby="promoListModalLabel" aria-hidden="true">
@@ -469,5 +486,43 @@
   class="custom-toast alert alert-info shadow-sm border-0 px-4 py-3 animate__animated animate__fadeInDown"
   *ngIf="successPromoToast"
 >
-  🎉 Promoción borrada exitosamente.
+  Promoción borrada exitosamente.
+</div>
+
+<!-- Modal de Subscripciones -->
+<div class="modal fade" id="subscriptionsModal" tabindex="-1" aria-labelledby="subscriptionsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="subscriptionsModalLabel">Subscripciones</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Aquí puedes poner contenido de subscripciones -->
+        <p>Aquí aparecerán las opciones de subscripción.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="promoOptionsModal" tabindex="-1" aria-labelledby="promoOptionsLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="promoOptionsLabel">Promociones</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body text-center">
+        <button class="btn btn-primary mb-2 w-100" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#promoModal">
+          ➕ Agregar nueva promoción
+        </button>
+        <button class="btn btn-outline-info w-100" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#promoListModal">
+          👁 Ver promociones
+        </button>
+      </div>
+    </div>
+  </div>
 </div>

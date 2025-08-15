@@ -8,9 +8,8 @@
     transition: filter 0.2s;
 }
 
-/* Excepción: icono de casa activo en blanco sólido */
-.menubar-nav .nav-link.active .flaticon-dog-house,
-.menubar-nav .nav-link:active .flaticon-dog-house {
+/* Todos los iconos activos en blanco sólido */
+.menubar-nav .nav-link.active i {
     background: none !important;
     -webkit-background-clip: initial !important;
     -webkit-text-fill-color: #fff !important;
@@ -19,6 +18,6 @@
 }
 .menubar-area .menubar-nav .nav-link.active {
     color: white;
-  }
+}
 
 

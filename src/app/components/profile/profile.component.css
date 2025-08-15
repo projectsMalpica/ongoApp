@@ -317,5 +317,20 @@
 .btn-gradient-purple:hover {
   opacity: 0.85;
 }
-
-
+ul.desc {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+  text-align: left;
+}
+ul.desc li {
+  display: flex;
+  align-items: left;
+  margin-bottom: 4px;
+  font-size: 15px;
+}
+ul.desc .star {
+  color: #ffb300; /* dorado, cambia si prefieres otro color */
+  margin-right: 8px;
+  font-size: 1.1em;
+}

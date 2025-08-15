@@ -5,13 +5,16 @@ import { AuthPocketbaseService } from 'src/app/services/authPocketbase.service';
 import { GlobalService } from 'src/app/services/global.service';
 import PocketBase from 'pocketbase';
 import * as bootstrap from 'bootstrap';
-/* import mapboxgl from 'mapbox-gl';
- */
 import * as mapboxgl from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
-
+import { Modal } from 'bootstrap';
+import { ModalService } from 'src/app/services/modal.service';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs'; // para convertir Observable en Promise
+import { WompiService } from 'src/app/services/wompi.service';
+import { environment } from '../../../environments/environment';
 @Component({
 selector: 'app-profile-local',
 standalone: true,
@@ -20,9 +23,18 @@ templateUrl: './profile-local.component.html',
 styleUrl: './profile-local.component.css'
 })
 export class ProfileLocalComponent implements OnInit, AfterViewInit {
-  // Toast para feedback de ubicación
+  openSubscriptionsModal() {
+    const modalEl = document.getElementById('subscriptionsModal');
+    if (modalEl) {
+      const modalInstance = new bootstrap.Modal(modalEl);
+      modalInstance.show();
+    } else {
+      console.warn('No se encontró el modal de subscripciones en el DOM');
+    }
+  }
+  
+  @ViewChild('promoOptionsModal', { static: false }) promoOptionsModalRef!: ElementRef;
   @ViewChild('mapRef', { static: false }) mapRef!: ElementRef;
-
   toastMessage: string = '';
   toastType: 'success' | 'error' | 'info' = 'info';
   showToast: boolean = false;
@@ -33,11 +45,9 @@ private mapInitialized = false;
 selectedLat: number | null = null;
 selectedLng: number | null = null;
 marker!: mapboxgl.Marker;
- /* map!: mapboxgl.Map; */
-  
-  coordenadasSeleccionadas: { lat: number, lng: number } | null = null;
-  isEditingPromo: boolean = false;
-  editingPromoId: string | null = null;
+coordenadasSeleccionadas: { lat: number, lng: number } | null = null;
+isEditingPromo: boolean = false;
+editingPromoId: string | null = null;
 showSuccessToast = false;
 isEditProfile: boolean = false;
 Profile: boolean = false;
@@ -74,7 +84,10 @@ selectedMarker!:mapboxgl.Marker;
 
 constructor(
 public global: GlobalService,
-public auth: AuthPocketbaseService
+public auth: AuthPocketbaseService,
+public modalService: ModalService,
+public http: HttpClient,
+public wompi: WompiService
 ) {
 this.loadPromotionsForPartner();
 }
@@ -123,25 +136,21 @@ async ngAfterViewChecked() {
   }
 }
 
-/* private initMapIfReady() {
-  // Solo inicializa una vez y cuando el div existe
-  if (!this.mapInitialized && this.mapContainer) {
-    this.mapInitialized = true;
-    this.map = new mapboxgl.Map({
-      container: this.mapContainer.nativeElement,
-      style: 'mapbox://styles/mapbox/streets-v11',
-      center: [
-        this.global.profileDataPartner.lng || -74.08175,
-        this.global.profileDataPartner.lat || 4.60971
-      ],
-      zoom: 12,
-      accessToken: 'pk.eyJ1Ijoib25nb21hdGNoIiwiYSI6ImNtYnNnMDJyeTBrYWQycHB4aHIzYXpybTIifQ.8Wc3ow1OKOUh_fxiXMgTtQ'
-    });
-    this.map.on('click', (event) => this.onMapClick(event));
-  }
-} */
+openPromoOptions() {
+  this.modalService.open('promoOptionsModal');
+}
 
-  private initMapIfReady() {
+
+
+
+openPromoListModal() {
+  this.modalService.close('promoOptionsModal'); // Cierra el modal de opciones
+  setTimeout(() => {
+    this.modalService.open('promoListModal');
+  }, 150);
+}
+
+ private initMapIfReady() {
     if (!this.mapInitialized && this.mapContainer) {
       this.mapInitialized = true;
   
@@ -556,6 +565,7 @@ async savePromotion() {
     this.promoImageFile = null;
 
     // Cerrar modal y limpiar backdrop
+    this.modalService.close('promoOptionsModal'); // Cierra el modal de opciones
     const modalEl = document.getElementById('promoModal');
     if (modalEl) {
       const modalInstance = (window as any).bootstrap?.Modal?.getOrCreateInstance(modalEl) || (window as any).bootstrap?.Modal?.getInstance(modalEl);
@@ -691,7 +701,10 @@ editPromo(promo: any) {
     }
   }, 100);
 }
+
 openPromoModal() {
+  this.modalService.close('promoOptionsModal'); // Cierra el modal de opciones
+
   // Limpieza antes de abrir
   const backdrop = document.querySelector('.modal-backdrop');
   if (backdrop) backdrop.remove();
@@ -704,7 +717,17 @@ openPromoModal() {
       modalInstance.show();
     }
   }
+  setTimeout(() => {
+    this.modalService.open('promoModal');
+  }, 150);
+  
 }
+/* openPromoModal() {
+  this.modalService.close('promoOptionsModal'); // Cierra el modal de opciones
+  setTimeout(() => {
+    this.modalService.open('promoModal');
+  }, 150); // Pequeño delay para asegurar la transición
+} */
 
 async guardarPerfil() {
   if (!this.coordenadasSeleccionadas) return;
@@ -774,4 +797,92 @@ async guardarUbicacion(): Promise<void> {
     setTimeout(() => this.showToast = false, 3000);
   }
 }
+/* <-- async subscribeToPlan(plan: any) {
+  const amount = Number(plan.priceCOP || 0) * 100;
+  const userEmail = this.global.profileDataPartner.email || this.auth.currentUser?.email;
+
+  const body = {
+    amountInCents: amount,
+    currency: 'COP',
+    customerEmail: userEmail,
+    reference: `partner_${Date.now()}`,
+    paymentMethod: { type: 'CARD' } // puedes omitir si quieres mostrar opciones
+  };
+
+  try {
+    const res: any = await firstValueFrom(this.http.post('http://localhost:3000/api/pago', body));
+    if (res.checkout_url) {
+      window.location.href = res.checkout_url;
+    } else {
+      console.warn('No se recibió checkout_url:', res);
+    }
+  } catch (err) {
+    console.error('Error creando sesión de pago:', err);
+  }
+}--> */
+
+/* async subscribeToPlan(plan: any) {
+  const amountInCents = Number(plan.priceCOP || 0) * 100;
+  const userEmail = this.global.profileDataPartner?.email || this.auth.currentUser?.email;
+
+  const body = {
+    amountInCents: Number(plan.priceCOP || 0) * 100,
+    currency: 'COP',
+    customerEmail: userEmail,
+    reference: `partner_${Date.now()}`
+  };
+  
+
+  try {
+    const res: any = await firstValueFrom(this.http.post('http://localhost:3000/api/pago', body));
+    if (res.checkout_url) {
+      window.location.href = res.checkout_url;
+    } else {
+      console.warn('No se recibió checkout_url:', res);
+    }
+  } catch (err) {
+    console.error('Error creando sesión de pago:', err);
+  }
+} */
+
+  private toAmountInCents(priceCOP: string | number): number {
+    if (typeof priceCOP === 'number') return Math.round(priceCOP * 100);
+    // elimina todo lo que no sea dígito (soporta puntos y comas de miles)
+    const onlyDigits = priceCOP.replace(/\D/g, '');
+    return Number(onlyDigits) * 100;
+  }
+
+  async subscribeToPlan(planning: any) {
+    // planning.priceCOP podría venir como "49.500", "49500" o número
+    const amountInCents = this.toAmountInCents(planning?.priceCOP ?? 0);
+    if (!amountInCents || amountInCents <= 0) {
+      console.warn('Precio inválido para el plan:', planning);
+      return;
+    }
+
+    const reference = `partner_${planning?.id || 'plan'}_${Date.now()}`;
+    const redirectUrl = window.location.origin + '/pago-completado';
+    const customerEmail = (planning?.email) || ''; // opcional: carga tu email real del perfil
+
+    try {
+      const result = await this.wompi.openCheckout({
+        amountInCents,
+        reference,
+        redirectUrl,
+        customerEmail,
+        // publicKey: environment.WOMPI_PUBLIC_KEY // opcional, ya lo usa el servicio
+      });
+
+      // result.transaction: { id, status, reference, ... }
+      console.log('Wompi result:', result);
+      const tx = result?.transaction;
+      if (tx?.id) {
+        // Aquí puedes: (1) mostrar feedback, (2) notificar a tu backend para validar por ID
+        // Ejemplo: this.paymentsService.verify(tx.id).subscribe(...)
+      }
+    } catch (e) {
+      console.error('No se pudo abrir el widget Wompi:', e);
+    }
+  }
+
 }

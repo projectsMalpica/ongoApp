@@ -18444,7 +18444,7 @@ svg.radial-progress {
     .dz-subscribe-area .subscribe-area-top .subscribe-box.platinum .badge {
       color: #090A0C; }
   .dz-subscribe-area .subscribe-area-top .subscribe-box.style-2 {
-    background: var(--btn-gradient);
+    background: var(--bg-gradient);
     padding: 30px 20px;
     flex-direction: column;
     text-align: center;
@@ -18469,7 +18469,7 @@ svg.radial-progress {
       font-size: 16px;
       font-weight: 500; }
     .dz-subscribe-area .subscribe-area-top .subscribe-box.style-2.premium-plus {
-      background: var(--btn-gradient);
+      background: linear-gradient(90deg, #7b2ff7, #f70192);
       box-shadow: 0px 5px 14px 0px rgba(10, 11, 14, 0.35); }
     .dz-subscribe-area .subscribe-area-top .subscribe-box.style-2.premium {
       background: linear-gradient(90deg, #090A0C, #374550);

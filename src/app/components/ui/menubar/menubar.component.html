@@ -3,26 +3,26 @@
   <div class="toolbar-inner menubar-nav">
     <!-- Home / Home-local -->
     <a class="nav-link" [ngClass]="{'active': global.activeRoute === (auth.isPartner() ? 'home-local' : 'home')}" (click)="global.setRoute(auth.isPartner() ? 'home-local' : 'home')" title="Inicio">
-      <i class="flaticon flaticon-dog-house" style="color: #fff;"></i>
+      <i class="flaticon flaticon-dog-house" ></i>
     </a>
     <!-- Maps -->
     <a class="nav-link" [ngClass]="{'active': global.activeRoute === 'maps'}" (click)="global.setRoute('maps')" title="Mapas">
-      <i class="fas fa-map-marker-alt" style="color: #fff;"></i>
+      <i class="fas fa-map-marker-alt" ></i>
     </a>
     <!-- Explorer -->
     <a class="nav-link" [ngClass]="{'active': global.activeRoute === 'explorer'}" (click)="global.setRoute('explorer')" title="Explorar">
-      <i class="flaticon flaticon-search" style="color: #fff;"></i>
+      <i class="flaticon flaticon-search" ></i>
     </a>
     <!-- Chat solo para client -->
     <a *ngIf="auth.isClient()" class="nav-link" [ngClass]="{'active': global.activeRoute === 'chat'}" (click)="global.setRoute('chat')" title="Chat">
-      <i class="flaticon flaticon-chat-1" style="color: #fff;"></i>
+      <i class="flaticon flaticon-chat-1" ></i>
     </a>
     <!-- Profile para client y profile-local para partner -->
     <a *ngIf="auth.isPartner()" class="nav-link" [ngClass]="{'active': global.activeRoute === 'profile-local'}" (click)="global.setRoute('profile-local')" title="Perfil">
-      <i class="flaticon flaticon-user" style="color: #fff;"></i>
+      <i class="flaticon flaticon-user" ></i>
     </a>
     <a *ngIf="auth.isClient()" class="nav-link" [ngClass]="{'active': global.activeRoute === 'profile'}" (click)="global.setRoute('profile')" title="Perfil">
-      <i class="flaticon flaticon-user" style="color: #fff;"></i>
+      <i class="flaticon flaticon-user" ></i>
     </a>
   </div>
 </div>

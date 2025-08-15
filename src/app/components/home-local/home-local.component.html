@@ -67,9 +67,13 @@
                             <div class="swiper-slide" data-card="premium-plus" *ngFor="let planning of global.planningPartners$ | async">
                                 <div class="subscribe-box style-2 premium-plus">
                                     <h5 class="title"><img src="{{planning.subscription}}" alt="">{{planning.name}}</h5>
-                                    <p class="desc">{{planning.items}}</p>
-                                    <div class="plan-price">{{planning.priceCOP}}<span>/mes</span></div>
-                                    <div class="plan-price">{{planning.PriceUSD}}<span>/mes</span></div>
+                                    <ul>
+                                      <li *ngFor="let item of planning.items.split(',')" style="text-align: left;">
+                                        <span class="star">★</span> {{ item.trim() }}
+                                      </li>
+                                    </ul>
+                                    <div class="plan-price">{{planning.priceCOP}} <span>COP/mes</span></div>
+                                    <div class="plan-price">{{planning.PriceUSD}} <span>USD/mes</span></div>
                                 </div>
                             </div>
                         </div>
@@ -78,8 +82,7 @@
                         </div>
                     </div>
                 </div>
-               
-            </div>
+              </div>
         </div>
     </div> 
 </div>

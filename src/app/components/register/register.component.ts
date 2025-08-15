@@ -8,6 +8,7 @@ import { register as registerSwiperElements } from 'swiper/element/bundle';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { TermsComponent } from '../terms/terms.component';
 import { PrivacyComponent } from '../privacy/privacy.component';
+import { EmailService } from 'src/app/services/email.service';
 registerSwiperElements();
 
 @Component({
@@ -51,7 +52,8 @@ export class RegisterComponent {
   constructor(
     private fb: FormBuilder,
     public auth: AuthPocketbaseService,
-    public global: GlobalService
+    public global: GlobalService,
+    public emailService: EmailService
   ) {
     // Formulario para partners (locales nocturnos)
     this.partnerForm = this.fb.group({
@@ -285,7 +287,14 @@ async uploadImage() {
       };
     
       await this.auth.pb.collection('usuariosPartner').create(partnerData);
-    
+     // 🔔 Email de bienvenida específico para locales
+  this.emailService.sendWelcome({
+    toEmail: formData.email,
+    toName: formData.venueName,
+    userType: 'partner',
+    params: { venueName: formData.venueName }
+  }).catch(err => console.warn('Welcome email failed:', err));
+
       // 3. Autologin y redirección
       await this.auth.loginUser(formData.email, formData.password).toPromise();
       this.global.setRoute('profile-local');
@@ -374,7 +383,14 @@ async uploadImage() {
         };
       
         await this.auth.pb.collection('usuariosClient').create(clientData);
-      
+        // 🔔 Disparar email de bienvenida (no bloquear)
+  this.emailService.sendWelcome({
+    toEmail: formData.email,
+    toName: formData.name,
+    userType: 'client',
+    params: { plan: 'free' }
+  }).catch(err => console.warn('Welcome email failed:', err));
+
         // Autologin y redirección        await this.auth.loginUser(formData.email, formData.password).toPromise();
         this.global.setRoute('profile');
       
