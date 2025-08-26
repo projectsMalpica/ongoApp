@@ -3,8 +3,9 @@
     height: calc(100vh - 60px); /* Ajusta el valor según el tamaño de tu header */
     overflow-y: auto; /* Habilita el scroll vertical */
     -webkit-overflow-scrolling: touch; /* Mejora el desplazamiento en dispositivos táctiles */
+    padding-bottom: 90px; /* Aumenta el espacio inferior según el alto del botón */
+
   }
-  
   /* Asegurar que el contenedor interno no cause problemas de desplazamiento */
   .container {
     height: 100%;
