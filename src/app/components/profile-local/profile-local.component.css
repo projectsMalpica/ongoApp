@@ -15,13 +15,11 @@
 }
 
 .page-content {
-  /* Fallback para navegadores antiguos */
-  height: calc(100vh - 80px); /* Ajustar según la altura del header */
-  /* Mejor soporte para móviles modernos */
-  height: calc(100dvh - 80px);
+  min-height: calc(100dvh - 80px); /* soporta notch y barras dinámicas */
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
+
 
 @supports (height: 100dvh) {
   .page-content {

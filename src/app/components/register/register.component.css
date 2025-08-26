@@ -16,10 +16,11 @@
   margin-bottom: 80px; 
 } */
 .page-content {
-  height: calc(100vh - 60px); /* Ajustar según la altura del header */
+  height: calc(100vh - 60px); 
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
+
 .register-link {
   position: fixed;
   left: 0;

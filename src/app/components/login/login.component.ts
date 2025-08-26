@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Renderer2 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { GlobalService } from '../../services/global.service';
 import Swal from 'sweetalert2';
@@ -8,6 +8,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TermsComponent } from '../terms/terms.component';
 import { PrivacyComponent } from '../privacy/privacy.component';
 import { ChatPocketbaseService } from 'src/app/services/chat.service';
+import { firstValueFrom } from 'rxjs';
+type UserType = 'admin' | 'partner'  | 'client';
 
 @Component({
   selector: 'app-login',
@@ -19,6 +21,7 @@ import { ChatPocketbaseService } from 'src/app/services/chat.service';
 export class LoginComponent {
   loginForm: FormGroup;
   showModal: boolean = false;
+  loading = false;
   modalTitle: string = '';
   modalContent: 'terms' | 'privacy' | null = null;
 
@@ -26,13 +29,16 @@ export class LoginComponent {
     private fb: FormBuilder,
     private auth: AuthPocketbaseService,
     public global: GlobalService,
-    public chatService: ChatPocketbaseService
+    public chatService: ChatPocketbaseService,
+    private renderer: Renderer2
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
       remember: [false]
     });
+    //, { updateOn: 'submit' });
+    
   }
 
   openTermsModal(type: 'terms' | 'privacy') {
@@ -55,7 +61,7 @@ export class LoginComponent {
     this.modalContent = null;
   }
 
-  onSubmit() {
+   onSubmit() {
     if (this.loginForm.invalid) return;
   
     const { email, password } = this.loginForm.value;
@@ -78,8 +84,69 @@ export class LoginComponent {
       }
     });
   }
-  goToForgotPassword() {
-    this.global.setRoute('forgot-password'); // Si usas routing virtual
-  }
-   
+  
+  
+   /*  async onSubmit() {
+      if (this.loginForm.invalid || this.loading) return;
+      this.loading = true;
+    
+      const { email, password, remember } = this.loginForm.value as {
+        email: string; password: string; remember: boolean;
+      };
+    
+      try {
+        // ⬇️ Convierte el Observable a Promise
+        const resp: any = await firstValueFrom(this.auth.loginUser(email, password));
+        // resp debe traer { token, record } desde tu servicio
+        const token  = resp?.token;
+        const record = resp?.record;
+    
+        const userType = (record?.type || 'client') as UserType;
+    
+        // ✅ Guarda lo mínimo para que el nombre se muestre en la UI
+        this.global.currentUser = {
+          id: record?.id,
+          email: record?.email ?? '',
+          username: record?.username ?? record?.name ?? '',
+          type: userType
+        };
+    
+        // (Opcional) Persistencia simple según "remember"
+        const store = remember ? localStorage : sessionStorage;
+        store.setItem('user', JSON.stringify(this.global.currentUser));
+        if (token) store.setItem('pb_token', token);
+    
+        // Ajuste de layout
+        this.renderer.setAttribute(document.body, 'class', 'fixed sidebar-mini sidebar-collapse');
+    
+        // Enrutamiento por tipo
+        switch (userType) {
+          case 'admin':
+            this.global.setRoute('dashboard/admin');
+            break;
+          case 'partner':
+            this.global.setRoute('profile-local');
+            break;
+          case 'client':
+          default:
+            this.global.setRoute('explorer');
+            break;
+        }
+    
+      } catch (err: any) {
+        console.error('Error en login:', err);
+        Swal.fire({
+          title: 'Error',
+          text: err?.message || 'Correo o contraseña incorrectos',
+          icon: 'error',
+          confirmButtonText: 'Entendido'
+        });
+      } finally {
+        this.loading = false;
+      }
+    } */
+  
+    goToForgotPassword() {
+      this.global.setRoute?.('forgot-password');
+    }
 }

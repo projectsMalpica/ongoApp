@@ -10,7 +10,7 @@ export class GlobalService {
   /* activeRoute: string = 'register'; */
   activeRoute: string = ''; // Sin valor inicial
   pb = new PocketBase('https://db.ongomatch.com:8090');
-
+  
   // Observables de datos
   private clientesSubject = new BehaviorSubject<any[]>([]);
   clientes$ = this.clientesSubject.asObservable();
@@ -29,6 +29,7 @@ export class GlobalService {
   chatReceiverId: string = '';
   profileData: any = {};
   profileDataPartner: any = {};
+  previewCard: any = null;
   promosByPartner: any[] = [];
   selectedServicesPartner: any[] = [];
   allServices: { value: string; label: string }[] = [];

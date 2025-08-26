@@ -6,7 +6,23 @@
   import { UserInterface } from '../interface/user-interface ';
   import { RecordModel } from 'pocketbase';
   /* import { RealtimeOrdersService } from './realtime-orders.service';  
-  */@Injectable({
+  */
+
+type UserType = 'admin' | 'partner' | 'client';
+
+interface PocketbaseAuthResponse {
+  token: string;
+  record: {
+    id: string;
+    email?: string;
+    username?: string;
+    name?: string;
+    type?: UserType; // <- Asegúrate que este campo exista en tu colección users
+    [k: string]: any;
+  }
+}
+
+ @Injectable({
     providedIn: 'root',
   })
   export class AuthPocketbaseService {
@@ -14,12 +30,13 @@
     public currentUser: any; // Usuario actual
     public profile: any = null; // Perfil actual (usuariosClient)
     complete: boolean = false;
-
+    private readonly PB_URL = 'https://db.ongomatch.com:8090';
+    private readonly AUTH_ENDPOINT = `${this.PB_URL}/api/collections/users/auth-with-password`;
+  
     constructor(
   /*     public realtimeOrders: RealtimeOrdersService,
   */    public global: GlobalService) {
       this.pb = new PocketBase('https://db.ongomatch.com:8090');
-      // Restaurar sesión y perfil automáticamente al iniciar el servicio
       const token = localStorage.getItem('accessToken');
       const userString = localStorage.getItem('user');
       if (token && userString) {
@@ -37,7 +54,93 @@
         }
       }
     }
-
+    private readonly STORAGE = {
+      TOKEN: 'pb_token',
+      USER:  'pb_user',
+      TYPE:  'type',
+      LOGGED: 'isLoggedin'
+    };
+  
+    /** Login usando fetch. Devuelve {token, record} de PocketBase */
+    async login(email: string, password: string, remember = false): Promise<PocketbaseAuthResponse> {
+      const res = await fetch(this.AUTH_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        // Si usas cookies de PB en el mismo dominio/puerto, agrega credentials: 'include'
+        // credentials: 'include',
+        body: JSON.stringify({ identity: email, password })
+      });
+  
+      if (!res.ok) {
+        const err = await this.safeJson(res);
+        throw new Error(err?.message || 'Credenciales inválidas');
+      }
+  
+      const data: PocketbaseAuthResponse = await res.json();
+  
+      // Persistencia básica
+      if (remember) {
+        localStorage.setItem(this.STORAGE.TOKEN, data.token);
+        localStorage.setItem(this.STORAGE.USER, JSON.stringify(data.record));
+        localStorage.setItem(this.STORAGE.TYPE, data.record?.type || '');
+        localStorage.setItem(this.STORAGE.LOGGED, 'true');
+      } else {
+        sessionStorage.setItem(this.STORAGE.TOKEN, data.token);
+        sessionStorage.setItem(this.STORAGE.USER, JSON.stringify(data.record));
+        sessionStorage.setItem(this.STORAGE.TYPE, data.record?.type || '');
+        sessionStorage.setItem(this.STORAGE.LOGGED, 'true');
+      }
+  
+      return data;
+    }
+  
+    /** Obtiene el perfil extendido según el type del user */
+    async fetchProfileByType(userId: string, type: UserType, token?: string): Promise<any | null> {
+      const authToken = token ?? this.getToken();
+      const headers: HeadersInit = { 'Content-Type': 'application/json' };
+      if (authToken) headers['Authorization'] = `Bearer ${authToken}`;
+  
+      // Mapea tu “type” a su colección real
+      const map: Record<UserType, string> = {
+        admin:  'admins',                // si no tienes colección, puedes saltarte el fetch
+        partner:'usuariosPartner',
+        client: 'usuariosClient',
+      };
+      const collection = map[type] || 'usuariosClient';
+  
+      // Nota: si no existe la colección para admin, puedes retornar null.
+      if (type === 'admin') return null;
+  
+      const url = new URL(`${this.PB_URL}/api/collections/${collection}/records`);
+      url.searchParams.set('page', '1');
+      url.searchParams.set('perPage', '1');
+      url.searchParams.set('filter', `userId="${userId}"`);
+  
+      const res = await fetch(url.toString(), { headers });
+      if (!res.ok) {
+        const err = await this.safeJson(res);
+        throw new Error(err?.message || `No se pudo cargar ${collection}`);
+      }
+      const data = await res.json();
+      return data?.items?.[0] ?? null;
+    }
+  
+    getToken(): string | null {
+      return localStorage.getItem(this.STORAGE.TOKEN) ?? sessionStorage.getItem(this.STORAGE.TOKEN);
+    }
+    getUser(): any | null {
+      const raw = localStorage.getItem(this.STORAGE.USER) ?? sessionStorage.getItem(this.STORAGE.USER);
+      try { return raw ? JSON.parse(raw) : null; } catch { return null; }
+    }
+    logout() {
+      [this.STORAGE.TOKEN, this.STORAGE.USER, this.STORAGE.TYPE, this.STORAGE.LOGGED].forEach(k => {
+        localStorage.removeItem(k); sessionStorage.removeItem(k);
+      });
+    }
+  
+    private async safeJson(res: Response) {
+      try { return await res.json(); } catch { return null; }
+    }
     async loadProfileFromBackend() {
       if (!this.currentUser?.id) return;
       try {
@@ -266,9 +369,9 @@
     
       // Redirige según rol
       if (user.type === 'partner') {
-        this.global.setRoute('profile-local');
+        this.global.setRoute('home-local');
       } else if (user.type === 'client') {
-        this.global.setRoute('profile');
+        this.global.setRoute('explorer');
       } else {
         this.global.setRoute('login');
       }
