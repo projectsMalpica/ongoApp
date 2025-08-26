@@ -61,16 +61,58 @@
 }
 
 /* Contenedor principal con espacio para los botones */
-.page-content {
-  height: calc(100vh - 60px); /* Ajustar según la altura del header */
+/* === Variables locales del componente === */
+:host{
+  --header-h: 60px;          /* alto del header */
+  --bottom-nav-h: 64px;      /* alto del menú inferior (ajústalo a tu caso) */
+  --cta-h: 64px;             /* alto aprox. de la barra de acciones */
+}
+
+/* === Contenido a pantalla completa y con colchón inferior === */
+.page-content{
+  /* En móviles modernos usar 100dvh */
+  min-height: calc(100dvh - var(--header-h));
+  /* Colchón para que nada quede tapado por menú + CTA + área segura */
+  padding-bottom: calc(
+    var(--bottom-nav-h) + var(--cta-h) + max(env(safe-area-inset-bottom), 0px)
+  );
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
-/* .page-content {
-  min-height: calc(100dvh - 80px); 
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-} */
+@supports not (height: 100dvh){
+  .page-content{ min-height: calc(100vh - var(--header-h)); }
+}
+
+/* === Reset: evita el conflicto sticky === */
+.action-buttons{
+  position: static;   
+  bottom: auto;
+  box-shadow: none;
+  padding: 0;
+  z-index: auto;
+}
+
+/* === Barra de acciones fija por encima del menú inferior === */
+.action-buttons.fixed-bottom-action{
+  position: fixed !important;
+  left: 0;
+  right: 0;
+  bottom: calc(
+    var(--bottom-nav-h) + max(env(safe-area-inset-bottom), 0px)
+  );
+  width: 100%;
+  padding: 12px 16px;
+  background: #242a34;
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.06);
+  border-radius: 10px 10px 0 0;
+  z-index: 1100; /* mayor que el menú inferior */
+}
+
+/* Botones full-width en móvil */
+.action-buttons.fixed-bottom-action .d-flex{ width: 100%; }
+.action-buttons.fixed-bottom-action .btn{ min-height: 48px; }
+
+
 /* Contenido scrollable */
 .edit-profile-container {
   flex-grow: 1;
@@ -111,13 +153,13 @@
 }
 
 /* Asegurar que los botones de acción estén siempre visibles */
-.action-buttons {
+/* .action-buttons {
   position: sticky;
   bottom: 0;
   padding: 1rem 0;
   box-shadow: 0 -5px 15px rgba(0,0,0,0.05);
   z-index: 1000;
-}
+} */
 
 /* Ajustes para móviles */
 @media (max-width: 767.98px) {
