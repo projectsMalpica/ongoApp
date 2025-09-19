@@ -9,7 +9,7 @@ declare global {
 export class WompiService {
   private scriptLoaded = false;
   private scriptLoading?: Promise<void>;
-
+  publicKey?: string;
   /** Carga el script si hace falta (útil si no lo pusiste en index.html) */
   private ensureScript(): Promise<void> {
     if (this.scriptLoaded) return Promise.resolve();
@@ -30,32 +30,38 @@ export class WompiService {
     return this.scriptLoading;
   }
 
-  /**
-   * Abre el widget de Wompi y resuelve con la transacción que devuelve el callback.
-   * Solo necesitas la llave pública.
-   */
-  async openCheckout(options: {
-    amountInCents: number;
-    reference: string;
-    currency?: 'COP';
-    redirectUrl?: string;
-    customerEmail?: string;
-    publicKey?: string; // si no se pasa, usa la del environment
-  }): Promise<any> {
-    await this.ensureScript();
+  // wompi.service.ts
+async openCheckout(options: {
+  amountInCents: number;
+  reference: string;
+  currency?: 'COP';
+  customerEmail?: string;
+  signature?: string;         // <- opcional
+  expirationTime?: string;
+  publicKey?: string;
+  redirectUrl?: string;
+}): Promise<any> {
+  await this.ensureScript();
+  const pk = options.publicKey ?? environment.WOMPI_PUBLIC_KEY;
+if (!pk) {
+  console.error('WOMPI_PUBLIC_KEY faltante. Revisa src/environments/environment.ts');
+  throw new Error('Falta WOMPI_PUBLIC_KEY'); // <- evita lanzar el widget y generar el 422
+}
+const base: any = {
+  currency: options.currency ?? 'COP',
+  amountInCents: options.amountInCents,
+  reference: options.reference,
+  publicKey: pk,
+  signature: options.signature ? { integrity: options.signature } : undefined,
+  customerData: options.customerEmail ? { email: options.customerEmail } : undefined,
+};
+  if (options.signature) base.signature = { integrity: options.signature };  // <- solo si viene
+  if (options.redirectUrl) base.redirectUrl = options.redirectUrl;
+  if (options.expirationTime) base.expirationTime = options.expirationTime;
+  if (options.customerEmail) base.customerData = { email: options.customerEmail };
 
-    const checkout = new window.WidgetCheckout({
-      currency: options.currency ?? 'COP',
-      amountInCents: options.amountInCents,
-      reference: options.reference,
-      publicKey: options.publicKey ?? environment.WOMPI_PUBLIC_KEY,
-      redirectUrl: options.redirectUrl,              // opcional
-      // Puedes añadir customerData/shippingAddress si quieres
-      // customerData: { email: options.customerEmail }
-    });
+  const checkout = new window.WidgetCheckout(base);
+  return new Promise((resolve) => checkout.open((result: any) => resolve(result)));
+}
 
-    return new Promise((resolve) => {
-      checkout.open((result: any) => resolve(result)); // result.transaction.id, status, etc.
-    });
-  }
 }
