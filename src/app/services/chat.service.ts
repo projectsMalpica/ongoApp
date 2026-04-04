@@ -14,7 +14,7 @@ export class ChatPocketbaseService {
   chatReceiverId: string = '';
   constructor() {
     if (this.pb.authStore.model) {
-      this.userId = this.pb.authStore.model.id;
+      this.userId = this.pb.authStore.model['id'];
     }
   }
 

@@ -48,7 +48,8 @@ export class RegisterComponent {
   private baseUrl: string = 'https://db.ongomatch.com:8090';
   
   @ViewChild('profileFileInput') profileFileInput!: ElementRef;
-
+showPassword = false;
+showConfirmPassword = false;
   constructor(
     private fb: FormBuilder,
     public auth: AuthPocketbaseService,
@@ -120,7 +121,13 @@ export class RegisterComponent {
     }
     return null;
   }
-  
+  togglePassword(): void {
+  this.showPassword = !this.showPassword;
+}
+
+toggleConfirmPassword(): void {
+  this.showConfirmPassword = !this.showConfirmPassword;
+}
   openTermsModal(type: 'terms' | 'privacy') {
     console.log('Opening modal with type:', type);
     this.modalContent = type;

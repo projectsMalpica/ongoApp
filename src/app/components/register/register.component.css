@@ -16,7 +16,7 @@
   margin-bottom: 80px; 
 } */
 .page-content {
-  height: calc(100vh - 60px); 
+  height: calc(100vh - 60px);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
@@ -29,7 +29,7 @@
 
   z-index: 10;
   padding: 12px 0 8px 0;
-  box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
   text-align: center;
 }
 
@@ -43,7 +43,7 @@
 }
 
 .floating-avatars-container {
-position: relative;
+  position: relative;
   width: 100%;
   height: 540px;
   overflow: hidden;
@@ -57,7 +57,8 @@ position: relative;
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%; /* ✅ Esto es clave */
+  height: 100%;
+  /* ✅ Esto es clave */
   background-image: url('/assets/images/maps.jpg');
   background-size: cover;
   background-position: center;
@@ -81,6 +82,7 @@ position: relative;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   z-index: 2;
 }
+
 .floating-avatar-1 {
   position: absolute;
   width: 80px;
@@ -96,7 +98,7 @@ position: relative;
   height: 100%;
   object-fit: cover;
   border-radius: 50%;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 
@@ -154,28 +156,61 @@ position: relative;
   animation: pulse 2s infinite;
 }
 
-.pin-1 {top: 39%;
-  left: 17%; }
-.pin-2 { top: 53%;
-  left: 67%;}
-.pin-3 { top: 87%;
-  left: 64%; }
-.pin-4 { top: 76%;
-  left: 21%;}
-.pin-5 {top: 69%;
-  left: 86%; }
+.pin-1 {
+  top: 39%;
+  left: 17%;
+}
+
+.pin-2 {
+  top: 53%;
+  left: 67%;
+}
+
+.pin-3 {
+  top: 87%;
+  left: 64%;
+}
+
+.pin-4 {
+  top: 76%;
+  left: 21%;
+}
+
+.pin-5 {
+  top: 69%;
+  left: 86%;
+}
 
 /* Animations */
 @keyframes float {
-  0% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-20px) rotate(5deg); }
-  100% { transform: translateY(0) rotate(0deg); }
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-20px) rotate(5deg);
+  }
+
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
 }
 
 @keyframes pulse {
-  0% { transform: scale(1); opacity: 0.7; }
-  70% { transform: scale(3); opacity: 0; }
-  100% { transform: scale(1); opacity: 0; }
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+
+  70% {
+    transform: scale(3);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
 }
 
 /* Modal Styles */
@@ -209,6 +244,7 @@ position: relative;
     opacity: 0;
     transform: translateY(-20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -316,6 +352,7 @@ position: relative;
   cursor: pointer;
   z-index: 1;
 }
+
 .started .title {
   font-size: 32px;
   font-weight: bold;
@@ -329,6 +366,7 @@ position: relative;
   text-align: center;
   margin-top: 8px;
 }
+
 .btn-gradient-pink {
   background: linear-gradient(90deg, #ff4e8e, #f70192);
   color: white;
@@ -345,13 +383,21 @@ position: relative;
 .btn-gradient-purple:hover {
   opacity: 0.85;
 }
+
 .welcome-area {
   animation: fadeIn 1s ease-in;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .welcome-area .logo-area .para-title {
@@ -371,4 +417,28 @@ position: relative;
     margin-top: 1.2rem;
     margin-bottom: 1.2rem;
   }
+}
+
+.password-field {
+  position: relative;
+}
+
+.password-field input {
+  padding-right: 3rem;
+}
+
+.toggle-password {
+  position: absolute;
+  top: 50%;
+  right: 0.75rem;
+  transform: translateY(-50%);
+  border-radius: 10px;
+  background: #f90f92;
+  color: #fff;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.toggle-password:hover {
+  color: #fff;
 }
