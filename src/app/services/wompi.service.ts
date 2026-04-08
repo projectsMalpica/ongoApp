@@ -31,7 +31,7 @@ export class WompiService {
   }
 
   // wompi.service.ts
-async openCheckout(options: {
+/* async openCheckout(options: {
   amountInCents: number;
   reference: string;
   currency?: 'COP';
@@ -62,6 +62,62 @@ const base: any = {
 
   const checkout = new window.WidgetCheckout(base);
   return new Promise((resolve) => checkout.open((result: any) => resolve(result)));
-}
+} */
+async openCheckout(options: {
+  amountInCents: number;
+  reference: string;
+  currency?: 'COP';
+  customerEmail?: string;
+  signature?: string;
+  expirationTime?: string;
+  publicKey?: string;
+  redirectUrl?: string;
+}): Promise<any> {
+  await this.ensureScript();
 
+  const pk = options.publicKey ?? environment.WOMPI_PUBLIC_KEY;
+
+  if (!pk) {
+    console.error('WOMPI_PUBLIC_KEY faltante');
+    throw new Error('Falta WOMPI_PUBLIC_KEY');
+  }
+
+  const base: any = {
+    currency: options.currency ?? 'COP',
+    amountInCents: options.amountInCents,
+    reference: options.reference,
+    publicKey: pk,
+  };
+
+  if (options.signature) {
+    base.signature = { integrity: options.signature };
+  }
+
+  if (options.redirectUrl) {
+    base.redirectUrl = options.redirectUrl;
+  }
+
+  if (options.expirationTime) {
+    base.expirationTime = options.expirationTime;
+  }
+
+  if (options.customerEmail) {
+    base.customerData = { email: options.customerEmail };
+  }
+
+  console.log('Wompi base config:', base);
+
+  const checkout = new window.WidgetCheckout(base);
+
+  return new Promise((resolve, reject) => {
+    try {
+      checkout.open((result: any) => {
+        console.log('Wompi callback result:', result);
+        resolve(result);
+      });
+    } catch (err) {
+      reject(err);
+    }
+  });
+}
 }

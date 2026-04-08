@@ -63,6 +63,18 @@
                     </ul>                
                 </div>
                 <div class="about" style="margin-bottom: 1rem;">
+                    <h6 class="title">Link para compra de entradas o productos:</h6>
+                    <ul class="dz-tag-list">
+                        <li> 
+                            <div class="dz-tag">
+                                <i class="icon feather icon-link"></i>
+                                <span style="color: #FF50A2;">{{global.profileDataPartner.purchaseLink}}</span>
+                            </div>
+                        </li>
+                       
+                    </ul>                
+                </div>
+                <div class="about" style="margin-bottom: 1rem;">
                     <h6 class="title">Servicios:</h6>
                     <ul class="dz-tag-list">
                         <li> 
@@ -292,6 +304,14 @@
         </div>
         <div class="card-body">
           <input type="text" class="form-control" name="openingHours" id="openingHours" [(ngModel)]="global.profileDataPartner.openingHours" placeholder="ingresa tu telefono" />
+        </div>
+      </div>
+      <div class="card style-4">
+        <div class="card-header">
+          <label for="purchaseLink">Link para compra de entradas o productos </label>
+        </div>
+        <div class="card-body">
+          <input type="text" class="form-control" name="purchaseLink" id="purchaseLink" [(ngModel)]="global.profileDataPartner.purchaseLink" placeholder="ingresa tu link" />
         </div>
       </div>
      

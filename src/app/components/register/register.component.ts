@@ -180,7 +180,12 @@ async uploadImage() {
       
   }
 }
-  
+  goBackToTypeSelection(): void {
+  this.userType = null;
+  this.currentStep = 1;
+  this.showPassword = false;
+  this.showConfirmPassword = false;
+}
   openProfileFileSelector() {
     this.profileFileInput.nativeElement.click();
   }
@@ -470,7 +475,7 @@ async uploadImage() {
   
 
   // Manejo de selección de tipo de usuario
-  selectUserType(type: 'partner' | 'client') {
+ /*  selectUserType(type: 'partner' | 'client') {
     this.userType = type;
     this.nextStep();
     if (type === 'partner') {
@@ -479,7 +484,13 @@ async uploadImage() {
     if (type === 'client') {
       this.setClientStepValidators(1);
     }
-  }
+  } */
+  selectUserType(type: 'partner' | 'client'): void {
+  this.userType = type;
+  this.currentStep = 1;
+  this.showPassword = false;
+  this.showConfirmPassword = false;
+}
   setClientStepValidators(step: number) {
     // Limpiar validadores de todos los campos
     const controls = this.clientForm.controls;

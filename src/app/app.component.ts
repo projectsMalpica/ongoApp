@@ -20,6 +20,8 @@ import { HomeLocalComponent } from './components/home-local/home-local.component
 import { MapsComponent } from './components/maps/maps.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { WalletComponent } from './components/wallet/wallet.component';
+import { WalletHistoryComponent } from './components/wallet-history/wallet-history.component';
 
 @Component({
   selector: 'app-root',
@@ -42,7 +44,9 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
     HomeLocalComponent,
     MapsComponent,
     ForgotPasswordComponent,
-    ResetPasswordComponent
+    ResetPasswordComponent,
+    WalletComponent,
+    WalletHistoryComponent
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']

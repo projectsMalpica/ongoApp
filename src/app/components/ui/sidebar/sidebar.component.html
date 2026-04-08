@@ -53,6 +53,14 @@
 					</a>
 				</li>
 				<li>
+					<a class="nav-link" (click)="global.setRoute(auth.isPartner() ? 'wallet' : 'wallet')">
+						<span class="dz-icon">
+							<i class="icon feather icon-user"></i>
+						</span>
+						<span>Mi wallet</span>
+					</a>
+				</li>
+				<li>
 					<a class="nav-link" (click)="auth.logoutUser()">
 						<span class="dz-icon">
 							<i class="icon feather icon-log-out"></i>

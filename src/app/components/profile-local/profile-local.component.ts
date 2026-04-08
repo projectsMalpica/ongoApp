@@ -15,6 +15,8 @@ import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs'; // para convertir Observable en Promise
 import { WompiService } from 'src/app/services/wompi.service';
 import { environment } from '../../../environments/environment';
+import { localEnv } from '../../../environments/environment.local';
+
 @Component({
 selector: 'app-profile-local',
 standalone: true,
@@ -23,6 +25,8 @@ templateUrl: './profile-local.component.html',
 styleUrl: './profile-local.component.css'
 })
 export class ProfileLocalComponent implements OnInit, AfterViewInit {
+  MAPBOX_TOKEN = localEnv.MAPBOX_PUBLIC_TOKEN || environment.MAPBOX_PUBLIC_TOKEN;
+
   openSubscriptionsModal() {
     const modalEl = document.getElementById('subscriptionsModal');
     if (modalEl) {
@@ -69,7 +73,7 @@ newPromo = {
 name: '',
 description: '',
 date: '',
-files:[],
+files:[], 
 userId: '',
 };
 showPromos = false;
@@ -90,6 +94,7 @@ public http: HttpClient,
 public wompi: WompiService
 ) {
 this.loadPromotionsForPartner();
+this.pb.autoCancellation(false);
 }
 
 async ngOnInit() {
@@ -129,8 +134,9 @@ async ngAfterViewChecked() {
         style: 'mapbox://styles/mapbox/streets-v11',
         center: [lng, lat],
         zoom: 14,
-        accessToken: 'pk.eyJ1Ijoib25nb21hdGNoIiwiYSI6ImNtYnNnMDJyeTBrYWQycHB4aHIzYXpybTIifQ.8Wc3ow1OKOUh_fxiXMgTtQ'
+        accessToken: environment.MAPBOX_PUBLIC_TOKEN
       });
+
       this.map.on('click', (event) => this.onMapClick(event));
     }, 0);
   }
@@ -151,33 +157,33 @@ openPromoListModal() {
 }
 
  private initMapIfReady() {
-    if (!this.mapInitialized && this.mapContainer) {
-      this.mapInitialized = true;
-  
-      this.map = new mapboxgl.Map({
-        container: this.mapContainer.nativeElement,
-        style: 'mapbox://styles/mapbox/streets-v11',
-        center: [
-          this.global.profileDataPartner.lng || -74.08175,
-          this.global.profileDataPartner.lat || 4.60971
-        ],
-        zoom: 12,
-        accessToken: 'pk.eyJ1Ijoib25nb21hdGNoIiwiYSI6ImNtYnNnMDJyeTBrYWQycHB4aHIzYXpybTIifQ.8Wc3ow1OKOUh_fxiXMgTtQ'
-      });
-  
-      const geocoder = new MapboxGeocoder({
-        accessToken: 'pk.eyJ1Ijoib25nb21hdGNoIiwiYSI6ImNtYnNnMDJyeTBrYWQycHB4aHIzYXpybTIifQ.8Wc3ow1OKOUh_fxiXMgTtQ',
-        mapboxgl: mapboxgl, 
-        marker: false
-      });
-  
-      this.map.addControl(geocoder);
-      geocoder.on('result', e => {
-        const [lng, lat] = e.result.center;
-        this.placeMarker(lng, lat);
-      });
-    }
+  if (!this.mapInitialized && this.mapContainer) {
+    this.mapInitialized = true;
+
+    this.map = new mapboxgl.Map({
+      container: this.mapContainer.nativeElement,
+      style: 'mapbox://styles/mapbox/streets-v11',
+      center: [
+        this.global.profileDataPartner.lng || -74.08175,
+        this.global.profileDataPartner.lat || 4.60971
+      ],
+      zoom: 12,
+      accessToken: environment.MAPBOX_PUBLIC_TOKEN
+    });
+
+    const geocoder = new MapboxGeocoder({
+      accessToken: environment.MAPBOX_PUBLIC_TOKEN,
+      mapboxgl: mapboxgl,
+      marker: false
+    });
+
+    this.map.addControl(geocoder);
+    geocoder.on('result', e => {
+      const [lng, lat] = e.result.center;
+      this.placeMarker(lng, lat);
+    });
   }
+}
   
   private placeMarker(lng: number, lat: number) {
     // Coloca o mueve marcador existente
@@ -262,6 +268,7 @@ async loadProfileDataPartner() {
       lat: userData['lat'] || '',
       lng: userData['lng'] || '',
       services: userData['services'] || '',
+      purchaseLink: userData['purchaseLink'] || '',
       };
       this.global.profileDataPartner.avatar = this.pb.files.getUrl(userData, userData['avatar']);
       
@@ -350,7 +357,7 @@ editProfile() {
   }
 }
 
-async saveProfile() {
+/* async saveProfile() {
 try {
   // Subir fotos nuevas
   const uploadedPhotosPartner = [];
@@ -381,6 +388,7 @@ formData.append('lat', String(this.global.profileDataPartner.lat || 0));
 formData.append('lng', String(this.global.profileDataPartner.lng || 0));
 formData.append('services', this.selectedServices.join(', '));
 formData.append('files', JSON.stringify(uploadedPhotosPartner));
+formData.append('purchaseLink', this.global.profileDataPartner.purchaseLink || '');
 
 // Fotos
 const uploadedPhotos = [];
@@ -427,6 +435,126 @@ this.isEditProfile = false;
 } catch (error) {
 console.error('Error guardando perfil:', error);
 }
+} */
+
+async saveProfile() {
+  try {
+    const userId = this.auth.currentUser?.id;
+    if (!userId) {
+      console.error('No hay usuario autenticado');
+      return;
+    }
+
+    // Inicializar servicios si no están cargados
+    if (!this.selectedServices.length && this.global.profileDataPartner.services) {
+      this.selectedServices = this.global.profileDataPartner.services
+        .split(',')
+        .map((s: string) => s.trim())
+        .filter(Boolean);
+    }
+
+    // Subir fotos una sola vez
+    const uploadedPhotos: string[] = [];
+
+    for (const photo of this.photosPartner) {
+      if (photo.file) {
+        const photoForm = new FormData();
+        photoForm.append('file', photo.file);
+
+        const record = await this.pb.collection('files').create(photoForm, {
+          requestKey: null
+        });
+
+        const url = this.pb.files.getUrl(record, record['file']);
+        uploadedPhotos.push(url);
+      } else if (photo.url) {
+        uploadedPhotos.push(photo.url);
+      }
+    }
+
+    const formData = new FormData();
+    formData.append('venueName', this.global.profileDataPartner.venueName || '');
+    formData.append('description', this.global.profileDataPartner.description || '');
+    formData.append('email', this.global.profileDataPartner.email || '');
+    formData.append('phone', this.global.profileDataPartner.phone || '');
+    formData.append('address', this.global.profileDataPartner.address || '');
+    formData.append('capacity', String(this.global.profileDataPartner.capacity || 0));
+    formData.append('openingHours', this.global.profileDataPartner.openingHours || '');
+    formData.append('lat', String(this.global.profileDataPartner.lat || 0));
+    formData.append('lng', String(this.global.profileDataPartner.lng || 0));
+    formData.append('services', this.selectedServices.join(', '));
+    formData.append('files', JSON.stringify(uploadedPhotos));
+    formData.append('purchaseLink', this.global.profileDataPartner.purchaseLink || '');
+
+    if (this.newAvatar) {
+      formData.append('avatar', this.newAvatar);
+    }
+
+    const existingProfile = await this.pb
+      .collection('usuariosPartner')
+      .getFirstListItem(`userId="${userId}"`, {
+        requestKey: null
+      })
+      .catch(() => null);
+
+    let savedRecord: any;
+
+    if (existingProfile) {
+      savedRecord = await this.pb.collection('usuariosPartner').update(
+        existingProfile.id,
+        formData,
+        { requestKey: null }
+      );
+    } else {
+      formData.append('userId', userId);
+      savedRecord = await this.pb.collection('usuariosPartner').create(
+        formData,
+        { requestKey: null }
+      );
+    }
+
+    this.global.profileDataPartner = {
+      ...this.global.profileDataPartner,
+      id: savedRecord.id,
+      userId: savedRecord.userId,
+      venueName: savedRecord.venueName,
+      description: savedRecord.description,
+      email: savedRecord.email,
+      phone: savedRecord.phone,
+      address: savedRecord.address,
+      capacity: savedRecord.capacity,
+      openingHours: savedRecord.openingHours,
+      lat: savedRecord.lat,
+      lng: savedRecord.lng,
+      services: savedRecord.services,
+      purchaseLink: savedRecord.purchaseLink,
+      files: savedRecord.files || uploadedPhotos,
+      avatar: savedRecord.avatar
+        ? this.pb.files.getUrl(savedRecord, savedRecord.avatar)
+        : this.global.profileDataPartner.avatar
+    };
+
+    this.showSuccessToast = true;
+    setTimeout(() => {
+      this.showSuccessToast = false;
+    }, 3000);
+
+    this.avatarPreview = null;
+    this.newAvatar = null;
+    this.isEditProfile = false;
+
+    console.log('Perfil actualizado correctamente');
+  } catch (error: any) {
+    console.error('Error guardando perfil:', error);
+
+    if (error?.isAbort) {
+      console.error('PocketBase canceló la petición automáticamente');
+    }
+
+    if (error?.response) {
+      console.error('Detalle PocketBase:', error.response);
+    }
+  }
 }
 
 cancelEdit() {

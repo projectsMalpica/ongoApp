@@ -240,8 +240,16 @@
 
           <div class="mb-3">
             <label class="form-label">Contraseña *</label>
-            <input type="password" class="form-control" formControlName="password"
-              [class.is-invalid]="f['password'].touched && f['password'].invalid">
+
+            <div class="password-field">
+              <input [type]="showPassword ? 'text' : 'password'" class="form-control" formControlName="password"
+                [class.is-invalid]="f['password'].touched && f['password'].invalid" />
+
+              <button type="button" class="toggle-password" (click)="togglePassword()">
+                <i class="fa" [ngClass]="showPassword ? 'fa-eye' : 'fa-eye-slash'"></i>
+              </button>
+            </div>
+
             <div *ngIf="f['password'].touched && f['password'].invalid" class="invalid-feedback">
               <span *ngIf="f['password'].errors?.['required']">La contraseña es requerida</span>
               <span *ngIf="f['password'].errors?.['minlength']">Mínimo 8 caracteres</span>
@@ -250,8 +258,16 @@
 
           <div class="mb-3">
             <label class="form-label">Confirmar Contraseña *</label>
-            <input type="password" class="form-control" formControlName="confirmPassword"
-              [class.is-invalid]="clientForm.errors?.['mismatch']">
+
+            <div class="password-field">
+              <input [type]="showConfirmPassword ? 'text' : 'password'" class="form-control"
+                formControlName="confirmPassword" [class.is-invalid]="clientForm.errors?.['mismatch']" />
+
+              <button type="button" class="toggle-password" (click)="toggleConfirmPassword()">
+                <i class="fa" [ngClass]="showConfirmPassword ? 'fa-eye' : 'fa-eye-slash'"></i>
+              </button>
+            </div>
+
             <div *ngIf="clientForm.errors?.['mismatch']" class="invalid-feedback">
               Las contraseñas no coinciden
             </div>
