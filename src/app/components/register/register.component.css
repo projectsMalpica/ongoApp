@@ -42,35 +42,34 @@
   }
 }
 
-.floating-avatars-container {
+/* .floating-avatars-container {
   position: relative;
   width: 100%;
   height: 540px;
   overflow: hidden;
   border-radius: 0px 0px 0px 85px;
   margin-bottom: 160px;
-}
+} */
 
 /* Map Background */
-.map-background {
+/* .map-background {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  /* ✅ Esto es clave */
   background-image: url('/assets/images/maps.jpg');
   background-size: cover;
   background-position: center;
   opacity: 0.2;
   z-index: 0;
   pointer-events: none;
-}
+} */
 
 
 
 /* Floating Avatars */
-.floating-avatar {
+/* .floating-avatar {
   position: absolute;
   width: 80px;
   height: 80px;
@@ -91,7 +90,7 @@
   align-items: center;
   justify-content: center;
   z-index: 2;
-}
+} */
 
 .floating-avatar img {
   width: 100%;
@@ -103,7 +102,7 @@
 
 
 /* Avatar Positions and Animations */
-.avatar-1 {
+/* .avatar-1 {
   top: 20%;
   left: 15%;
   animation: float 8s ease-in-out infinite;
@@ -134,17 +133,17 @@
   animation: float 8.5s ease-in-out 0.8s infinite;
   border: 2px solid #f70192;
 
-}
+} */
 
 /* Location Pins */
-.location-pin {
+/* .location-pin {
   position: absolute;
   width: 20px;
   height: 20px;
   background: #f70192;
   border-radius: 50%;
   z-index: 1;
-}
+} */
 
 .location-pin::after {
   content: '';
@@ -156,33 +155,33 @@
   animation: pulse 2s infinite;
 }
 
-.pin-1 {
-  top: 39%;
-  left: 17%;
-}
+  /* .pin-1 {
+    top: 39%;
+    left: 17%;
+  }
 
-.pin-2 {
-  top: 53%;
-  left: 67%;
-}
+  .pin-2 {
+    top: 53%;
+    left: 67%;
+  }
 
-.pin-3 {
-  top: 87%;
-  left: 64%;
-}
+  .pin-3 {
+    top: 87%;
+    left: 64%;
+  }
 
-.pin-4 {
-  top: 76%;
-  left: 21%;
-}
+  .pin-4 {
+    top: 76%;
+    left: 21%;
+  }
 
-.pin-5 {
-  top: 69%;
-  left: 86%;
-}
+  .pin-5 {
+    top: 69%;
+    left: 86%;
+  } */
 
 /* Animations */
-@keyframes float {
+/* @keyframes float {
   0% {
     transform: translateY(0) rotate(0deg);
   }
@@ -211,7 +210,7 @@
     transform: scale(1);
     opacity: 0;
   }
-}
+} */
 
 /* Modal Styles */
 .modal-overlay {
@@ -441,4 +440,332 @@
 
 .toggle-password:hover {
   color: #fff;
+}
+
+/* =========================
+   SCREEN
+========================= */
+.onboarding-screen {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top, rgba(107, 43, 255, 0.18), transparent 28%),
+    radial-gradient(circle at 80% 20%, rgba(247, 1, 146, 0.20), transparent 25%),
+    linear-gradient(180deg, #09041d 0%, #130828 45%, #09041b 100%);
+  overflow: hidden;
+}
+
+.welcome-hero {
+  min-height: 100vh;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  padding: 18px 18px 28px;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    url('/assets/images/night-city-bg.jpg') center center / cover no-repeat;
+  opacity: 0.30;
+  filter: blur(1px) saturate(1.15);
+  transform: scale(1.05);
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(7, 2, 25, 0.25) 0%, rgba(7, 2, 25, 0.35) 30%, rgba(7, 2, 25, 0.82) 100%);
+  z-index: 1;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 460px;
+  min-height: calc(100vh - 36px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  padding: 8px 6px 0;
+}
+
+/* =========================
+   TOP
+========================= */
+.hero-top {
+  margin-top: 10px;
+  margin-bottom: 12px;
+}
+
+.hero-kicker {
+  color: #ffffff;
+  font-size: 1.15rem;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  margin-bottom: 12px;
+  opacity: 0.95;
+}
+
+.hero-logo .logo {
+  width: 170px;
+  max-width: 70%;
+  height: auto;
+  display: block;
+  margin: 0 auto 10px;
+  filter: drop-shadow(0 0 18px rgba(147, 82, 255, 0.28));
+}
+
+.hero-title {
+  margin: 0;
+  color: #ffffff;
+  font-size: 1.05rem;
+  line-height: 1.35;
+  font-weight: 600;
+  opacity: 0.98;
+}
+
+/* =========================
+   HERO IMAGE
+========================= */
+.hero-main-image {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 18px 0 20px;
+}
+
+.hero-main-image img {
+  width: min(88vw, 290px);
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: 28px;
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.35),
+    0 0 30px rgba(255, 0, 128, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+/* =========================
+   ACTIONS
+========================= */
+.hero-actions {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.hero-btn {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  color: #fff;
+  border-radius: 24px;
+  min-height: 72px;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 1.28rem;
+  font-weight: 500;
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.28),
+    inset 0 0 0 1px rgba(255,255,255,0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.hero-btn span:last-child {
+  flex: 1;
+  text-align: center;
+  padding-right: 36px;
+}
+
+.hero-btn:hover,
+.hero-btn:active {
+  transform: translateY(-1px) scale(1.01);
+  opacity: 0.96;
+}
+
+.hero-btn-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+  background: rgba(255,255,255,0.08);
+}
+
+.hero-btn-client {
+  box-shadow:
+    0 0 0 1px rgba(122, 205, 255, 0.25),
+    0 0 18px rgba(80, 173, 255, 0.32),
+    0 12px 24px rgba(0, 0, 0, 0.28);
+}
+
+.hero-btn-client .hero-btn-icon {
+  color: #dff3ff;
+  box-shadow: inset 0 0 12px rgba(122, 205, 255, 0.25);
+}
+
+.hero-btn-partner {
+  box-shadow:
+    0 0 0 1px rgba(255, 119, 184, 0.22),
+    0 0 18px rgba(255, 0, 128, 0.28),
+    0 12px 24px rgba(0, 0, 0, 0.28);
+}
+
+.hero-btn-partner .hero-btn-icon {
+  color: #ffe4f2;
+  box-shadow: inset 0 0 12px rgba(255, 0, 128, 0.25);
+}
+
+/* =========================
+   STATS
+========================= */
+.hero-stats {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  align-items: stretch;
+  margin-top: 4px;
+  margin-bottom: 18px;
+}
+
+.stat-card {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 22px;
+  padding: 12px 10px;
+  color: white;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.22);
+}
+
+.stat-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.stat-avatar {
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-bottom: 8px;
+  border: 2px solid rgba(255, 92, 170, 0.7);
+  box-shadow: 0 0 18px rgba(255, 0, 128, 0.22);
+}
+
+.stat-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.stat-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stat-text strong,
+.stat-text span {
+  font-size: 0.8rem;
+  line-height: 1.2;
+}
+
+.stat-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  background:
+    radial-gradient(circle at center, rgba(247, 1, 146, 0.20), rgba(123, 47, 247, 0.16)),
+    rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.14);
+}
+
+.stat-number {
+  font-size: 2.15rem;
+  line-height: 1;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+/* =========================
+   LOGIN LINK
+========================= */
+.register-link-inline {
+  position: static;
+  width: 100%;
+  padding: 0;
+  box-shadow: none;
+  background: transparent;
+  margin-top: auto;
+}
+
+.register-link-inline p {
+  margin: 0;
+  color: rgba(255,255,255,0.88);
+  font-size: 0.98rem;
+  font-weight: 500;
+}
+
+.register-link-inline a {
+  color: #ff4da6;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 420px) {
+  .hero-kicker {
+    font-size: 1rem;
+  }
+
+  .hero-title {
+    font-size: 0.98rem;
+  }
+
+  .hero-btn {
+    min-height: 66px;
+    font-size: 1.08rem;
+    border-radius: 20px;
+  }
+
+  .hero-btn span:last-child {
+    padding-right: 24px;
+  }
+
+  .hero-main-image img {
+    width: min(84vw, 250px);
+  }
+
+  .stat-number {
+    font-size: 1.7rem;
+  }
+
+  .stat-text strong,
+  .stat-text span {
+    font-size: 0.72rem;
+  }
 }

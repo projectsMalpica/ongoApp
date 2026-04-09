@@ -1,16 +1,14 @@
 <!-- Paso 1: Selección de tipo de usuario -->
-<div class="content-body" *ngIf="currentStep === 1 && !userType">
+<!-- <div class="content-body" *ngIf="currentStep === 1 && !userType">
   <div class="welcome-area bg-image" style="padding: 8px 28px;">
     <div class="map-background"></div>
 
     <div class="welcome-inner">
       <div class="dz-media floating-avatars-container">
-        <!-- Map Background -->
         <div class="logo-area">
           <img class="logo" src="../assets/images/logo.png" alt="" style="max-width: 40%;">
           <p class="para-title">Ve, Sal y Conecta!</p>
         </div>
-        <!-- Floating Avatars -->
         <div class="floating-avatar-1 ">
           <img src="../assets/images/edificio.png" alt="Avatar">
         </div>
@@ -28,10 +26,6 @@
         <div class="floating-avatar avatar-5">
           <img src="https://images.pexels.com/photos/30743458/pexels-photo-30743458.jpeg" alt="Avatar">
         </div>
-
-
-
-        <!-- Location Pins -->
         <div class="location-pin pin-1"><i class="icon feather icon-map-pin"></i></div>
         <div class="location-pin pin-2"><i class="icon feather icon-map-pin"></i></div>
         <div class="location-pin pin-3"><i class="icon feather icon-map-pin"></i></div>
@@ -58,6 +52,87 @@
       <p style="padding-top: 0px; text-align: center; font-size: 1.1rem;
   font-weight: 600; cursor: pointer;">¿Tienes una cuenta? <a (click)="global.setRoute('login')"
           style="color: #f70192;">Inicia sesión</a></p>
+    </div>
+  </div>
+</div> -->
+<div class="content-body onboarding-screen" *ngIf="currentStep === 1 && !userType">
+  <div class="welcome-hero">
+
+    <!-- Fondo decorativo -->
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
+
+    <div class="welcome-inner hero-content">
+
+      <!-- Encabezado -->
+      <div class="hero-top">
+        <p class="hero-kicker">Esta noche algo puede pasar...</p>
+
+        <div class="logo-area hero-logo">
+          <img class="logo" src="../assets/images/logo.png" alt="OnGo logo">
+        </div>
+
+        <h1 class="hero-title">Las mejores noches empiezan aquí</h1>
+      </div>
+
+      <!-- Imagen principal -->
+      <div class="hero-main-image">
+        <img src="assets/images/hero-night.png" alt="Experiencia OnGo">
+      </div>
+
+      <!-- Botones -->
+      <div class="hero-actions">
+        <button (click)="selectUserType('client')" class="hero-btn hero-btn-client">
+          <span class="hero-btn-icon">
+            <i class="feather icon-user"></i>
+          </span>
+          <span>Entrar como Cliente</span>
+        </button>
+
+        <button (click)="selectUserType('partner')" class="hero-btn hero-btn-partner">
+          <span class="hero-btn-icon">
+            <i class="feather icon-map-pin"></i>
+          </span>
+          <span>Registrar mi Local</span>
+        </button>
+      </div>
+
+      <!-- Métricas / preview social -->
+      <div class="hero-stats">
+        <div class="stat-card stat-profile">
+          <div class="stat-avatar">
+            <img src="https://images.pexels.com/photos/30743458/pexels-photo-30743458.jpeg" alt="Persona cerca">
+          </div>
+          <div class="stat-text">
+            <strong>Laura está en</strong>
+            <span>Sky Club</span>
+          </div>
+        </div>
+
+        <div class="stat-card stat-center">
+          <strong class="stat-number">27</strong>
+          <span>personas cerca de ti</span>
+        </div>
+
+        <div class="stat-card stat-profile">
+          <div class="stat-avatar">
+            <img src="https://images.pexels.com/photos/23876/pexels-photo.jpg" alt="Match posible">
+          </div>
+          <div class="stat-text">
+            <strong>3 matches</strong>
+            <span>posibles</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Login -->
+      <div class="register-link register-link-inline">
+        <p>
+          ¿Tienes una cuenta?
+          <a (click)="global.setRoute('login')">Inicia sesión</a>
+        </p>
+      </div>
+
     </div>
   </div>
 </div>
